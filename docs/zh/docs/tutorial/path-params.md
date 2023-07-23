@@ -114,13 +114,13 @@
 
 否则，`/users/{user_id}` 的路径还将与 `/users/me` 相匹配，"认为"自己正在接收一个值为 `"me"` 的 `user_id` 参数。
 
-Similarly, you cannot redefine a path operation:
+与之类似，也不能重新定义路径操作：
 
 ```Python hl_lines="6  11"
 {!../../../docs_src/path_params/tutorial003b.py!}
 ```
 
-The first one will always be used since the path matches first.
+这里将始终采用第一个定义的路径操作，因为其路径先被匹配上。
 
 ## 预设值
 
@@ -191,7 +191,7 @@ The first one will always be used since the path matches first.
 {!../../../docs_src/path_params/tutorial005.py!}
 ```
 
-In your client you will get a JSON response like:
+客户端会得到类似下面这样的 JSON 响应：
 
 ```JSON
 {
