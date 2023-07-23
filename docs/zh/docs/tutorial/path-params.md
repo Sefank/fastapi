@@ -61,7 +61,7 @@
 
 因为路径参数 `item_id` 传入的值为 `"foo"`，它不是一个 `int`。
 
-如果你提供的是 `float` 而非整数也会出现同样的错误，比如： <a href="http://127.0.0.1:8000/items/4.2" class="external-link" target="_blank">http://127.0.0.1:8000/items/4.2</a>
+如果你提供的是 `float` 而非 `int` 也会出现同样的错误，比如： <a href="http://127.0.0.1:8000/items/4.2" class="external-link" target="_blank">http://127.0.0.1:8000/items/4.2</a>
 
 !!! check
     所以，通过同样的 Python 类型声明，**FastAPI** 提供了数据校验功能。
@@ -83,9 +83,9 @@
 
 ## 基于标准的好处：可选文档
 
-由于生成的 API 模式来自于 <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md" class="external-link" target="_blank">OpenAPI</a> 标准，所以有很多工具与其兼容。
+由于生成的 API 模式来自于 <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md" class="external-link" target="_blank">OpenAPI</a> 标准，所以有很多工具与其兼容。
 
-正因如此，**FastAPI** 内置了一个可选的 API 文档（使用 Redoc）：
+正因如此，**FastAPI** 内置了一个可选的 API 文档（使用 Redoc），你可以在 <a href="http://127.0.0.1:8000/redoc" class="external-link" target="_blank">http://127.0.0.1:8000/redoc</a> 访问它：
 
 <img src="https://fastapi.tiangolo.com/img/tutorial/path-params/image02.png">
 
@@ -113,6 +113,14 @@
 ```
 
 否则，`/users/{user_id}` 的路径还将与 `/users/me` 相匹配，"认为"自己正在接收一个值为 `"me"` 的 `user_id` 参数。
+
+Similarly, you cannot redefine a path operation:
+
+```Python hl_lines="6  11"
+{!../../../docs_src/path_params/tutorial003b.py!}
+```
+
+The first one will always be used since the path matches first.
 
 ## 预设值
 
@@ -146,7 +154,7 @@
 
 ### 查看文档
 
-因为已经指定了*路径参数*的可用值，所以交互式文档可以恰当地展示它们：
+因为已经预先指定了*路径参数*的可用值，所以交互式文档可以恰当地展示它们：
 
 <img src="https://fastapi.tiangolo.com/img/tutorial/path-params/image03.png">
 
@@ -166,7 +174,7 @@
 
 你可以使用 `model_name.value` 或通常来说 `your_enum_member.value` 来获取实际的值（在这个例子中为 `str`）：
 
-```Python hl_lines="19"
+```Python hl_lines="20"
 {!../../../docs_src/path_params/tutorial005.py!}
 ```
 
@@ -177,10 +185,19 @@
 
 你可以从*路径操作*中返回*枚举成员*，即使嵌套在 JSON 结构中（例如一个 `dict` 中）。
 
-在返回给客户端之前，它们将被转换为对应的值：
+在返回给客户端之前，它们将被转换为对应的值（在这个例子中会被转换为字符串）：
 
-```Python hl_lines="18-21"
+```Python hl_lines="18  21  23"
 {!../../../docs_src/path_params/tutorial005.py!}
+```
+
+In your client you will get a JSON response like:
+
+```JSON
+{
+  "model_name": "alexnet",
+  "message": "Deep Learning FTW!"
+}
 ```
 
 ## 包含路径的路径参数

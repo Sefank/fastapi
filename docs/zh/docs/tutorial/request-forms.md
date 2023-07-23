@@ -3,7 +3,6 @@
 接收的不是 JSON，而是表单字段时，要使用 `Form`。
 
 !!! info "说明"
-
     要使用表单，需预先安装 <a href="https://andrew-d.github.io/python-multipart/" class="external-link" target="_blank">`python-multipart`</a>。
 
     例如，`pip install python-multipart`。
@@ -12,30 +11,62 @@
 
 从 `fastapi` 导入 `Form`：
 
-```Python hl_lines="1"
-{!../../../docs_src/request_forms/tutorial001.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/request_forms/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/request_forms/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/request_forms/tutorial001.py!}
+    ```
 
 ## 定义 `Form` 参数
 
 创建表单（`Form`）参数的方式与 `Body` 和 `Query` 一样：
 
-```Python hl_lines="7"
-{!../../../docs_src/request_forms/tutorial001.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/request_forms/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/request_forms/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/request_forms/tutorial001.py!}
+    ```
 
 例如，OAuth2 规范的 "密码流" 模式规定要通过表单字段发送 `username` 和 `password`。
 
 <abbr title="specification">该规范</abbr>要求字段必须命名为 `username` 和 `password`，并通过表单字段发送，不能用 JSON。
 
-使用 `Form` 可以声明与 `Body` （及 `Query`、`Path`、`Cookie`）相同的元数据和验证。
+使用 `Form` 可以声明与 `Body` （及 `Query`、`Path`、`Cookie`）相同的配置，包括验证、examples, an alias (e.g. `user-name` instead of `username`), etc。
 
 !!! info "说明"
-
     `Form` 是直接继承自 `Body` 的类。
 
 !!! tip "提示"
-
     声明表单体要显式使用 `Form` ，否则，FastAPI 会把该参数当作查询参数或请求体（JSON）参数。
 
 ## 关于 "表单字段"

@@ -8,13 +8,37 @@
 
 === "Python 3.10+"
 
-    ```Python hl_lines="7"
-    {!> ../../../docs_src/dependencies/tutorial001_py310.py!}
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py39.py!}
     ```
 
 === "Python 3.6+"
 
-    ```Python hl_lines="9"
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/dependencies/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/dependencies/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="11"
     {!> ../../../docs_src/dependencies/tutorial001.py!}
     ```
 
@@ -81,11 +105,35 @@ fluffy = Cat(name="Mr Fluffy")
 
 === "Python 3.10+"
 
+    ```Python hl_lines="11-15"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="11-15"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="12-16"
+    {!> ../../../docs_src/dependencies/tutorial002_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="9-13"
     {!> ../../../docs_src/dependencies/tutorial002_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="11-15"
     {!> ../../../docs_src/dependencies/tutorial002.py!}
@@ -95,11 +143,35 @@ fluffy = Cat(name="Mr Fluffy")
 
 === "Python 3.10+"
 
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="13"
+    {!> ../../../docs_src/dependencies/tutorial002_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="10"
     {!> ../../../docs_src/dependencies/tutorial002_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="12"
     {!> ../../../docs_src/dependencies/tutorial002.py!}
@@ -109,11 +181,35 @@ fluffy = Cat(name="Mr Fluffy")
 
 === "Python 3.10+"
 
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/dependencies/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="6"
     {!> ../../../docs_src/dependencies/tutorial001_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="9"
     {!> ../../../docs_src/dependencies/tutorial001.py!}
@@ -135,11 +231,35 @@ fluffy = Cat(name="Mr Fluffy")
 
 === "Python 3.10+"
 
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/dependencies/tutorial002_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="17"
     {!> ../../../docs_src/dependencies/tutorial002_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="19"
     {!> ../../../docs_src/dependencies/tutorial002.py!}
@@ -151,14 +271,25 @@ fluffy = Cat(name="Mr Fluffy")
 
 注意，我们在上面的代码中编写了两次`CommonQueryParams`：
 
-```Python
-commons: CommonQueryParams = Depends(CommonQueryParams)
-```
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons: CommonQueryParams = Depends(CommonQueryParams)
+    ```
+
+=== "Python 3.6+"
+
+    ```Python
+    commons: Annotated[CommonQueryParams, Depends(CommonQueryParams)]
+    ```
 
 最后的 `CommonQueryParams`:
 
 ```Python
-... = Depends(CommonQueryParams)
+... Depends(CommonQueryParams)
 ```
 
 ...实际上是 **Fastapi** 用来知道依赖项是什么的。
@@ -169,27 +300,73 @@ FastAPI 将从依赖项中提取声明的参数，这才是 FastAPI 实际调用
 
 在本例中，第一个 `CommonQueryParams` ：
 
-```Python
-commons: CommonQueryParams ...
-```
+=== "Python 3.6+"
 
-...对于 **FastAPI** 没有任何特殊的意义。FastAPI 不会使用它进行数据转换、验证等 (因为对于这，它使用 `= Depends(CommonQueryParams)`)。
+    ```Python
+    commons: Annotated[CommonQueryParams, ...
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons: CommonQueryParams ...
+    ```
+
+...对于 **FastAPI** 没有任何特殊的意义。FastAPI 不会使用它进行数据转换、验证等 (因为对于这，它使用 `Depends(CommonQueryParams)`)。
 
 你实际上可以只这样编写:
 
-```Python
-commons = Depends(CommonQueryParams)
-```
+=== "Python 3.6+"
+
+    ```Python
+    commons: Annotated[Any, Depends(CommonQueryParams)]
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons = Depends(CommonQueryParams)
+    ```
 
 ..就像:
 
 === "Python 3.10+"
 
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial003_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial003_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/dependencies/tutorial003_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="17"
     {!> ../../../docs_src/dependencies/tutorial003_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="19"
     {!> ../../../docs_src/dependencies/tutorial003.py!}
@@ -203,9 +380,20 @@ commons = Depends(CommonQueryParams)
 
 但是您可以看到，我们在这里有一些代码重复了，编写了`CommonQueryParams`两次：
 
-```Python
-commons: CommonQueryParams = Depends(CommonQueryParams)
-```
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons: CommonQueryParams = Depends(CommonQueryParams)
+    ```
+
+=== "Python 3.6+"
+
+    ```Python
+    commons: Annotated[CommonQueryParams, Depends(CommonQueryParams)]
+    ```
 
 **FastAPI** 为这些情况提供了一个快捷方式，在这些情况下，依赖项 *明确地* 是一个类，**FastAPI** 将 "调用" 它来创建类本身的一个实例。
 
@@ -213,27 +401,73 @@ commons: CommonQueryParams = Depends(CommonQueryParams)
 
 不是写成这样：
 
-```Python
-commons: CommonQueryParams = Depends(CommonQueryParams)
-```
+=== "Python 3.6+"
+
+    ```Python
+    commons: Annotated[CommonQueryParams, Depends(CommonQueryParams)]
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons: CommonQueryParams = Depends(CommonQueryParams)
+    ```
 
 ...而是这样写:
 
-```Python
-commons: CommonQueryParams = Depends()
-```
+=== "Python 3.6+"
 
-您声明依赖项作为参数的类型，并使用 `Depends()` 作为该函数的参数的 "默认" 值(在 `=` 之后)，而在 `Depends()` 中没有任何参数，而不是在 `Depends(CommonQueryParams)` 编写完整的类。
+    ```Python
+    commons: Annotated[CommonQueryParams, Depends()]
+    ```
+
+=== "Python 3.6 non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons: CommonQueryParams = Depends()
+    ```
+
+声明依赖项作为参数的类型，在 `Depends()` 中不需要任何参数，而不是在 `Depends(CommonQueryParams)` 内*再次*写上完整的类。
 
 同样的例子看起来像这样：
 
 === "Python 3.10+"
 
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial004_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial004_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/dependencies/tutorial004_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="17"
     {!> ../../../docs_src/dependencies/tutorial004_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="19"
     {!> ../../../docs_src/dependencies/tutorial004.py!}

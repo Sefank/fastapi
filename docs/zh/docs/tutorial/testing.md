@@ -8,7 +8,7 @@
 
 ## 使用 `TestClient`
 
-!!! 信息
+!!! info "提示"
     要使用 `TestClient`，先要安装 <a href="https://www.python-httpx.org" class="external-link" target="_blank">`httpx`</a>.
 
     例：`pip install httpx`.
@@ -168,7 +168,7 @@
 
 关于如何传数据给后端的更多信息 (使用`httpx` 或 `TestClient`)，请查阅 <a href="https://www.python-httpx.org" class="external-link" target="_blank">HTTPX 文档</a>.
 
-!!! 信息
+!!! info "提示"
     注意 `TestClient` 接收可以被转化为JSON的数据，而不是Pydantic模型。
 
     如果你在测试中有一个Pydantic模型，并且你想在测试时发送它的数据给应用，你可以使用在[JSON Compatible Encoder](encoder.md){.internal-link target=_blank}介绍的`jsonable_encoder` 。

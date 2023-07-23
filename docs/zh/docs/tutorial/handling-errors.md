@@ -275,15 +275,10 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 ### 复用 **FastAPI** 异常处理器
 
-FastAPI 支持先对异常进行某些处理，然后再使用 **FastAPI** 中处理该异常的默认异常处理器。
-
-从 `fastapi.exception_handlers` 中导入要复用的默认异常处理器：
+如果想让异常与 **FastAPI** 中相同的默认异常处理函数一起使用，可以导入并重用 `fastapi.exception_handlers` 中的默认异常处理函数：
 
 ```Python hl_lines="2-5  15  21"
 {!../../../docs_src/handling_errors/tutorial006.py!}
-
 ```
 
-虽然，本例只是输出了夸大其词的错误信息。
-
-但也足以说明，可以在处理异常之后再复用默认的异常处理器。
+虽然，本例只是 `print` 出了夸大其词的错误信息，但也足以说明，可以在处理异常之后再复用默认的异常处理器。

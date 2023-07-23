@@ -1,10 +1,17 @@
 # SQL (关系型) 数据库
 
+!!! info "提示"
+    这部分文档即将更新。🎉
+
+    当前版本假定为 Pydantic v1，并且 SQLAlchemy 版本低于 2.0。
+
+    新的文档将包括 Pydantic v2，并且会使用 <a href="https://sqlmodel.tiangolo.com/" class="external-link" target="_blank">SQLModel</a>（这个库也基于 SQLAlchemy），只要 SQLModel 也更新到使用 Pydantic v2。
+
 **FastAPI**不需要你使用SQL(关系型)数据库。
 
 但是您可以使用任何您想要的关系型数据库。
 
-在这里，让我们看一个使用着[SQLAlchemy](https://www.sqlalchemy.org/)的示例。
+在这里，让我们看一个使用着 <a href="https://www.sqlalchemy.org/" class="external-link" target="_blank">SQLAlchemy</a> 的示例。
 
 您可以很容易地将SQLAlchemy支持任何数据库，像：
 
@@ -22,7 +29,9 @@
     这儿有一个**FastAPI**和**PostgreSQL**的官方项目生成器，全部基于**Docker**，包括前端和更多工具：<a href="https://github.com/tiangolo/full-stack-fastapi-postgresql" class="external-link" target="_blank">https://github.com/tiangolo/full-stack-fastapi-postgresql</a>
 
 !!! note
-    请注意，大部分代码是`SQLAlchemy`的标准代码，您可以用于任何框架。FastAPI特定的代码和往常一样少。
+    请注意，大部分代码是`SQLAlchemy`的标准代码，您可以用于任何框架。
+
+    FastAPI特定的代码和往常一样少。
 
 ## ORMs（对象关系映射）
 
@@ -77,6 +86,20 @@ ORM 具有在代码和数据库表（“*关系型”）中的**对象**之间�
 该文件`__init__.py`只是一个空文件，但它告诉 Python 其中`sql_app`的所有模块（Python 文件）都是一个包。
 
 现在让我们看看每个文件/模块的作用。
+
+## Install `SQLAlchemy`
+
+First you need to install `SQLAlchemy`:
+
+<div class="termy">
+
+```console
+$ pip install sqlalchemy
+
+---> 100%
+```
+
+</div>
 
 ## 创建 SQLAlchemy 部件
 
@@ -315,7 +338,7 @@ name: str
 
 现在，在用于查询的 Pydantic*模型*`Item`中`User`，添加一个内部`Config`类。
 
-此类[`Config`](https://pydantic-docs.helpmanual.io/usage/model_config/)用于为 Pydantic 提供配置。
+此类<a href="https://pydantic-docs.helpmanual.io/usage/model_config/" class="external-link" target="_blank">`Config`</a>用于为 Pydantic 提供配置。
 
 在`Config`类中，设置属性`orm_mode = True`。
 
@@ -485,7 +508,7 @@ current_user.items
 
 “迁移”是每当您更改 SQLAlchemy 模型的结构、添加新属性等以在数据库中复制这些更改、添加新列、新表等时所需的一组步骤。
 
-您可以在[Project Generation - Template](https://fastapi.tiangolo.com/zh/project-generation/)的模板中找到一个 FastAPI 项目中的 Alembic 示例。具体在[`alembic`代码目录中](https://github.com/tiangolo/full-stack-fastapi-postgresql/tree/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app/alembic/)。
+您可以在 [Project Generation - Template](../project-generation.md){.internal-link target=_blank}. 的模板中找到一个 FastAPI 项目中的 Alembic 示例。具体在 <a href="https://github.com/tiangolo/full-stack-fastapi-postgresql/tree/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app/alembic/" class="external-link" target="_blank">`alembic` 的代码目录</a>中。
 
 ### 创建依赖项
 
@@ -495,7 +518,7 @@ current_user.items
 
 然后将为下一个请求创建一个新会话。
 
-为此，我们将创建一个新的依赖项`yield`，正如前面关于[Dependencies with`yield`](https://fastapi.tiangolo.com/zh/tutorial/dependencies/dependencies-with-yield/)的部分中所解释的那样。
+为此，我们将创建一个新的依赖项`yield`，正如前面关于 [Dependencies with `yield`](dependencies/dependencies-with-yield.md){.internal-link target=_blank} 的部分中所解释的那样。
 
 我们的依赖项将创建一个新的 SQLAlchemy `SessionLocal`，它将在单个请求中使用，然后在请求完成后关闭它。
 
@@ -518,7 +541,7 @@ current_user.items
 
     通过这种方式，我们确保数据库会话在请求后始终关闭。即使在处理请求时出现异常。
 
-    但是您不能从退出代码中引发另一个异常（在yield之后）。可以查阅 [Dependencies with yield and HTTPException](https://fastapi.tiangolo.com/zh/tutorial/dependencies/dependencies-with-yield/#dependencies-with-yield-and-httpexception)
+    但是您不能从退出代码中引发另一个异常（在yield之后）。可以查阅 [Dependencies with `yield` and `HTTPException`](./dependencies/dependencies-with-yield.md#dependencies-with-yield-and-httpexception){.internal-link target=_blank}
 
 *然后，当在路径操作函数*中使用依赖项时，我们使用`Session`，直接从 SQLAlchemy 导入的类型声明它。
 
@@ -601,20 +624,20 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 ```
 
 !!! info
-    如果您需要异步连接到关系数据库，请参阅[Async SQL (Relational) Databases](https://fastapi.tiangolo.com/zh/advanced/async-sql-databases/)
+    如果您需要异步连接到关系数据库，请参阅 [Async SQL (Relational) Databases](../advanced/async-sql-databases.md){.internal-link target=_blank}。
 
 !!! note "Very Technical Details"
-    如果您很好奇并且拥有深厚的技术知识，您可以在[Async](https://fastapi.tiangolo.com/zh/async/#very-technical-details)文档中查看有关如何处理 `async def`于`def`差别的技术细节。
+    如果您很好奇并且拥有深厚的技术知识，您可以在 [Async](../async.md#very-technical-details){.internal-link target=_blank} 文档中查看有关如何处理 `async def`于`def`差别的技术细节。
 
 ## 迁移
 
-因为我们直接使用 SQLAlchemy，并且我们不需要任何类型的插件来使用**FastAPI**，所以我们可以直接将数据库迁移至[Alembic](https://alembic.sqlalchemy.org/)进行集成。
+因为我们直接使用 SQLAlchemy，并且我们不需要任何类型的插件来使用**FastAPI**，所以我们可以直接将数据库<abbr title="Automatically updating the database to have any new column we define in our models.">migrations</abbr>至 <a href="https://alembic.sqlalchemy.org" class="external-link" target="_blank">Alembic</a> 进行集成。
 
 由于与 SQLAlchemy 和 SQLAlchemy 模型相关的代码位于单独的独立文件中，您甚至可以使用 Alembic 执行迁移，而无需安装 FastAPI、Pydantic 或其他任何东西。
 
 同样，您将能够在与**FastAPI**无关的代码的其他部分中使用相同的 SQLAlchemy 模型和实用程序。
 
-例如，在具有[Celery](https://docs.celeryq.dev/)、[RQ](https://python-rq.org/)或[ARQ](https://arq-docs.helpmanual.io/)的后台任务工作者中。
+例如，在具有 <a href="https://docs.celeryq.dev" class="external-link" target="_blank">Celery</a>、<a href="https://python-rq.org/" class="external-link" target="_blank">RQ</a> 或 <a href="https://arq-docs.helpmanual.io/" class="external-link" target="_blank">ARQ</a> 的后台任务工作者中。
 
 ## 审查所有文件
 
@@ -697,7 +720,7 @@ $ uvicorn sql_app.main:app --reload
 
 </div>
 
-打开浏览器进入 <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs。</a>
+打开浏览器进入 <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a>。
 
 您将能够与您的**FastAPI**应用程序交互，从真实数据库中读取数据：
 
@@ -705,13 +728,13 @@ $ uvicorn sql_app.main:app --reload
 
 ## 直接与数据库交互
 
-如果您想独立于 FastAPI 直接浏览 SQLite 数据库（文件）以调试其内容、添加表、列、记录、修改数据等，您可以使用[SQLite 的 DB Browser](https://sqlitebrowser.org/)
+如果您想独立于 FastAPI 直接浏览 SQLite 数据库（文件）以调试其内容、添加表、列、记录、修改数据等，您可以使用 <a href="https://sqlitebrowser.org/" class="external-link" target="_blank">SQLite 的 DB Browser</a>。
 
 它看起来像这样：
 
 <img src="/img/tutorial/sql-databases/image02.png">
 
-您还可以使用[SQLite Viewer](https://inloop.github.io/sqlite-viewer/)或[ExtendsClass](https://extendsclass.com/sqlite-browser.html)等在线 SQLite 浏览器。
+您还可以使用 <a href="https://inloop.github.io/sqlite-viewer/" class="external-link" target="_blank">SQLite Viewer</a> 或 <a href="https://extendsclass.com/sqlite-browser.html" class="external-link" target="_blank">ExtendsClass</a> 等在线 SQLite 浏览器。
 
 ## 中间件替代数据库会话
 
@@ -744,7 +767,7 @@ $ uvicorn sql_app.main:app --reload
 
 ### 关于`request.state`
 
-`request.state`是每个`Request`对象的属性。它用于存储附加到请求本身的任意对象，例如本例中的数据库会话。您可以在[Starlette 的关于`Request`state](https://www.starlette.io/requests/#other-state)的文档中了解更多信息。
+`request.state`是每个`Request`对象的属性。它用于存储附加到请求本身的任意对象，例如本例中的数据库会话。您可以在 <a href="https://www.starlette.io/requests/#other-state" class="external-link" target="_blank">Starlette 的关于`Request` 状态的文档</a>中了解更多信息。
 
 对于这种情况下，它帮助我们确保在所有请求中使用单个数据库会话，然后关闭（在中间件中）。
 

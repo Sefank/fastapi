@@ -49,9 +49,41 @@ OAuth2 规定在使用（我们打算用的）「password 流程」时，客户�
 
 首先，导入 `OAuth2PasswordRequestForm`，然后在 `token` 的*路径操作*中通过 `Depends` 将其作为依赖项使用。
 
-```Python hl_lines="4  76"
-{!../../../docs_src/security/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="4  78"
+    {!> ../../../docs_src/security/tutorial003_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="4  78"
+    {!> ../../../docs_src/security/tutorial003_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="4  79"
+    {!> ../../../docs_src/security/tutorial003_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="2  74"
+    {!> ../../../docs_src/security/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4  76"
+    {!> ../../../docs_src/security/tutorial003.py!}
+    ```
 
 `OAuth2PasswordRequestForm` 是一个类依赖项，声明了如下的请求表单：
 
@@ -90,9 +122,41 @@ OAuth2 规定在使用（我们打算用的）「password 流程」时，客户�
 
 对于这个错误，我们使用 `HTTPException` 异常：
 
-```Python hl_lines="3  77-79"
-{!../../../docs_src/security/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="3  79-81"
+    {!> ../../../docs_src/security/tutorial003_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="3  79-81"
+    {!> ../../../docs_src/security/tutorial003_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="3  80-82"
+    {!> ../../../docs_src/security/tutorial003_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1  75-77"
+    {!> ../../../docs_src/security/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="3  77-79"
+    {!> ../../../docs_src/security/tutorial003.py!}
+    ```
 
 ### 校验密码
 
@@ -118,9 +182,41 @@ OAuth2 规定在使用（我们打算用的）「password 流程」时，客户�
 
 因此，小偷将无法尝试在另一个系统中使用这些相同的密码（由于许多用户在任何地方都使用相同的密码，因此这很危险）。
 
-```Python hl_lines="80-83"
-{!../../../docs_src/security/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="82-85"
+    {!> ../../../docs_src/security/tutorial003_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="82-85"
+    {!> ../../../docs_src/security/tutorial003_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="83-86"
+    {!> ../../../docs_src/security/tutorial003_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="78-81"
+    {!> ../../../docs_src/security/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="80-83"
+    {!> ../../../docs_src/security/tutorial003.py!}
+    ```
 
 #### 关于 `**user_dict`
 
@@ -156,9 +252,41 @@ UserInDB(
 
     但现在，让我们仅关注我们需要的特定细节。
 
-```Python hl_lines="85"
-{!../../../docs_src/security/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="87"
+    {!> ../../../docs_src/security/tutorial003_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="87"
+    {!> ../../../docs_src/security/tutorial003_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="88"
+    {!> ../../../docs_src/security/tutorial003_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="83"
+    {!> ../../../docs_src/security/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="85"
+    {!> ../../../docs_src/security/tutorial003.py!}
+    ```
 
 !!! tip
     根据规范，你应该像本示例一样，返回一个带有 `access_token` 和 `token_type` 的 JSON。
@@ -181,9 +309,41 @@ UserInDB(
 
 因此，在我们的端点中，只有当用户存在，身份认证通过且处于启用状态时，我们才能获得该用户：
 
-```Python hl_lines="58-67  69-72  90"
-{!../../../docs_src/security/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="58-66  69-74  94"
+    {!> ../../../docs_src/security/tutorial003_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="58-66  69-74  94"
+    {!> ../../../docs_src/security/tutorial003_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="59-67  70-75  95"
+    {!> ../../../docs_src/security/tutorial003_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="56-64  67-70  88"
+    {!> ../../../docs_src/security/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="58-66  69-72  90"
+    {!> ../../../docs_src/security/tutorial003.py!}
+    ```
 
 !!! info
     我们在此处返回的值为 `Bearer` 的额外响应头 `WWW-Authenticate` 也是规范的一部分。
@@ -214,11 +374,11 @@ UserInDB(
 
 密码：`secret`
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/security/image04.png">
+<img src="/img/tutorial/security/image04.png">
 
 在系统中进行身份认证后，你将看到：
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/security/image05.png">
+<img src="/img/tutorial/security/image05.png">
 
 ### 获取本人的用户数据
 
@@ -236,7 +396,7 @@ UserInDB(
 }
 ```
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/security/image06.png">
+<img src="/img/tutorial/security/image06.png">
 
 如果你点击锁定图标并注销，然后再次尝试同一操作，则会得到 HTTP 401 错误：
 

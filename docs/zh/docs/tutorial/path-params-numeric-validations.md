@@ -4,11 +4,50 @@
 
 ## 导入 Path
 
-首先，从 `fastapi` 导入 `Path`：
+首先，从 `fastapi` 导入 `Path`，and import `Annotated`：
 
-```Python hl_lines="1"
-{!../../../docs_src/path_params_numeric_validations/tutorial001.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="1  3"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="1  3"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="3-4"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial001.py!}
+    ```
+
+!!! info
+    FastAPI added support for `Annotated` (and started recommending it) in version 0.95.0.
+
+    If you have an older version, you would get errors when trying to use `Annotated`.
+
+    Make sure you [Upgrade the FastAPI version](../deployment/versions.md#upgrading-the-fastapi-versions){.internal-link target=_blank} to at least 0.95.1 before using `Annotated`.
 
 ## 声明元数据
 
@@ -16,9 +55,41 @@
 
 例如，要声明路径参数 `item_id`的 `title` 元数据值，你可以输入：
 
-```Python hl_lines="8"
-{!../../../docs_src/path_params_numeric_validations/tutorial001.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial001.py!}
+    ```
 
 !!! note
     路径参数总是必需的，因为它必须是路径的一部分。
@@ -29,11 +100,14 @@
 
 ## 按需对参数排序
 
+!!! tip
+    This is probably not as important or necessary if you use `Annotated`.
+
 假设你想要声明一个必需的 `str` 类型查询参数 `q`。
 
 而且你不需要为该参数声明任何其他内容，所以实际上你并不需要使用 `Query`。
 
-但是你仍然需要使用 `Path` 来声明路径参数 `item_id`。
+但是你仍然需要使用 `Path` 来声明路径参数 `item_id`。And you don't want to use `Annotated` for some reason.
 
 如果你将带有「默认值」的参数放在没有「默认值」的参数之前，Python 将会报错。
 
@@ -43,13 +117,44 @@
 
 因此，你可以将函数声明为：
 
-```Python hl_lines="7"
-{!../../../docs_src/path_params_numeric_validations/tutorial002.py!}
-```
+=== "Python 3.6 non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial002.py!}
+    ```
+
+But have in mind that if you use `Annotated`, you won't have this problem, it won't matter as you're not using the function parameter default values for `Query()` or `Path()`.
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial002_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial002_an.py!}
+    ```
 
 ## 按需对参数排序的技巧
 
-如果你想不使用 `Query` 声明没有默认值的查询参数 `q`，同时使用 `Path` 声明路径参数 `item_id`，并使它们的顺序与上面不同，Python 对此有一些特殊的语法。
+!!! tip
+    This is probably not as important or necessary if you use `Annotated`.
+
+Here's a **small trick** that can be handy, but you won't need it often.
+
+如果你想：
+
+* 不使用 `Query` 声明没有默认值的查询参数 `q`
+* 使用 `Path` 声明路径参数 `item_id`
+* 使它们的顺序与上面不同
+* 不使用 `Annotated`
+
+...Python 对此有一些特殊的语法。
 
 传递 `*` 作为函数的第一个参数。
 
@@ -59,15 +164,48 @@ Python 不会对该 `*` 做任何事情，但是它将知道之后的所有参�
 {!../../../docs_src/path_params_numeric_validations/tutorial003.py!}
 ```
 
+### Better with `Annotated`
+
+Have in mind that if you use `Annotated`, as you are not using function parameter default values, you won't have this problem, and you probably won't need to use `*`.
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial003_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial003_an.py!}
+    ```
+
 ## 数值校验：大于等于
 
-使用 `Query` 和 `Path`（以及你将在后面看到的其他类）可以声明字符串约束，但也可以声明数值约束。
+使用 `Query` 和 `Path`（以及你将在后面看到的其他类）可以声明数值约束。
 
 像下面这样，添加 `ge=1` 后，`item_id` 将必须是一个大于（`g`reater than）或等于（`e`qual）`1` 的整数。
 
-```Python hl_lines="8"
-{!../../../docs_src/path_params_numeric_validations/tutorial004.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial004_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial004_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial004.py!}
+    ```
 
 ## 数值校验：大于和小于等于
 
@@ -76,9 +214,26 @@ Python 不会对该 `*` 做任何事情，但是它将知道之后的所有参�
 * `gt`：大于（`g`reater `t`han）
 * `le`：小于等于（`l`ess than or `e`qual）
 
-```Python hl_lines="9"
-{!../../../docs_src/path_params_numeric_validations/tutorial005.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial005_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial005_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial005.py!}
+    ```
 
 ## 数值校验：浮点数、大于和小于
 
@@ -90,9 +245,26 @@ Python 不会对该 `*` 做任何事情，但是它将知道之后的所有参�
 
 对于 <abbr title="less than"><code>lt</code></abbr> 也是一样的。
 
-```Python hl_lines="11"
-{!../../../docs_src/path_params_numeric_validations/tutorial006.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="13"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial006_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial006_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/path_params_numeric_validations/tutorial006.py!}
+    ```
 
 ## 总结
 
@@ -106,9 +278,9 @@ Python 不会对该 `*` 做任何事情，但是它将知道之后的所有参�
 * `le`：小于等于（`l`ess than or `e`qual）
 
 !!! info
-    `Query`、`Path` 以及你后面会看到的其他类继承自一个共同的 `Param` 类（不需要直接使用它）。
+    `Query`、`Path` 以及你后面会看到的其他类都共同继承自 `Param` 类。
 
-    而且它们都共享相同的所有你已看到并用于添加额外校验和元数据的参数。
+    所有的这些类，在（你所见过的）另行添加的校验以及元数据方面，都共享相同的参数。
 
 !!! note "技术细节"
     当你从 `fastapi` 导入 `Query`、`Path` 和其他同类对象时，它们实际上是函数。

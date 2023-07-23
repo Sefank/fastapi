@@ -3,48 +3,100 @@
 *路径操作装饰器*支持多种配置参数。
 
 !!! warning "警告"
-
     注意：以下参数应直接传递给**路径操作装饰器**，不能传递给*路径操作函数*。
 
-## `status_code` 状态码
+## 响应的状态码
 
-`status_code` 用于定义*路径操作*响应中的 HTTP 状态码。
+可以为*路径操作*的响应定义（HTTP） `status_code`（状态码）。
 
 可以直接传递 `int` 代码， 比如 `404`。
 
 如果记不住数字码的涵义，也可以用 `status` 的快捷常量：
 
-```Python hl_lines="3  17"
-{!../../../docs_src/path_operation_configuration/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-状态码在响应中使用，并会被添加到 OpenAPI 概图。
+    ```Python hl_lines="1  15"
+    {!> ../../../docs_src/path_operation_configuration/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="3  17"
+    {!> ../../../docs_src/path_operation_configuration/tutorial001_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="3  17"
+    {!> ../../../docs_src/path_operation_configuration/tutorial001.py!}
+    ```
+
+状态码在响应中使用，并会被添加到 OpenAPI 模式中。
 
 !!! note "技术细节"
-
     也可以使用 `from starlette import status` 导入状态码。
 
-    **FastAPI** 的`fastapi.status` 和 `starlette.status` 一样，只是快捷方式。实际上，`fastapi.status` 直接继承自 Starlette。
+    **FastAPI** 的 `fastapi.status` 和 `starlette.status` 一样，只是快捷方式。实际上，`fastapi.status` 直接继承自 Starlette。
 
-## `tags` 参数
+## 标签
 
-`tags` 参数的值是由 `str` 组成的 `list` （一般只有一个 `str` ），`tags` 用于为*路径操作*添加标签：
+可以为你的 *路径操作* 添加标签（tag），只需要传入 `tags` 参数即可，`tags` 参数的值应当是由 `str` 组成的 `list`（通常只有一个 `str`）。
 
-```Python hl_lines="17  22  27"
-{!../../../docs_src/path_operation_configuration/tutorial002.py!}
-```
+=== "Python 3.10+"
 
-OpenAPI 概图会自动添加标签，供 API 文档接口使用：
+    ```Python hl_lines="15  20  25"
+    {!> ../../../docs_src/path_operation_configuration/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="17  22  27"
+    {!> ../../../docs_src/path_operation_configuration/tutorial002_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="17  22  27"
+    {!> ../../../docs_src/path_operation_configuration/tutorial002.py!}
+    ```
+
+OpenAPI 模式会自动添加标签，供 API 文档接口使用：
 
 <img src="/img/tutorial/path-operation-configuration/image01.png">
+
+### Tags with Enums
+
+If you have a big application, you might end up accumulating **several tags**, and you would want to make sure you always use the **same tag** for related *path operations*.
+
+In these cases, it could make sense to store the tags in an `Enum`.
+
+**FastAPI** supports that the same way as with plain strings:
+
+```Python hl_lines="1  8-10  13  18"
+{!../../../docs_src/path_operation_configuration/tutorial002b.py!}
+```
 
 ## `summary` 和 `description` 参数
 
 路径装饰器还支持 `summary` 和 `description` 这两个参数：
 
-```Python hl_lines="20-21"
-{!../../../docs_src/path_operation_configuration/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="18-19"
+    {!> ../../../docs_src/path_operation_configuration/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="20-21"
+    {!> ../../../docs_src/path_operation_configuration/tutorial003_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20-21"
+    {!> ../../../docs_src/path_operation_configuration/tutorial003.py!}
+    ```
 
 ## 文档字符串（`docstring`）
 
@@ -52,9 +104,23 @@ OpenAPI 概图会自动添加标签，供 API 文档接口使用：
 
 文档字符串支持 <a href="https://en.wikipedia.org/wiki/Markdown" class="external-link" target="_blank">Markdown</a>，能正确解析和显示 Markdown 的内容，但要注意文档字符串的缩进。
 
-```Python hl_lines="19-27"
-{!../../../docs_src/path_operation_configuration/tutorial004.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="17-25"
+    {!> ../../../docs_src/path_operation_configuration/tutorial004_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="19-27"
+    {!> ../../../docs_src/path_operation_configuration/tutorial004_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="19-27"
+    {!> ../../../docs_src/path_operation_configuration/tutorial004.py!}
+    ```
 
 下图为 Markdown 文本在 API 文档中的显示效果：
 
@@ -64,16 +130,28 @@ OpenAPI 概图会自动添加标签，供 API 文档接口使用：
 
 `response_description` 参数用于定义响应的描述说明：
 
-```Python hl_lines="21"
-{!../../../docs_src/path_operation_configuration/tutorial005.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/path_operation_configuration/tutorial005_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="21"
+    {!> ../../../docs_src/path_operation_configuration/tutorial005_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="21"
+    {!> ../../../docs_src/path_operation_configuration/tutorial005.py!}
+    ```
 
 !!! info "说明"
-
     注意，`response_description` 只用于描述响应，`description` 一般则用于描述*路径操作*。
 
 !!! check "检查"
-
     OpenAPI 规定每个*路径操作*都要有响应描述。
 
     如果没有定义响应描述，**FastAPI** 则自动生成内容为 "Successful response" 的响应描述。

@@ -6,30 +6,47 @@
 
 你可以将一个属性定义为拥有子元素的类型。例如 Python `list`：
 
-```Python hl_lines="12"
-{!../../../docs_src/body_nested_models/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-这将使 `tags` 成为一个由元素组成的列表。不过它没有声明每个元素的类型。
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/body_nested_models/tutorial001_py310.py!}
+    ```
 
-## 具有子类型的 List 字段
+=== "Python 3.6+"
+
+    ```Python hl_lines="14"
+    {!> ../../../docs_src/body_nested_models/tutorial001.py!}
+    ```
+
+这将使 `tags` 成为一个列表。不过它没有声明列表中元素的类型。
+
+## 带类型参数的 List 字段
 
 但是 Python 有一种特定的方法来声明具有子类型的列表：
 
 ### 从 typing 导入 `List`
 
-首先，从 Python 的标准库 `typing` 模块中导入 `List`：
+In Python 3.9 and above you can use the standard `list` to declare these type annotations as we'll see below. 💡
+
+But in Python versions before 3.9 (3.6 and above), you first need to 从 Python 的标准库 `typing` 模块中导入 `List`：
 
 ```Python hl_lines="1"
-{!../../../docs_src/body_nested_models/tutorial002.py!}
+{!> ../../../docs_src/body_nested_models/tutorial002.py!}
 ```
 
-### 声明具有子类型的 List
+### 声明带类型参数的 `list`
 
-要声明具有子类型的类型，例如 `list`、`dict`、`tuple`：
+要声明带类型参数（内部类型）的类型，例如 `list`、`dict`、`tuple`：
 
-* 从 `typing` 模块导入它们
-* 使用方括号 `[` 和 `]` 将子类型作为「类型参数」传入
+* If you are in a Python version lower than 3.9, import their equivalent version from the `typing` module
+* 使用方括号 `[` 和 `]` 将内部类型作为「类型参数」传入
+In Python 3.9 it would be:
+
+```Python
+my_list: list[str]
+```
+
+In versions of Python before 3.9, it would be:
 
 ```Python
 from typing import List
@@ -39,13 +56,27 @@ my_list: List[str]
 
 这完全是用于类型声明的标准 Python 语法。
 
-对具有子类型的模型属性也使用相同的标准语法。
+对带内部类型的模型属性也使用相同的标准语法。
 
 因此，在我们的示例中，我们可以将 `tags` 明确地指定为一个「字符串列表」：
 
-```Python hl_lines="14"
-{!../../../docs_src/body_nested_models/tutorial002.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/body_nested_models/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="14"
+    {!> ../../../docs_src/body_nested_models/tutorial002_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="14"
+    {!> ../../../docs_src/body_nested_models/tutorial002.py!}
+    ```
 
 ## Set 类型
 
@@ -53,11 +84,25 @@ my_list: List[str]
 
 Python 具有一种特殊的数据类型来保存一组唯一的元素，即 `set`。
 
-然后我们可以导入 `Set` 并将 `tag` 声明为一个由 `str` 组成的 `set`：
+然后我们可以将 `tag` 声明为一个由 `str` 组成的 `set`：
 
-```Python hl_lines="1 14"
-{!../../../docs_src/body_nested_models/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/body_nested_models/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="14"
+    {!> ../../../docs_src/body_nested_models/tutorial003_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  14"
+    {!> ../../../docs_src/body_nested_models/tutorial003.py!}
+    ```
 
 这样，即使你收到带有重复数据的请求，这些数据也会被转换为一组唯一项。
 
@@ -71,7 +116,7 @@ Pydantic 模型的每个属性都具有类型。
 
 但是这个类型本身可以是另一个 Pydantic 模型。
 
-因此，你可以声明拥有特定属性名称、类型和校验的深度嵌套的 JSON 对象。
+因此，你可以声明拥有特定属性名称、类型和校验的深度嵌套的 JSON “对象”。
 
 上述这些都可以任意的嵌套。
 
@@ -79,17 +124,45 @@ Pydantic 模型的每个属性都具有类型。
 
 例如，我们可以定义一个 `Image` 模型：
 
-```Python hl_lines="9 10 11"
-{!../../../docs_src/body_nested_models/tutorial004.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7-9"
+    {!> ../../../docs_src/body_nested_models/tutorial004_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="9-11"
+    {!> ../../../docs_src/body_nested_models/tutorial004_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9-11"
+    {!> ../../../docs_src/body_nested_models/tutorial004.py!}
+    ```
 
 ### 将子模型用作类型
 
 然后我们可以将其用作一个属性的类型：
 
-```Python hl_lines="20"
-{!../../../docs_src/body_nested_models/tutorial004.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="18"
+    {!> ../../../docs_src/body_nested_models/tutorial004_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/body_nested_models/tutorial004_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/body_nested_models/tutorial004.py!}
+    ```
 
 这意味着 **FastAPI** 将期望类似于以下内容的请求体：
 
@@ -122,9 +195,23 @@ Pydantic 模型的每个属性都具有类型。
 
 例如，在 `Image` 模型中我们有一个 `url` 字段，我们可以把它声明为 Pydantic 的 `HttpUrl`，而不是 `str`：
 
-```Python hl_lines="4 10"
-{!../../../docs_src/body_nested_models/tutorial005.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="2  8"
+    {!> ../../../docs_src/body_nested_models/tutorial005_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="4  10"
+    {!> ../../../docs_src/body_nested_models/tutorial005_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="4  10"
+    {!> ../../../docs_src/body_nested_models/tutorial005.py!}
+    ```
 
 该字符串将被检查是否为有效的 URL，并在 JSON Schema / OpenAPI 文档中进行记录。
 
@@ -132,9 +219,23 @@ Pydantic 模型的每个属性都具有类型。
 
 你还可以将 Pydantic 模型用作 `list`、`set` 等的子类型：
 
-```Python hl_lines="20"
-{!../../../docs_src/body_nested_models/tutorial006.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="18"
+    {!> ../../../docs_src/body_nested_models/tutorial006_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/body_nested_models/tutorial006_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/body_nested_models/tutorial006.py!}
+    ```
 
 这将期望（转换，校验，记录文档等）下面这样的 JSON 请求体：
 
@@ -169,12 +270,26 @@ Pydantic 模型的每个属性都具有类型。
 
 你可以定义任意深度的嵌套模型：
 
-```Python hl_lines="9 14 20 23 27"
-{!../../../docs_src/body_nested_models/tutorial007.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7  12  18  21  25"
+    {!> ../../../docs_src/body_nested_models/tutorial007_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="9  14  20  23  27"
+    {!> ../../../docs_src/body_nested_models/tutorial007_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9  14  20  23  27"
+    {!> ../../../docs_src/body_nested_models/tutorial007.py!}
+    ```
 
 !!! info
-    请注意 `Offer` 拥有一组 `Item` 而反过来 `Item` 又是一个可选的 `Image` 列表是如何发生的。
+    请留意 `Offer` 拥有一组 `Item` 而反过来 `Item` 又是一个可选的 `Image` 列表是如何发生的。
 
 ## 纯列表请求体
 
@@ -184,11 +299,25 @@ Pydantic 模型的每个属性都具有类型。
 images: List[Image]
 ```
 
+or in Python 3.9 and above:
+
+```Python
+images: list[Image]
+```
+
 例如：
 
-```Python hl_lines="15"
-{!../../../docs_src/body_nested_models/tutorial008.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="13"
+    {!> ../../../docs_src/body_nested_models/tutorial008_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="15"
+    {!> ../../../docs_src/body_nested_models/tutorial008.py!}
+    ```
 
 ## 无处不在的编辑器支持
 
@@ -196,7 +325,7 @@ images: List[Image]
 
 即使是列表中的元素：
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/body-nested-models/image01.png">
+<img src="/img/tutorial/body-nested-models/image01.png">
 
 如果你直接使用 `dict` 而不是 Pydantic 模型，那你将无法获得这种编辑器支持。
 
@@ -218,9 +347,17 @@ images: List[Image]
 
 在下面的例子中，你将接受任意键为 `int` 类型并且值为 `float` 类型的 `dict`：
 
-```Python hl_lines="15"
-{!../../../docs_src/body_nested_models/tutorial009.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/body_nested_models/tutorial009_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/body_nested_models/tutorial009.py!}
+    ```
 
 !!! tip
     请记住 JSON 仅支持将 `str` 作为键。

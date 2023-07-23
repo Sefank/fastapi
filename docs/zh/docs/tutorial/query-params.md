@@ -63,9 +63,17 @@ http://127.0.0.1:8000/items/?skip=20
 
 通过同样的方式，你可以将它们的默认值设置为 `None` 来声明可选查询参数：
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params/tutorial002.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/query_params/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params/tutorial002.py!}
+    ```
 
 在这个例子中，函数参数 `q` 将是可选的，并且默认值为 `None`。
 
@@ -76,9 +84,17 @@ http://127.0.0.1:8000/items/?skip=20
 
 你还可以声明 `bool` 类型，它们将被自动转换：
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/query_params/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params/tutorial003.py!}
+    ```
 
 这个例子中，如果你访问：
 
@@ -121,9 +137,17 @@ http://127.0.0.1:8000/items/foo?short=yes
 
 它们将通过名称被检测到：
 
-```Python hl_lines="6  8"
-{!../../../docs_src/query_params/tutorial004.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="6  8"
+    {!> ../../../docs_src/query_params/tutorial004_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="8  10"
+    {!> ../../../docs_src/query_params/tutorial004.py!}
+    ```
 
 ## 必需查询参数
 
@@ -179,9 +203,17 @@ http://127.0.0.1:8000/items/foo-item?needy=sooooneedy
 
 当然，你也可以定义一些参数为必需的，一些具有默认值，而某些则完全是可选的：
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params/tutorial006.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/query_params/tutorial006_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params/tutorial006.py!}
+    ```
 
 在这个例子中，有3个查询参数：
 

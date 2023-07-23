@@ -33,7 +33,7 @@ JWT 字符串没有加密，任何人都能用它恢复原始信息。
 <div class="termy">
 
 ```console
-$ pip install python-jose[cryptography]
+$ pip install "python-jose[cryptography]"
 
 ---> 100%
 ```
@@ -45,7 +45,6 @@ $ pip install python-jose[cryptography]
 本教程推荐的后端是：<a href="https://cryptography.io/" class="external-link" target="_blank">pyca/cryptography</a>。
 
 !!! tip "提示"
-
     本教程以前使用 <a href="https://pyjwt.readthedocs.io/" class="external-link" target="_blank">PyJWT</a>。
 
     但后来换成了 Python-jose，因为 Python-jose 支持 PyJWT 的所有功能，还支持与其它工具集成时可能会用到的一些其它功能。
@@ -66,7 +65,7 @@ $ pip install python-jose[cryptography]
 
 ## 安装 `passlib`
 
-Passlib 是处理密码哈希的 Python 包。
+PassLib 是处理密码哈希的 Python 包。
 
 它支持很多安全哈希算法及配套工具。
 
@@ -77,7 +76,7 @@ Passlib 是处理密码哈希的 Python 包。
 <div class="termy">
 
 ```console
-$ pip install passlib[bcrypt]
+$ pip install "passlib[bcrypt]"
 
 ---> 100%
 ```
@@ -85,7 +84,6 @@ $ pip install passlib[bcrypt]
 </div>
 
 !!! tip "提示"
-
     `passlib` 甚至可以读取 Django、Flask 的安全插件等工具创建的密码。
 
     例如，把 Django 应用的数据共享给 FastAPI 应用的数据库。或利用同一个数据库，可以逐步把应用从 Django 迁移到 FastAPI。
@@ -99,7 +97,6 @@ $ pip install passlib[bcrypt]
 创建用于密码哈希和身份校验的 PassLib **上下文**。
 
 !!! tip "提示"
-
     PassLib 上下文还支持使用不同哈希算法的功能，包括只能校验的已弃用旧算法等。
 
     例如，用它读取和校验其它系统（如 Django）生成的密码，但要使用其它算法，如 Bcrypt，生成新的哈希密码。
@@ -112,12 +109,43 @@ $ pip install passlib[bcrypt]
 
 第三个函数用于身份验证，并返回用户。
 
-```Python hl_lines="7  48  55-56  59-60  69-75"
-{!../../../docs_src/security/tutorial004.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7  48  55-56  59-60  69-75"
+    {!> ../../../docs_src/security/tutorial004_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="7  48  55-56  59-60  69-75"
+    {!> ../../../docs_src/security/tutorial004_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="7  49  56-57  60-61  70-76"
+    {!> ../../../docs_src/security/tutorial004_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="6  47  54-55  58-59  68-74"
+    {!> ../../../docs_src/security/tutorial004_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7  48  55-56  59-60  69-75"
+    {!> ../../../docs_src/security/tutorial004.py!}
+    ```
 
 !!! note "笔记"
-
     查看新的（伪）数据库 `fake_users_db`，就能看到哈希后的密码：`"$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW"`。
 
 ## 处理 JWT 令牌
@@ -148,9 +176,41 @@ $ openssl rand -hex 32
 
 创建生成新的访问令牌的工具函数。
 
-```Python hl_lines="6  12-14  28-30  78-86"
-{!../../../docs_src/security/tutorial004.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="6  12-14  28-30  78-86"
+    {!> ../../../docs_src/security/tutorial004_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="6  12-14  28-30  78-86"
+    {!> ../../../docs_src/security/tutorial004_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="6  13-15  29-31 79-87"
+    {!> ../../../docs_src/security/tutorial004_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="5  11-13  27-29  77-85"
+    {!> ../../../docs_src/security/tutorial004_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="6  12-14  28-30  78-86"
+    {!> ../../../docs_src/security/tutorial004.py!}
+    ```
 
 ## 更新依赖项
 
@@ -160,9 +220,41 @@ $ openssl rand -hex 32
 
 如果令牌无效，则直接返回 HTTP 错误。
 
-```Python hl_lines="89-106"
-{!../../../docs_src/security/tutorial004.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="89-106"
+    {!> ../../../docs_src/security/tutorial004_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="89-106"
+    {!> ../../../docs_src/security/tutorial004_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="90-107"
+    {!> ../../../docs_src/security/tutorial004_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="88-105"
+    {!> ../../../docs_src/security/tutorial004_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="89-106"
+    {!> ../../../docs_src/security/tutorial004.py!}
+    ```
 
 ## 更新 `/token` *路径操作*
 
@@ -170,9 +262,41 @@ $ openssl rand -hex 32
 
 创建并返回真正的 JWT 访问令牌。
 
-```Python hl_lines="115-128"
-{!../../../docs_src/security/tutorial004.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="117-132"
+    {!> ../../../docs_src/security/tutorial004_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="117-132"
+    {!> ../../../docs_src/security/tutorial004_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="118-133"
+    {!> ../../../docs_src/security/tutorial004_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="114-127"
+    {!> ../../../docs_src/security/tutorial004_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="115-128"
+    {!> ../../../docs_src/security/tutorial004.py!}
+    ```
 
 ### JWT `sub` 的技术细节
 
@@ -202,19 +326,19 @@ JWT 规范还包括 `sub` 键，值是令牌的主题。
 
 可以看到如下用户界面：
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/security/image07.png">
+<img src="/img/tutorial/security/image07.png">
 
 用与上一章同样的方式实现应用授权。
 
 使用如下凭证：
 
-用户名: `johndoe` 密码: `secret`
+用户名: `johndoe`
+密码: `secret`
 
 !!! check "检查"
-
     注意，代码中没有明文密码**`secret`**，只保存了它的哈希值。
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/security/image08.png">
+<img src="/img/tutorial/security/image08.png">
 
 调用 `/users/me/` 端点，收到下面的响应：
 
@@ -227,14 +351,13 @@ JWT 规范还包括 `sub` 键，值是令牌的主题。
 }
 ```
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/security/image09.png">
+<img src="/img/tutorial/security/image09.png">
 
-打开浏览器的开发者工具，查看数据是怎么发送的，而且数据里只包含了令牌，只有验证用户的第一个请求才发送密码，并获取访问令牌，但之后不会再发送密码：
+打开浏览器的开发者工具，查看发送的数据如何只包括令牌，密码只在第一个请求中发送，以验证用户并获得访问令牌，之后便不会再发送密码：
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/security/image10.png">
+<img src="/img/tutorial/security/image10.png">
 
 !!! note "笔记"
-
     注意，请求中 `Authorization` 响应头的值以 `Bearer` 开头。
 
 ## `scopes` 高级用法

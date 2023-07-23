@@ -31,9 +31,41 @@ FastAPI 提供了简单易用，但功能强大的**<abbr title="也称为组件
 
 依赖项就是一个函数，且可以使用与*路径操作函数*相同的参数：
 
-```Python hl_lines="8-11"
-{!../../../docs_src/dependencies/tutorial001.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="8-9"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="8-11"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9-12"
+    {!> ../../../docs_src/dependencies/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="6-7"
+    {!> ../../../docs_src/dependencies/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="8-11"
+    {!> ../../../docs_src/dependencies/tutorial001.py!}
+    ```
 
 大功告成。
 
@@ -53,19 +85,90 @@ FastAPI 提供了简单易用，但功能强大的**<abbr title="也称为组件
 
 然后，依赖项函数返回包含这些值的 `dict`。
 
+!!! info
+    FastAPI added support for `Annotated` (and started recommending it) in version 0.95.0.
+
+    If you have an older version, you would get errors when trying to use `Annotated`.
+
+    Make sure you [Upgrade the FastAPI version](../../deployment/versions.md#upgrading-the-fastapi-versions){.internal-link target=_blank} to at least 0.95.1 before using `Annotated`.
+
 ### 导入 `Depends`
 
-```Python hl_lines="3"
-{!../../../docs_src/dependencies/tutorial001.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/dependencies/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/dependencies/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/dependencies/tutorial001.py!}
+    ```
 
 ### 声明依赖项
 
 与在*路径操作函数*参数中使用 `Body`、`Query` 的方式相同，声明依赖项需要使用 `Depends` 和一个新的参数：
 
-```Python hl_lines="15  20"
-{!../../../docs_src/dependencies/tutorial001.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="13  18"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="15  20"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="16  21"
+    {!> ../../../docs_src/dependencies/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="11  16"
+    {!> ../../../docs_src/dependencies/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="15  20"
+    {!> ../../../docs_src/dependencies/tutorial001.py!}
+    ```
 
 虽然，在路径操作函数的参数中使用 `Depends` 的方式与 `Body`、`Query` 相同，但 `Depends` 的工作方式略有不同。
 
@@ -73,10 +176,11 @@ FastAPI 提供了简单易用，但功能强大的**<abbr title="也称为组件
 
 且该参数必须是可调用对象，比如函数。
 
+You **don't call it** directly (don't add the parenthesis at the end), you just pass it as a parameter to `Depends()`.
+
 该函数接收的参数和*路径操作函数*的参数一样。
 
 !!! tip "提示"
-
     下一章介绍，除了函数还有哪些「对象」可以用作依赖项。
 
 接收到新的请求时，**FastAPI** 执行如下操作：
@@ -99,10 +203,48 @@ common_parameters --> read_users
 这样，只编写一次代码，**FastAPI** 就可以为多个*路径操作*共享这段代码 。
 
 !!! check "检查"
-
     注意，无需创建专门的类，并将之传递给 **FastAPI** 以进行「注册」或执行类似的操作。
 
     只要把它传递给 `Depends`，**FastAPI** 就知道该如何执行后续操作。
+
+## Share `Annotated` dependencies
+
+In the examples above, you see that there's a tiny bit of **code duplication**.
+
+When you need to use the `common_parameters()` dependency, you have to write the whole parameter with the type annotation and `Depends()`:
+
+```Python
+commons: Annotated[dict, Depends(common_parameters)]
+```
+
+But because we are using `Annotated`, we can store that `Annotated` value in a variable and use it in multiple places:
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="12  16  21"
+    {!> ../../../docs_src/dependencies/tutorial001_02_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="14  18  23"
+    {!> ../../../docs_src/dependencies/tutorial001_02_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="15  19  24"
+    {!> ../../../docs_src/dependencies/tutorial001_02_an.py!}
+    ```
+
+!!! tip
+    This is just standard Python, it's called a "type alias", it's actually not specific to **FastAPI**.
+
+    But because **FastAPI** is based on the Python standards, including `Annotated`, you can use this trick in your code. 😎
+
+The dependencies will keep working as expected, and the **best part** is that the **type information will be preserved**, which means that your editor will be able to keep providing you with **autocompletion**, **inline errors**, etc. The same for other tools like `mypy`.
+
+This will be especially useful when you use it in a **large code base** where you use **the same dependencies** over and over again in **many *path operations***.
 
 ## 要不要使用 `async`？
 
@@ -115,7 +257,6 @@ common_parameters --> read_users
 上述这些操作都是可行的，**FastAPI** 知道该怎么处理。
 
 !!! note "笔记"
-
     如里不了解异步，请参阅[异步：*“着急了？”*](../../async.md){.internal-link target=_blank} 一章中 `async` 和 `await` 的内容。
 
 ## 与 OpenAPI 集成

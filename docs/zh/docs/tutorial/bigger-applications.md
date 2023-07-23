@@ -112,9 +112,26 @@
 
 现在我们将使用一个简单的依赖项来读取一个自定义的 `X-Token` 请求首部：
 
-```Python hl_lines="1  4-6"
-{!../../../docs_src/bigger_applications/app/dependencies.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="3  6-8"
+    {!> ../../../docs_src/bigger_applications/app_an_py39/dependencies.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  5-7"
+    {!> ../../../docs_src/bigger_applications/app_an/dependencies.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1  4-6"
+    {!> ../../../docs_src/bigger_applications/app/dependencies.py!}
+    ```
 
 !!! tip
     我们正在使用虚构的请求首部来简化此示例。
@@ -252,7 +269,7 @@ from ...dependencies import get_token_header
 * 从该模块（`app/routers/items.py` 文件）所在的同一个包（`app/routers/` 目录）开始...
 * 跳转到其父包（`app/` 目录）...
 * 然后跳转到该包的父包（该父包并不存在，`app` 已经是最顶层的包 😱）...
-* 在该父包中，找到 `dependencies` 模块（位于 `app/` 更上一级目录中的 `dependencies.py` 文件）...
+* 在该父包中，找到 `dependencies` 模块（位于 `app/dependencies.py` 文件）...
 * 然后从中导入函数 `get_token_header`。
 
 这将引用 `app/` 的往上一级，带有其自己的 `__init __.py` 等文件的某个包。但是我们并没有这个包。因此，这将在我们的示例中引发错误。🚨

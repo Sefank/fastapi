@@ -6,9 +6,26 @@
 
 这样一来，就可以为所有*路径操作*应用该依赖项：
 
-```Python hl_lines="15"
-{!../../../docs_src/dependencies/tutorial012.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="16"
+    {!> ../../../docs_src/dependencies/tutorial012_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="16"
+    {!> ../../../docs_src/dependencies/tutorial012_an.py!}
+    ```
+
+=== "Python 3.6 non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="15"
+    {!> ../../../docs_src/dependencies/tutorial012.py!}
+    ```
 
 [*路径装饰器依赖项*](dependencies-in-path-operation-decorators.md){.internal-link target=_blank} 一章的思路均适用于全局依赖项， 在本例中，这些依赖项可以用于应用中的所有*路径操作*。
 

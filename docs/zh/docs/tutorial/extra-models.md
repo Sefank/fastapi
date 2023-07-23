@@ -17,9 +17,17 @@
 
 下面是应该如何根据它们的密码字段以及使用位置去定义模型的大概思路：
 
-```Python hl_lines="9  11  16  22  24  29-30  33-35  40-41"
-{!../../../docs_src/extra_models/tutorial001.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7  9  14  20  22  27-28  31-33  38-39"
+    {!> ../../../docs_src/extra_models/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9  11  16  22  24  29-30  33-35  40-41"
+    {!> ../../../docs_src/extra_models/tutorial001.py!}
+    ```
 
 ### 关于 `**user_in.dict()`
 
@@ -150,9 +158,17 @@ UserInDB(
 
 这样，我们可以仅声明模型之间的差异部分（具有明文的 `password`、具有 `hashed_password` 以及不包括密码）。
 
-```Python hl_lines="9  15-16  19-20  23-24"
-{!../../../docs_src/extra_models/tutorial002.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7  13-14  17-18  21-22"
+    {!> ../../../docs_src/extra_models/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9  15-16  19-20  23-24"
+    {!> ../../../docs_src/extra_models/tutorial002.py!}
+    ```
 
 ## `Union` 或者 `anyOf`
 
@@ -162,13 +178,34 @@ UserInDB(
 
 为此，请使用标准的 Python 类型提示 <a href="https://docs.python.org/3/library/typing.html#typing.Union" class="external-link" target="_blank">`typing.Union`</a>：
 
-
 !!! note
     定义一个 <a href="https://pydantic-docs.helpmanual.io/usage/types/#unions" class="external-link" target="_blank">`Union`</a> 类型时，首先包括最详细的类型，然后是不太详细的类型。在下面的示例中，更详细的 `PlaneItem` 位于 `Union[PlaneItem，CarItem]` 中的 `CarItem` 之前。
 
-```Python hl_lines="1  14-15  18-20  33"
-{!../../../docs_src/extra_models/tutorial003.py!}
+=== "Python 3.10+"
+
+    ```Python hl_lines="1  14-15  18-20  33"
+    {!> ../../../docs_src/extra_models/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  14-15  18-20  33"
+    {!> ../../../docs_src/extra_models/tutorial003.py!}
+    ```
+
+### `Union` in Python 3.10
+
+In this example we pass `Union[PlaneItem, CarItem]` as the value of the argument `response_model`.
+
+Because we are passing it as a **value to an argument** instead of putting it in a **type annotation**, we have to use `Union` even in Python 3.10.
+
+If it was in a type annotation we could have used the vertical bar, as:
+
+```Python
+some_variable: PlaneItem | CarItem
 ```
+
+But if we put that in `response_model=PlaneItem | CarItem` we would get an error, because Python would try to perform an **invalid operation** between `PlaneItem` and `CarItem` instead of interpreting that as a type annotation.
 
 ## 模型列表
 
@@ -176,9 +213,17 @@ UserInDB(
 
 为此，请使用标准的 Python `typing.List`：
 
-```Python hl_lines="1  20"
-{!../../../docs_src/extra_models/tutorial004.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="18"
+    {!> ../../../docs_src/extra_models/tutorial004_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  20"
+    {!> ../../../docs_src/extra_models/tutorial004.py!}
+    ```
 
 ## 任意 `dict` 构成的响应
 
@@ -188,9 +233,17 @@ UserInDB(
 
 在这种情况下，你可以使用 `typing.Dict`：
 
-```Python hl_lines="1  8"
-{!../../../docs_src/extra_models/tutorial005.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="6"
+    {!> ../../../docs_src/extra_models/tutorial005_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  8"
+    {!> ../../../docs_src/extra_models/tutorial005.py!}
+    ```
 
 ## 总结
 
