@@ -9,11 +9,11 @@
 我们使用 <a href="https://pydantic-docs.helpmanual.io/" class="external-link" target="_blank">Pydantic</a> 模型来声明**请求**体，并能够获得它们所具有的所有能力和优点。
 
 !!! info
-    To send data, you should use one of: `POST` (the more common), `PUT`, `DELETE` or `PATCH`.
+    要发送数据，你必须使用下列方法之一：`POST`（较常见）、`PUT`、`DELETE` 或 `PATCH`。
 
-    Sending a body with a `GET` request has an undefined behavior in the specifications, nevertheless, it is supported by FastAPI, only for very complex/extreme use cases.
+    对 `GET` 请求发送请求体在规范中有未定义的行为，尽管如此，FastAPI 仍然支持对 `GET` 请求发送请求体，但请只在非常复杂/极端的情形下这么做。
 
-    As it is discouraged, the interactive docs with Swagger UI won't show the documentation for the body when using `GET`, and proxies in the middle might not support it.
+    由于对 `GET` 请求发送请求体不受鼓励，Swagger UI 交互式文档在使用 `GET` 时不会显示请求体的文档，此外，中间代理也可能不支持这么做。
 
 ## 导入 Pydantic 的 `BaseModel`
 
