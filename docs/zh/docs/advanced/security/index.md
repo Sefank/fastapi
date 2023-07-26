@@ -1,16 +1,16 @@
-# Advanced Security
+# 高级安全
 
-## Additional Features
+## 附加特性
 
-There are some extra features to handle security apart from the ones covered in the [Tutorial - User Guide: Security](../../tutorial/security/){.internal-link target=_blank}.
+除 [教程 - 用户指南: 安全性](../../tutorial/security/){.internal-link target=_blank} 中涵盖的功能之外，还有一些额外的功能来处理安全性.
 
-!!! tip
-    The next sections are **not necessarily "advanced"**.
+!!! !!! tip "小贴士"
+    接下来的章节 **并不一定是 "高级的"**.
 
-    And it's possible that for your use case, the solution is in one of them.
+    而且对于你的使用场景来说，解决方案很可能就在其中。
 
-## Read the Tutorial first
+## 先阅读教程
 
-The next sections assume you already read the main [Tutorial - User Guide: Security](../../tutorial/security/){.internal-link target=_blank}.
+接下来的部分假设你已经阅读了主要的 [教程 - 用户指南: 安全性](../../tutorial/security/){.internal-link target=_blank}.
 
-They are all based on the same concepts, but allow some extra functionalities.
+它们都基于相同的概念，但支持一些额外的功能.
