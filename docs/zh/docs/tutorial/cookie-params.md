@@ -1,34 +1,97 @@
-# Cookie 参数
+# Cookie Parameters
 
-你可以像定义 `Query` 参数和 `Path` 参数一样来定义 `Cookie` 参数。
+You can define Cookie parameters the same way you define `Query` and `Path` parameters.
 
-## 导入 `Cookie`
+## Import `Cookie`
 
-首先，导入 `Cookie`:
+First import `Cookie`:
 
-```Python hl_lines="3"
-{!../../../docs_src/cookie_params/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-## 声明 `Cookie` 参数
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/cookie_params/tutorial001_an_py310.py!}
+    ```
 
-声明 `Cookie` 参数的结构与声明 `Query` 参数和 `Path` 参数时相同。
+=== "Python 3.9+"
 
-第一个值是参数的默认值，同时也可以传递所有验证参数或注释参数，来校验参数：
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/cookie_params/tutorial001_an_py39.py!}
+    ```
 
+=== "Python 3.6+"
 
-```Python hl_lines="9"
-{!../../../docs_src/cookie_params/tutorial001.py!}
-```
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/cookie_params/tutorial001_an.py!}
+    ```
 
-!!! note "技术细节"
-    `Cookie` 、`Path` 、`Query`是兄弟类，它们都继承自公共的 `Param` 类
+=== "Python 3.10+ non-Annotated"
 
-    但请记住，当你从 `fastapi` 导入的 `Query`、`Path`、`Cookie` 或其他参数声明函数，这些实际上是返回特殊类的函数。
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/cookie_params/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/cookie_params/tutorial001.py!}
+    ```
+
+## Declare `Cookie` parameters
+
+Then declare the cookie parameters using the same structure as with `Path` and `Query`.
+
+The first value is the default value, you can pass all the extra validation or annotation parameters:
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/cookie_params/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/cookie_params/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/cookie_params/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/cookie_params/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/cookie_params/tutorial001.py!}
+    ```
+
+!!! note "Technical Details"
+    `Cookie` is a "sister" class of `Path` and `Query`. It also inherits from the same common `Param` class.
+
+    But remember that when you import `Query`, `Path`, `Cookie` and others from `fastapi`, those are actually functions that return special classes.
 
 !!! info
-    你需要使用 `Cookie` 来声明 cookie 参数，否则参数将会被解释为查询参数。
+    To declare cookies, you need to use `Cookie`, because otherwise the parameters would be interpreted as query parameters.
 
-## 总结
+## Recap
 
-使用 `Cookie` 声明 cookie 参数，使用方式与 `Query` 和 `Path` 类似。
+Declare cookies with `Cookie`, using the same common pattern as `Query` and `Path`.
