@@ -1,39 +1,39 @@
-# Static Files
+# 静态文件
 
-You can serve static files automatically from a directory using `StaticFiles`.
+您可以使用 `StaticFiles`从目录中自动提供静态文件。
 
-## Use `StaticFiles`
+## 使用`StaticFiles`
 
-* Import `StaticFiles`.
-* "Mount" a `StaticFiles()` instance in a specific path.
+* 导入`StaticFiles`。
+* "挂载"(Mount) 一个 `StaticFiles()` 实例到一个指定路径。
 
 ```Python hl_lines="2  6"
 {!../../../docs_src/static_files/tutorial001.py!}
 ```
 
-!!! note "Technical Details"
-    You could also use `from starlette.staticfiles import StaticFiles`.
+!!! !!! note "技术细节"
+    你也可以用 `from starlette.staticfiles import StaticFiles`。
 
-    **FastAPI** provides the same `starlette.staticfiles` as `fastapi.staticfiles` just as a convenience for you, the developer. But it actually comes directly from Starlette.
+    **FastAPI** 提供了和 `starlette.staticfiles` 相同的 `fastapi.staticfiles` ，只是为了方便你，开发者。 但它确实来自Starlette。
 
-### What is "Mounting"
+### 什么是"挂载"(Mounting)
 
-"Mounting" means adding a complete "independent" application in a specific path, that then takes care of handling all the sub-paths.
+"挂载" 表示在特定路径添加一个完全"独立的"应用，然后负责处理所有子路径。
 
-This is different from using an `APIRouter` as a mounted application is completely independent. The OpenAPI and docs from your main application won't include anything from the mounted application, etc.
+这与使用`APIRouter`不同，因为安装的应用程序是完全独立的。 OpenAPI和来自你主应用的文档不会包含已挂载应用的任何东西等等。
 
-You can read more about this in the **Advanced User Guide**.
+你可以在**高级用户指南**中了解更多。
 
-## Details
+## 细节
 
-The first `"/static"` refers to the sub-path this "sub-application" will be "mounted" on. So, any path that starts with `"/static"` will be handled by it.
+这个 "子应用" 会被 "挂载" 到第一个 `"/static"` 指向的子路径。 因此，任何以`"/static"`开头的路径都会被它处理。
 
-The `directory="static"` refers to the name of the directory that contains your static files.
+`directory="static"` 指向包含你的静态文件的目录名字。
 
-The `name="static"` gives it a name that can be used internally by **FastAPI**.
+`name="static"` 提供了一个能被**FastAPI**内部使用的名字。
 
-All these parameters can be different than "`static`", adjust them with the needs and specific details of your own application.
+所有这些参数可以不同于"`static`"，根据你应用的需要和具体细节调整它们。
 
-## More info
+## 更多信息
 
-For more details and options check <a href="https://www.starlette.io/staticfiles/" class="external-link" target="_blank">Starlette's docs about Static Files</a>.
+更多细节和选择查阅 <a href="https://www.starlette.io/staticfiles/" class="external-link" target="_blank">Starlette's docs about Static Files</a>.
