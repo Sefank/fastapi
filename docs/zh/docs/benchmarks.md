@@ -1,34 +1,34 @@
 # Benchmarks
 
-Independent TechEmpower benchmarks show **FastAPI** applications running under Uvicorn as <a href="https://www.techempower.com/benchmarks/#section=test&runid=7464e520-0dc2-473d-bd34-dbdfd7e85911&hw=ph&test=query&l=zijzen-7" class="external-link" target="_blank">one of the fastest Python frameworks available</a>, only below Starlette and Uvicorn themselves (used internally by FastAPI). (*)
+第三方机构 TechEmpower 的基准测试表明在 Uvicorn 下运行的 **FastAPI** 应用程序是 <a href="https://www.techempower.com/benchmarks/#section=test&runid=7464e520-0dc2-473d-bd34-dbdfd7e85911&hw=ph&test=query&l=zijzen-7" class="external-link" target="_blank">可用的最快的 Python 框架之一</a>，仅次于 Starlette 和 Uvicorn 本身 (由 FastAPI 内部使用）。 (*)
 
-But when checking benchmarks and comparisons you should have the following in mind.
+但是在查看基准得分和对比时，请注意以下几点。
 
-## Benchmarks and speed
+## 基准测试和速度
 
-When you check the benchmarks, it is common to see several tools of different types compared as equivalent.
+当你查看基准测试时，几个不同类型的工具被等效地做比较是很常见的情况。
 
-Specifically, to see Uvicorn, Starlette and FastAPI compared together (among many other tools).
+具体来说，是将 Uvicorn，Starlette 和 FastAPI 一起比较（在许多其它工具中）。
 
-The simpler the problem solved by the tool, the better performance it will get. And most of the benchmarks don't test the additional features provided by the tool.
+该工具解决的问题最简单，它将获得更好的性能。 而且大多数基准测试并未测试该工具提供的其他功能。
 
-The hierarchy is like:
+层次结构如下：
 
-* **Uvicorn**: an ASGI server
-    * **Starlette**: (uses Uvicorn) a web microframework
-        * **FastAPI**: (uses Starlette) an API microframework with several additional features for building APIs, with data validation, etc.
+* **Uvicorn**：ASGI服务器
+    * **Starlette**：（使用 Uvicorn）网络微框架
+        * **FastAPI**：（使用 Starlette） 具有多个附加功能的API微框架，用于构建API，进行数据验证等。
 
 * **Uvicorn**:
-    * Will have the best performance, as it doesn't have much extra code apart from the server itself.
-    * You wouldn't write an application in Uvicorn directly. That would mean that your code would have to include more or less, at least, all the code provided by Starlette (or **FastAPI**). And if you did that, your final application would have the same overhead as having used a framework and minimizing your app code and bugs.
-    * If you are comparing Uvicorn, compare it against Daphne, Hypercorn, uWSGI, etc. Application servers.
+    * 具有最佳性能，因为除了服务器本身外，它没有太多额外的代码。
+    * 您不会直接在 Uvicorn 中编写应用程序。 这意味着您的代码至少必须包含 Starlette（或 **FastAPI**）提供的代码。 如果您这样做了（即直接在 Uvicorn 中编写应用程序），最终的应用程序会和使用了框架并且最小化了应用代码和 bug 的情况具有相同的性能损耗。
+    * 如果要对比与 Uvicorn 对标的服务器，请将其与 Daphne，Hypercorn，uWSGI等应用服务器进行比较。 Application servers.
 * **Starlette**:
-    * Will have the next best performance, after Uvicorn. In fact, Starlette uses Uvicorn to run. So, it probably can only get "slower" than Uvicorn by having to execute more code.
-    * But it provides you the tools to build simple web applications, with routing based on paths, etc.
-    * If you are comparing Starlette, compare it against Sanic, Flask, Django, etc. Web frameworks (or microframeworks).
+    * 在 Uvicorn 后使用 Starlette，性能会略有下降。 实际上，Starlette 使用 Uvicorn运行。 因此，由于必须执行更多的代码，它只会比 Uvicorn 更慢。
+    * 但它为您提供了构建简单的网络程序的工具，并具有基于路径的路由等功能。
+    * 如果想对比与 Starlette 对标的开发框架，请将其与 Sanic，Flask，Django 等网络框架（或微框架）进行比较。 Web frameworks (or microframeworks).
 * **FastAPI**:
-    * The same way that Starlette uses Uvicorn and cannot be faster than it, **FastAPI** uses Starlette, so it cannot be faster than it.
-    * FastAPI provides more features on top of Starlette. Features that you almost always need when building APIs, like data validation and serialization. And by using it, you get automatic documentation for free (the automatic documentation doesn't even add overhead to running applications, it is generated on startup).
-    * If you didn't use FastAPI and used Starlette directly (or another tool, like Sanic, Flask, Responder, etc) you would have to implement all the data validation and serialization yourself. So, your final application would still have the same overhead as if it was built using FastAPI. And in many cases, this data validation and serialization is the biggest amount of code written in applications.
-    * So, by using FastAPI you are saving development time, bugs, lines of code, and you would probably get the same performance (or better) you would if you didn't use it (as you would have to implement it all in your code).
-    * If you are comparing FastAPI, compare it against a web application framework (or set of tools) that provides data validation, serialization and documentation, like Flask-apispec, NestJS, Molten, etc. Frameworks with integrated automatic data validation, serialization and documentation.
+    * 与 Starlette 使用 Uvicorn 一样，由于 **FastAPI** 使用 Starlette，因此 FastAPI 不能比 Starlette 更快。
+    * FastAPI 在 Starlette 基础上提供了更多功能。 例如在开发 API 时，所需的数据验证和序列化功能。 FastAPI 可以帮助您自动生成 API文档，（文档在应用程序启动时自动生成，所以不会增加应用程序运行时的开销）。
+    * 如果您不使用 FastAPI 而直接使用 Starlette（或诸如 Sanic，Flask，Responder 等其它工具），您则要自己实现所有的数据验证和序列化。 那么最终您的应用程序会和使用 FastAPI 构建的程序有相同的开销。 一般这种数据验证和序列化的操作在您应用程序的代码中会占很大比重。
+    * 因此，通过使用 FastAPI 意味着您可以节省开发时间，减少编码错误，用更少的编码实现其功能，并且相比不使用 FastAPI 您很大可能会获得相同或更好的性能（因为那样您必须在代码中实现所有相同的功能）。
+    * 如果您想对比与 FastAPI 对标的开发框架，请与能够提供数据验证，序列化和带有自动文档生成的网络应用程序框架（或工具集）进行对比，例如具有集成自动数据验证，序列化和自动化文档的 Flask-apispec，NestJS，Molten 等。 Frameworks with integrated automatic data validation, serialization and documentation.
