@@ -1,39 +1,57 @@
-# 请求体
+# Request Body
 
-当你需要将数据从客户端（例如浏览器）发送给 API 时，你将其作为「请求体」发送。
+When you need to send data from a client (let's say, a browser) to your API, you send it as a **request body**.
 
-**请求**体是客户端发送给 API 的数据。**响应**体是 API 发送给客户端的数据。
+A **request** body is data sent by the client to your API. A **response** body is the data your API sends to the client.
 
-你的 API 几乎总是要发送**响应**体。但是客户端并不总是需要发送**请求**体。
+Your API almost always has to send a **response** body. But clients don't necessarily need to send **request** bodies all the time.
 
-我们使用 <a href="https://pydantic-docs.helpmanual.io/" class="external-link" target="_blank">Pydantic</a> 模型来声明**请求**体，并能够获得它们所具有的所有能力和优点。
+To declare a **request** body, you use <a href="https://pydantic-docs.helpmanual.io/" class="external-link" target="_blank">Pydantic</a> models with all their power and benefits.
 
 !!! info
-    你不能使用 `GET` 操作（HTTP 方法）发送请求体。
+    To send data, you should use one of: `POST` (the more common), `PUT`, `DELETE` or `PATCH`.
 
-    要发送数据，你必须使用下列方法之一：`POST`（较常见）、`PUT`、`DELETE` 或 `PATCH`。
+    Sending a body with a `GET` request has an undefined behavior in the specifications, nevertheless, it is supported by FastAPI, only for very complex/extreme use cases.
+    
+    As it is discouraged, the interactive docs with Swagger UI won't show the documentation for the body when using `GET`, and proxies in the middle might not support it.
 
-## 导入 Pydantic 的 `BaseModel`
+## Import Pydantic's `BaseModel`
 
-首先，你需要从 `pydantic` 中导入 `BaseModel`：
+First, you need to import `BaseModel` from `pydantic`:
 
-```Python hl_lines="2"
-{!../../../docs_src/body/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-## 创建数据模型
+    ```Python hl_lines="2"
+    {!> ../../../docs_src/body/tutorial001_py310.py!}
+    ```
 
-然后，将你的数据模型声明为继承自 `BaseModel` 的类。
+=== "Python 3.6+"
 
-使用标准的 Python 类型来声明所有属性：
+    ```Python hl_lines="4"
+    {!> ../../../docs_src/body/tutorial001.py!}
+    ```
 
-```Python hl_lines="5-9"
-{!../../../docs_src/body/tutorial001.py!}
-```
+## Create your data model
 
-和声明查询参数时一样，当一个模型属性具有默认值时，它不是必需的。否则它是一个必需属性。将默认值设为 `None` 可使其成为可选属性。
+Then you declare your data model as a class that inherits from `BaseModel`.
 
-例如，上面的模型声明了一个这样的 JSON「`object`」（或 Python `dict`）：
+Use standard Python types for all the attributes:
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="5-9"
+    {!> ../../../docs_src/body/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="7-11"
+    {!> ../../../docs_src/body/tutorial001.py!}
+    ```
+
+The same as when declaring query parameters, when a model attribute has a default value, it is not required. Otherwise, it is required. Use `None` to make it just optional.
+
+For example, this model above declares a JSON "`object`" (or Python `dict`) like:
 
 ```JSON
 {
@@ -44,7 +62,7 @@
 }
 ```
 
-...由于 `description` 和 `tax` 是可选的（它们的默认值为 `None`），下面的 JSON「`object`」也将是有效的：
+...as `description` and `tax` are optional (with a default value of `None`), this JSON "`object`" would also be valid:
 
 ```JSON
 {
@@ -53,95 +71,143 @@
 }
 ```
 
-## 声明为参数
+## Declare it as a parameter
 
-使用与声明路径和查询参数的相同方式声明请求体，即可将其添加到「路径操作」中：
+To add it to your *path operation*, declare it the same way you declared path and query parameters:
 
-```Python hl_lines="16"
-{!../../../docs_src/body/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-...并且将它的类型声明为你创建的 `Item` 模型。
+    ```Python hl_lines="16"
+    {!> ../../../docs_src/body/tutorial001_py310.py!}
+    ```
 
-## 结果
+=== "Python 3.6+"
 
-仅仅使用了 Python 类型声明，**FastAPI** 将会：
+    ```Python hl_lines="18"
+    {!> ../../../docs_src/body/tutorial001.py!}
+    ```
 
-* 将请求体作为 JSON 读取。
-* 转换为相应的类型（在需要时）。
-* 校验数据。
-    * 如果数据无效，将返回一条清晰易读的错误信息，指出不正确数据的确切位置和内容。
-* 将接收的数据赋值到参数 `item` 中。
-    * 由于你已经在函数中将它声明为 `Item` 类型，你还将获得对于所有属性及其类型的一切编辑器支持（代码补全等）。
-* 为你的模型生成 <a href="https://json-schema.org" class="external-link" target="_blank">JSON 模式</a> 定义，你还可以在其他任何对你的项目有意义的地方使用它们。
-* 这些模式将成为生成的 OpenAPI 模式的一部分，并且被自动化文档 <abbr title="用户界面">UI</abbr> 所使用。
+...and declare its type as the model you created, `Item`.
 
-## 自动化文档
+## Results
 
-你所定义模型的 JSON 模式将成为生成的 OpenAPI 模式的一部分，并且在交互式 API 文档中展示：
+With just that Python type declaration, **FastAPI** will:
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/body/image01.png">
+* Read the body of the request as JSON.
+* Convert the corresponding types (if needed).
+* Validate the data.
+    * If the data is invalid, it will return a nice and clear error, indicating exactly where and what was the incorrect data.
+* Give you the received data in the parameter `item`.
+    * As you declared it in the function to be of type `Item`, you will also have all the editor support (completion, etc) for all of the attributes and their types.
+* Generate <a href="https://json-schema.org" class="external-link" target="_blank">JSON Schema</a> definitions for your model, you can also use them anywhere else you like if it makes sense for your project.
+* Those schemas will be part of the generated OpenAPI schema, and used by the automatic documentation <abbr title="User Interfaces">UIs</abbr>.
 
-而且还将在每一个需要它们的*路径操作*的 API 文档中使用：
+## Automatic docs
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/body/image02.png">
+The JSON Schemas of your models will be part of your OpenAPI generated schema, and will be shown in the interactive API docs:
 
-## 编辑器支持
+<img src="/img/tutorial/body/image01.png" />
 
-在你的编辑器中，你会在函数内部的任意地方得到类型提示和代码补全（如果你接收的是一个 `dict` 而不是 Pydantic 模型，则不会发生这种情况）：
+And will be also used in the API docs inside each *path operation* that needs them:
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/body/image03.png">
+<img src="/img/tutorial/body/image02.png" />
 
-你还会获得对不正确的类型操作的错误检查：
+## Editor support
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/body/image04.png">
+In your editor, inside your function you will get type hints and completion everywhere (this wouldn't happen if you received a `dict` instead of a Pydantic model):
 
-这并非偶然，整个框架都是围绕该设计而构建。
+<img src="/img/tutorial/body/image03.png" />
 
-并且在进行任何实现之前，已经在设计阶段经过了全面测试，以确保它可以在所有的编辑器中生效。
+You also get error checks for incorrect type operations:
 
-Pydantic 本身甚至也进行了一些更改以支持此功能。
+<img src="/img/tutorial/body/image04.png" />
 
-上面的截图取自 <a href="https://code.visualstudio.com" class="external-link" target="_blank">Visual Studio Code</a>。
+This is not by chance, the whole framework was built around that design.
 
-但是在 <a href="https://www.jetbrains.com/pycharm/" class="external-link" target="_blank">PyCharm</a> 和绝大多数其他 Python 编辑器中你也会获得同样的编辑器支持：
+And it was thoroughly tested at the design phase, before any implementation, to ensure it would work with all the editors.
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/body/image05.png">
+There were even some changes to Pydantic itself to support this.
 
-## 使用模型
+The previous screenshots were taken with <a href="https://code.visualstudio.com" class="external-link" target="_blank">Visual Studio Code</a>.
 
-在函数内部，你可以直接访问模型对象的所有属性：
+But you would get the same editor support with <a href="https://www.jetbrains.com/pycharm/" class="external-link" target="_blank">PyCharm</a> and most of the other Python editors:
 
-```Python hl_lines="19"
-{!../../../docs_src/body/tutorial002.py!}
-```
+<img src="/img/tutorial/body/image05.png" />
 
-## 请求体 + 路径参数
+!!! tip
+    If you use <a href="https://www.jetbrains.com/pycharm/" class="external-link" target="_blank">PyCharm</a> as your editor, you can use the <a href="https://github.com/koxudaxi/pydantic-pycharm-plugin/" class="external-link" target="_blank">Pydantic PyCharm Plugin</a>.
 
-你可以同时声明路径参数和请求体。
+    It improves editor support for Pydantic models, with:
 
-**FastAPI** 将识别出与路径参数匹配的函数参数应**从路径中获取**，而声明为 Pydantic 模型的函数参数应**从请求体中获取**。
+    * auto-completion
+    * type checks
+    * refactoring
+    * searching
+    * inspections
 
-```Python hl_lines="15-16"
-{!../../../docs_src/body/tutorial003.py!}
-```
+## Use the model
 
-## 请求体 + 路径参数 + 查询参数
+Inside of the function, you can access all the attributes of the model object directly:
 
-你还可以同时声明**请求体**、**路径参数**和**查询参数**。
+=== "Python 3.10+"
 
-**FastAPI** 会识别它们中的每一个，并从正确的位置获取数据。
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/body/tutorial002_py310.py!}
+    ```
 
-```Python hl_lines="16"
-{!../../../docs_src/body/tutorial004.py!}
-```
+=== "Python 3.6+"
 
-函数参数将依次按如下规则进行识别：
+    ```Python hl_lines="21"
+    {!> ../../../docs_src/body/tutorial002.py!}
+    ```
 
-* 如果在**路径**中也声明了该参数，它将被用作路径参数。
-* 如果参数属于**单一类型**（比如 `int`、`float`、`str`、`bool` 等）它将被解释为**查询**参数。
-* 如果参数的类型被声明为一个 **Pydantic 模型**，它将被解释为**请求体**。
+## Request body + path parameters
 
-## 不使用 Pydantic
+You can declare path parameters and request body at the same time.
 
-如果你不想使用 Pydantic 模型，你还可以使用 **Body** 参数。请参阅文档 [请求体 - 多个参数：请求体中的单一值](body-multiple-params.md#singular-values-in-body){.internal-link target=_blank}。
+**FastAPI** will recognize that the function parameters that match path parameters should be **taken from the path**, and that function parameters that are declared to be Pydantic models should be **taken from the request body**.
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="15-16"
+    {!> ../../../docs_src/body/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="17-18"
+    {!> ../../../docs_src/body/tutorial003.py!}
+    ```
+
+## Request body + path + query parameters
+
+You can also declare **body**, **path** and **query** parameters, all at the same time.
+
+**FastAPI** will recognize each of them and take the data from the correct place.
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="16"
+    {!> ../../../docs_src/body/tutorial004_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="18"
+    {!> ../../../docs_src/body/tutorial004.py!}
+    ```
+
+The function parameters will be recognized as follows:
+
+* If the parameter is also declared in the **path**, it will be used as a path parameter.
+* If the parameter is of a **singular type** (like `int`, `float`, `str`, `bool`, etc) it will be interpreted as a **query** parameter.
+* If the parameter is declared to be of the type of a **Pydantic model**, it will be interpreted as a request **body**.
+
+!!! note
+    FastAPI will know that the value of `q` is not required because of the default value `= None`.
+
+    The `Union` in `Union[str, None]` is not used by FastAPI, but will allow your editor to give you better support and detect errors.
+
+## Without Pydantic
+
+If you don't want to use Pydantic models, you can also use **Body** parameters. See the docs for [Body - Multiple Parameters: Singular values in body](body-multiple-params.md#singular-values-in-body){.internal-link target=_blank}.
