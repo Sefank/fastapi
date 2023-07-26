@@ -1,63 +1,63 @@
-# Return a Response Directly
+# 直接返回响应
 
-When you create a **FastAPI** *path operation* you can normally return any data from it: a `dict`, a `list`, a Pydantic model, a database model, etc.
+当你创建一个 **FastAPI** *路径操作* 时，你可以正常返回以下任意一种数据：`dict`，`list`，Pydantic 模型，数据库模型等等。
 
-By default, **FastAPI** would automatically convert that return value to JSON using the `jsonable_encoder` explained in [JSON Compatible Encoder](../tutorial/encoder.md){.internal-link target=_blank}.
+**FastAPI** 默认会使用 `jsonable_encoder` 将这些类型的返回值转换成 JSON 格式，`jsonable_encoder` 在 [JSON 兼容编码器](../tutorial/encoder.md){.internal-link target=_blank} 中有阐述。
 
-Then, behind the scenes, it would put that JSON-compatible data (e.g. a `dict`) inside of a `JSONResponse` that would be used to send the response to the client.
+然后，**FastAPI** 会在后台将这些兼容 JSON 的数据（比如字典）放到一个 `JSONResponse` 中，该 `JSONResponse` 会用来发送响应给客户端。
 
-But you can return a `JSONResponse` directly from your *path operations*.
+但是你可以在你的 *路径操作* 中直接返回一个 `JSONResponse`。
 
-It might be useful, for example, to return custom headers or cookies.
+直接返回响应可能会有用处，比如返回自定义的响应头和 cookies。
 
-## Return a `Response`
+## 返回 `Response`
 
-In fact, you can return any `Response` or any sub-class of it.
+事实上，你可以返回任意 `Response` 或者任意 `Response` 的子类。
 
-!!! tip
-    `JSONResponse` itself is a sub-class of `Response`.
+!!! !!! tip "小贴士"
+    `JSONResponse` 本身是一个 `Response` 的子类。
 
-And when you return a `Response`, **FastAPI** will pass it directly.
+当你返回一个 `Response` 时，**FastAPI** 会直接传递它。
 
 It won't do any data conversion with Pydantic models, it won't convert the contents to any type, etc.
 
-This gives you a lot of flexibility. You can return any data type, override any data declaration or validation, etc.
+这种特性给你极大的可扩展性。 你可以返回任何数据类型，重写任何数据声明或者校验，等等。
 
-## Using the `jsonable_encoder` in a `Response`
+## 在 `Response` 中使用 `jsonable_encoder`
 
-Because **FastAPI** doesn't do any change to a `Response` you return, you have to make sure it's contents are ready for it.
+由于 **FastAPI** 并未对你返回的 `Response` 做任何改变，你必须确保你已经准备好响应内容。
 
-For example, you cannot put a Pydantic model in a `JSONResponse` without first converting it to a `dict` with all the data types (like `datetime`, `UUID`, etc) converted to JSON-compatible types.
+例如，如果不首先将 Pydantic 模型转换为 `dict`，并将所有数据类型（如 `datetime`、`UUID` 等）转换为兼容 JSON 的类型，则不能将其放入JSONResponse中。
 
-For those cases, you can use the `jsonable_encoder` to convert your data before passing it to a response:
+对于这些情况，在将数据传递给响应之前，你可以使用 `jsonable_encoder` 来转换你的数据。
 
 ```Python hl_lines="6-7  21-22"
 {!../../../docs_src/response_directly/tutorial001.py!}
 ```
 
-!!! note "Technical Details"
-    You could also use `from starlette.responses import JSONResponse`.
+!!! !!! note "技术细节"
+    你也可以使用 `from starlette.responses import JSONResponse`。
 
-    **FastAPI** provides the same `starlette.responses` as `fastapi.responses` just as a convenience for you, the developer. But most of the available responses come directly from Starlette.
+    出于方便，**FastAPI** 会提供与 `starlette.responses` 相同的 `fastapi.responses` 给开发者。 但是大多数可用的响应都直接来自 Starlette。
 
-## Returning a custom `Response`
+## 返回自定义 `Response`
 
-The example above shows all the parts you need, but it's not very useful yet, as you could have just returned the `item` directly, and **FastAPI** would put it in a `JSONResponse` for you, converting it to a `dict`, etc. All that by default.
+上面的例子展示了需要的所有部分，但还不够实用，因为你本可以只是直接返回 `item`，而**FastAPI** 默认帮你把这个 `item` 放到 `JSONResponse` 中，又默认将其转换成了 `dict`等等。 All that by default.
 
-Now, let's see how you could use that to return a custom response.
+现在，让我们看看你如何才能返回一个自定义的响应。
 
-Let's say that you want to return an <a href="https://en.wikipedia.org/wiki/XML" class="external-link" target="_blank">XML</a> response.
+假设你想要返回一个 <a href="https://en.wikipedia.org/wiki/XML" class="external-link" target="_blank">XML</a> 响应。
 
-You could put your XML content in a string, put it in a `Response`, and return it:
+你可以把你的 XML 内容放到一个字符串中，放到一个 `Response` 中，然后返回。
 
 ```Python hl_lines="1  18"
 {!../../../docs_src/response_directly/tutorial002.py!}
 ```
 
-## Notes
+## 说明
 
-When you return a `Response` directly its data is not validated, converted (serialized), nor documented automatically.
+当你直接返回 `Response` 时，它的数据既没有校验，又不会进行转换（序列化），也不会自动生成文档。
 
-But you can still document it as described in [Additional Responses in OpenAPI](additional-responses.md){.internal-link target=_blank}.
+但是你仍可以参考 [OpenApI 中的额外响应](additional-responses.md){.internal-link target=_blank} 给响应编写文档。
 
-You can see in later sections how to use/declare these custom `Response`s while still having automatic data conversion, documentation, etc.
+在后续的章节中你可以了解到如何使用/声明这些自定义的 `Response` 的同时还保留自动化的数据转换和文档等。
