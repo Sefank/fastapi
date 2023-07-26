@@ -1,36 +1,35 @@
-# 特性
+# Features
 
-## FastAPI 特性
+## FastAPI features
 
-**FastAPI** 提供了以下内容：
+**FastAPI** gives you the following:
 
-### 基于开放标准
+### Based on open standards
 
+* <a href="https://github.com/OAI/OpenAPI-Specification" class="external-link" target="_blank"><strong>OpenAPI</strong></a> for API creation, including declarations of <abbr title="also known as: endpoints, routes">path</abbr> <abbr title="also known as HTTP methods, as POST, GET, PUT, DELETE">operations</abbr>, parameters, body requests, security, etc.
+* Automatic data model documentation with <a href="https://json-schema.org/" class="external-link" target="_blank"><strong>JSON Schema</strong></a> (as OpenAPI itself is based on JSON Schema).
+* Designed around these standards, after a meticulous study. Instead of an afterthought layer on top.
+* This also allows using automatic **client code generation** in many languages.
 
-* 用于创建 API 的 <a href="https://github.com/OAI/OpenAPI-Specification" class="external-link" target="_blank"><strong>OpenAPI</strong></a> 包含了<abbr title="也被叫做: endpoints, routes">路径</abbr><abbr title="也叫做HTTP方法, 例如 POST, GET, PUT, DELETE">操作</abbr>，请求参数，请求体，安全性等的声明。
-* 使用 <a href="https://json-schema.org/" class="external-link" target="_blank"><strong>JSON Schema</strong></a> (因为 OpenAPI 本身就是基于 JSON Schema 的)自动生成数据模型文档。
-* 经过了缜密的研究后围绕这些标准而设计。并非狗尾续貂。
-* 这也允许了在很多语言中自动**生成客户端代码**。
+### Automatic docs
 
-### 自动生成文档
+Interactive API documentation and exploration web user interfaces. As the framework is based on OpenAPI, there are multiple options, 2 included by default.
 
-交互式 API 文档以及具探索性 web 界面。因为该框架是基于 OpenAPI，所以有很多可选项，FastAPI 默认自带两个交互式 API 文档。
-
-* <a href="https://github.com/swagger-api/swagger-ui" class="external-link" target="_blank"><strong>Swagger UI</strong></a>，可交互式操作，能在浏览器中直接调用和测试你的 API  。
+* <a href="https://github.com/swagger-api/swagger-ui" class="external-link" target="_blank"><strong>Swagger UI</strong></a>, with interactive exploration, call and test your API directly from the browser.
 
 ![Swagger UI interaction](https://fastapi.tiangolo.com/img/index/index-03-swagger-02.png)
 
-* 另外的 API 文档：<a href="https://github.com/Rebilly/ReDoc" class="external-link" target="_blank"><strong>ReDoc</strong></a>
+* Alternative API documentation with <a href="https://github.com/Rebilly/ReDoc" class="external-link" target="_blank"><strong>ReDoc</strong></a>.
 
 ![ReDoc](https://fastapi.tiangolo.com/img/index/index-06-redoc-02.png)
 
-### 更主流的 Python
+### Just Modern Python
 
-全部都基于标准的 **Python 3.6 类型**声明（感谢 Pydantic ）。没有新的语法需要学习。只需要标准的 Python 。
+It's all based on standard **Python 3.6 type** declarations (thanks to Pydantic). No new syntax to learn. Just standard modern Python.
 
-如果你需要2分钟来学习如何使用 Python 类型（即使你不使用 FastAPI ），看看这个简短的教程：[Python Types](python-types.md){.internal-link target=_blank}。
+If you need a 2 minute refresher of how to use Python types (even if you don't use FastAPI), check the short tutorial: [Python Types](python-types.md){.internal-link target=_blank}.
 
-编写带有类型标注的标准 Python：
+You write standard Python with types:
 
 ```Python
 from datetime import date
@@ -50,7 +49,7 @@ class User(BaseModel):
     joined: date
 ```
 
-可以像这样来使用：
+That can then be used like:
 
 ```Python
 my_user: User = User(id=3, name="John Doe", joined="2018-07-19")
@@ -64,142 +63,136 @@ second_user_data = {
 my_second_user: User = User(**second_user_data)
 ```
 
-
 !!! info
-    `**second_user_data` 意思是:
+    `**second_user_data` means:
 
-    直接将`second_user_data`字典的键和值直接作为key-value参数传递，等同于：`User(id=4, name="Mary", joined="2018-11-30")`
+    Pass the keys and values of the `second_user_data` dict directly as key-value arguments, equivalent to: `User(id=4, name="Mary", joined="2018-11-30")`
 
-### 编辑器支持
+### Editor support
 
-整个框架都被设计得易于使用且直观，所有的决定都在开发之前就在多个编辑器上进行了测试，来确保最佳的开发体验。
+All the framework was designed to be easy and intuitive to use, all the decisions were tested on multiple editors even before starting development, to ensure the best development experience.
 
-在最近的 Python 开发者调查中，我们能看到 <a href="https://www.jetbrains.com/research/python-developers-survey-2017/#tools-and-features" class="external-link" target="_blank"> 被使用最多的功能是"自动补全"</a>。
+In the last Python developer survey it was clear <a href="https://www.jetbrains.com/research/python-developers-survey-2017/#tools-and-features" class="external-link" target="_blank">that the most used feature is "autocompletion"</a>.
 
-整个 **FastAPI** 框架就是基于这一点的。任何地方都可以进行自动补全。
+The whole **FastAPI** framework is based to satisfy that. Autocompletion works everywhere.
 
-你几乎不需要经常回来看文档。
+You will rarely need to come back to the docs.
 
-在这里，你的编辑器可能会这样帮助你：
+Here's how your editor might help you:
 
-* <a href="https://code.visualstudio.com/" class="external-link" target="_blank">Visual Studio Code</a> 中:
+* in <a href="https://code.visualstudio.com/" class="external-link" target="_blank">Visual Studio Code</a>:
 
 ![editor support](https://fastapi.tiangolo.com/img/vscode-completion.png)
 
-* <a href="https://www.jetbrains.com/pycharm/" class="external-link" target="_blank">PyCharm</a> 中:
+* in <a href="https://www.jetbrains.com/pycharm/" class="external-link" target="_blank">PyCharm</a>:
 
 ![editor support](https://fastapi.tiangolo.com/img/pycharm-completion.png)
 
-你将能进行代码补全，这是在之前你可能曾认为不可能的事。例如，在来自请求 JSON 体（可能是嵌套的）中的键 `price`。
+You will get completion in code you might even consider impossible before. As for example, the `price` key inside a JSON body (that could have been nested) that comes from a request.
 
-不会再输错键名，来回翻看文档，或者来回滚动寻找你最后使用的 `username` 或者 `user_name` 。
+No more typing the wrong key names, coming back and forth between docs, or scrolling up and down to find if you finally used `username` or `user_name`.
 
+### Short
 
+It has sensible **defaults** for everything, with optional configurations everywhere. All the parameters can be fine-tuned to do what you need and to define the API you need.
 
-### 简洁
+But by default, it all **"just works"**.
 
-任何类型都有合理的**默认值**，任何和地方都有可选配置。所有的参数被微调，来满足你的需求，定义成你需要的 API。
+### Validation
 
-但是默认情况下，一切都能**“顺利工作”**。
+* Validation for most (or all?) Python **data types**, including:
+    * JSON objects (`dict`).
+    * JSON array (`list`) defining item types.
+    * String (`str`) fields, defining min and max lengths.
+    * Numbers (`int`, `float`) with min and max values, etc.
 
-### 验证
-
-* 校验大部分（甚至所有？）的 Python **数据类型**，包括：
-    * JSON 对象 (`dict`).
-    * JSON 数组 (`list`) 定义成员类型。
-    * 字符串 (`str`) 字段, 定义最小或最大长度。
-    * 数字 (`int`, `float`) 有最大值和最小值， 等等。
-
-* 校验外来类型， 比如:
+* Validation for more exotic types, like:
     * URL.
     * Email.
     * UUID.
-    * ...及其他.
+    * ...and others.
 
-所有的校验都由完善且强大的 **Pydantic** 处理。
+All the validation is handled by the well-established and robust **Pydantic**.
 
-### 安全性及身份验证
+### Security and authentication
 
-集成了安全性和身份认证。杜绝数据库或者数据模型的渗透风险。
+Security and authentication integrated. Without any compromise with databases or data models.
 
-OpenAPI 中定义的安全模式，包括：
+All the security schemes defined in OpenAPI, including:
 
-* HTTP 基本认证。
-* **OAuth2** (也使用 **JWT tokens**)。在 [OAuth2 with JWT](tutorial/security/oauth2-jwt.md){.internal-link target=_blank}查看教程。
-* API 密钥，在:
-    * 请求头。
-    * 查询参数。
-    * Cookies, 等等。
+* HTTP Basic.
+* **OAuth2** (also with **JWT tokens**). Check the tutorial on [OAuth2 with JWT](tutorial/security/oauth2-jwt.md){.internal-link target=_blank}.
+* API keys in:
+    * Headers.
+    * Query parameters.
+    * Cookies, etc.
 
-加上来自 Starlette（包括 **session cookie**）的所有安全特性。
+Plus all the security features from Starlette (including **session cookies**).
 
-所有的这些都是可复用的工具和组件，可以轻松与你的系统，数据仓库，关系型以及 NoSQL 数据库等等集成。
+All built as reusable tools and components that are easy to integrate with your systems, data stores, relational and NoSQL databases, etc.
 
+### Dependency Injection
 
+FastAPI includes an extremely easy to use, but extremely powerful <abbr title='also known as "components", "resources", "services", "providers"'><strong>Dependency Injection</strong></abbr> system.
 
-### 依赖注入
+* Even dependencies can have dependencies, creating a hierarchy or **"graph" of dependencies**.
+* All **automatically handled** by the framework.
+* All the dependencies can require data from requests and **augment the path operation** constraints and automatic documentation.
+* **Automatic validation** even for *path operation* parameters defined in dependencies.
+* Support for complex user authentication systems, **database connections**, etc.
+* **No compromise** with databases, frontends, etc. But easy integration with all of them.
 
-FastAPI 有一个使用非常简单，但是非常强大的<abbr title='也叫做 "components", "resources", "services", "providers"'><strong>依赖注入</strong></abbr>系统。
+### Unlimited "plug-ins"
 
-* 甚至依赖也可以有依赖，创建一个层级或者**“图”依赖**。
-* 所有**自动化处理**都由框架完成。
-* 所有的依赖关系都可以从请求中获取数据，并且**增加了路径操作**约束和自动文档生成。
-* 即使在依赖项中被定义的*路径操作* 也会**自动验证**。
-* 支持复杂的用户身份认证系统，**数据库连接**等等。
-* **不依赖**数据库，前端等。 但是和它们集成很简单。
+Or in other way, no need for them, import and use the code you need.
 
-### 无限制"插件"
+Any integration is designed to be so simple to use (with dependencies) that you can create a "plug-in" for your application in 2 lines of code using the same structure and syntax used for your *path operations*.
 
-或者说，导入并使用你需要的代码，而不需要它们。
+### Tested
 
-任何集成都被设计得被易于使用（用依赖关系），你可以用和*路径操作*相同的结构和语法，在两行代码中为你的应用创建一个“插件”。
+* 100% <abbr title="The amount of code that is automatically tested">test coverage</abbr>.
+* 100% <abbr title="Python type annotations, with this your editor and external tools can give you better support">type annotated</abbr> code base.
+* Used in production applications.
 
-### 测试
+## Starlette features
 
-* 100% <abbr title="自动测试的代码量">测试覆盖</abbr>。
-* 代码库100% <abbr title="Python类型注解，有了这个你的编辑器和外部工具可以给你更好的支持">类型注释</abbr>。
-* 用于生产应用。
+**FastAPI** is fully compatible with (and based on) <a href="https://www.starlette.io/" class="external-link" target="_blank"><strong>Starlette</strong></a>. So, any additional Starlette code you have, will also work.
 
-## Starlette 特性
+`FastAPI` is actually a sub-class of `Starlette`. So, if you already know or use Starlette, most of the functionality will work the same way.
 
-**FastAPI** 和 <a href="https://www.starlette.io/" class="external-link" target="_blank"><strong>Starlette</strong></a> 完全兼容(并基于)。所以，你有的其他的 Starlette 代码也能正常工作。`FastAPI` 实际上是 `Starlette`的一个子类。所以，如果你已经知道或者使用 Starlette，大部分的功能会以相同的方式工作。
+With **FastAPI** you get all of **Starlette**'s features (as FastAPI is just Starlette on steroids):
 
-通过 **FastAPI** 你可以获得所有 **Starlette** 的特性 ( FastAPI 就像加强版的 Starlette )：
+* Seriously impressive performance. It is <a href="https://github.com/encode/starlette#performance" class="external-link" target="_blank">one of the fastest Python frameworks available, on par with **NodeJS** and **Go**</a>.
+* **WebSocket** support.
+* In-process background tasks.
+* Startup and shutdown events.
+* Test client built on HTTPX.
+* **CORS**, GZip, Static Files, Streaming responses.
+* **Session and Cookie** support.
+* 100% test coverage.
+* 100% type annotated codebase.
 
-* 令人惊叹的性能。它是 <a href="https://github.com/encode/starlette#performance" class="external-link" target="_blank">Python 可用的最快的框架之一，和 **NodeJS** 及 **Go** 相当</a>。
-* **支持 WebSocket** 。
-* **支持 GraphQL** 。
-* 后台任务处理。
-* Startup 和 shutdown 事件。
-* 测试客户端基于 HTTPX。
-* **CORS**, GZip, 静态文件, 流响应。
-* 支持 **Session 和 Cookie** 。
-* 100% 测试覆盖率。
-* 代码库 100% 类型注释。
+## Pydantic features
 
-## Pydantic 特性
+**FastAPI** is fully compatible with (and based on) <a href="https://pydantic-docs.helpmanual.io" class="external-link" target="_blank"><strong>Pydantic</strong></a>. So, any additional Pydantic code you have, will also work.
 
-**FastAPI** 和 <a href="https://pydantic-docs.helpmanual.io" class="external-link" target="_blank"><strong>Pydantic</strong></a> 完全兼容(并基于)。所以，你有的其他的 Pydantic 代码也能正常工作。
+Including external libraries also based on Pydantic, as <abbr title="Object-Relational Mapper">ORM</abbr>s, <abbr title="Object-Document Mapper">ODM</abbr>s for databases.
 
-兼容包括基于 Pydantic 的外部库， 例如用与数据库的 <abbr title="对象关系映射">ORM</abbr>s, <abbr title="对象文档映射">ODM</abbr>s。
+This also means that in many cases you can pass the same object you get from a request **directly to the database**, as everything is validated automatically.
 
-这也意味着在很多情况下，你可以将从请求中获得的相同对象**直接传到数据库**，因为所有的验证都是自动的。
+The same applies the other way around, in many cases you can just pass the object you get from the database **directly to the client**.
 
-反之亦然，在很多情况下，你也可以将从数据库中获取的对象**直接传到客户端**。
+With **FastAPI** you get all of **Pydantic**'s features (as FastAPI is based on Pydantic for all the data handling):
 
-通过 **FastAPI** 你可以获得所有 **Pydantic**  (FastAPI 基于 Pydantic 做了所有的数据处理)：
-
-* **更简单**：
-    * 没有新的模式定义 micro-language 需要学习。
-    * 如果你知道 Python types，你就知道如何使用 Pydantic。
-* 和你 **<abbr title="集成开发环境，和代码编辑器类似">IDE</abbr>/<abbr title="一个检查代码错误的程序">linter</abbr>/brain** 适配:
-    * 因为 pydantic 数据结构仅仅是你定义的类的实例；自动补全，linting，mypy 以及你的直觉应该可以和你验证的数据一起正常工作。
-* **更快**：
-    * 在 <a href="https://pydantic-docs.helpmanual.io/benchmarks/" class="external-link" target="_blank">基准测试</a> 中，Pydantic 比其他被测试的库都要快。
-* 验证**复杂结构**:
-    * 使用分层的 Pydantic 模型, Python `typing`的 `List` 和 `Dict` 等等。
-    * 验证器使我们能够简单清楚的将复杂的数据模式定义、检查并记录为 JSON Schema。
-    * 你可以拥有深度**嵌套的 JSON** 对象并对它们进行验证和注释。
-* **可扩展**:
-    * Pydantic 允许定义自定义数据类型或者你可以用验证器装饰器对被装饰的模型上的方法扩展验证。
-* 100% 测试覆盖率。
+* **No brainfuck**:
+    * No new schema definition micro-language to learn.
+    * If you know Python types you know how to use Pydantic.
+* Plays nicely with your **<abbr title="Integrated Development Environment, similar to a code editor">IDE</abbr>/<abbr title="A program that checks for code errors">linter</abbr>/brain**:
+    * Because pydantic data structures are just instances of classes you define; auto-completion, linting, mypy and your intuition should all work properly with your validated data.
+* Validate **complex structures**:
+    * Use of hierarchical Pydantic models, Python `typing`’s `List` and `Dict`, etc.
+    * And validators allow complex data schemas to be clearly and easily defined, checked and documented as JSON Schema.
+    * You can have deeply **nested JSON** objects and have them all validated and annotated.
+* **Extensible**:
+    * Pydantic allows custom data types to be defined or you can extend validation with methods on a model decorated with the validator decorator.
+* 100% test coverage.
