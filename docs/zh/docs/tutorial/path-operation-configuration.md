@@ -1,66 +1,65 @@
-# Path Operation Configuration
+# 路径操作配置
 
-There are several parameters that you can pass to your *path operation decorator* to configure it.
+*路径操作装饰器*支持多种配置参数。
 
 !!! warning
     Notice that these parameters are passed directly to the *path operation decorator*, not to your *path operation function*.
 
-## Response Status Code
+## `status_code` 状态码
 
-You can define the (HTTP) `status_code` to be used in the response of your *path operation*.
+`status_code` 用于定义*路径操作*响应中的 HTTP 状态码。
 
-You can pass directly the `int` code, like `404`.
+可以直接传递 `int` 代码， 比如 `404`。
 
-But if you don't remember what each number code is for, you can use the shortcut constants in `status`:
+如果记不住数字码的涵义，也可以用 `status` 的快捷常量：
 
 === "Python 3.10+"
 
     ```Python hl_lines="1  15"
-    {!> ../../../docs_src/path_operation_configuration/tutorial001_py310.py!}
+    注意：以下参数应直接传递给**路径操作装饰器**，不能传递给*路径操作函数*。
     ```
 
 === "Python 3.9+"
 
     ```Python hl_lines="3  17"
-    {!> ../../../docs_src/path_operation_configuration/tutorial001_py39.py!}
+    !!! check "检查"
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="3  17"
-    {!> ../../../docs_src/path_operation_configuration/tutorial001.py!}
+    API 文档会把该路径操作标记为弃用：
     ```
 
-That status code will be used in the response and will be added to the OpenAPI schema.
+状态码在响应中使用，并会被添加到 OpenAPI 概图。
 
-!!! note "Technical Details"
-    You could also use `from starlette import status`.
+!!! 也可以使用 `from starlette import status` 导入状态码。
 
-    **FastAPI** provides the same `starlette.status` as `fastapi.status` just as a convenience for you, the developer. But it comes directly from Starlette.
+    **FastAPI** 的`fastapi.status` 和 `starlette.status` 一样，只是快捷方式。 But it comes directly from Starlette.
 
 ## Tags
 
-You can add tags to your *path operation*, pass the parameter `tags` with a `list` of `str` (commonly just one `str`):
+`tags` 参数的值是由 `str` 组成的 `list` （一般只有一个 `str` ），`tags` 用于为*路径操作*添加标签：
 
 === "Python 3.10+"
 
     ```Python hl_lines="15  20  25"
-    {!> ../../../docs_src/path_operation_configuration/tutorial002_py310.py!}
+    {!../../../docs_src/path_operation_configuration/tutorial005.py!}
     ```
 
 === "Python 3.9+"
 
     ```Python hl_lines="17  22  27"
-    {!> ../../../docs_src/path_operation_configuration/tutorial002_py39.py!}
+    注意，`response_description` 只用于描述响应，`description` 一般则用于描述*路径操作*。
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="17  22  27"
-    {!> ../../../docs_src/path_operation_configuration/tutorial002.py!}
+    {!../../../docs_src/path_operation_configuration/tutorial002.py!}
     ```
 
-They will be added to the OpenAPI schema and used by the automatic documentation interfaces:
+OpenAPI 概图会自动添加标签，供 API 文档接口使用：
 
 <img src="/img/tutorial/path-operation-configuration/image01.png" />
 
@@ -73,94 +72,99 @@ In these cases, it could make sense to store the tags in an `Enum`.
 **FastAPI** supports that the same way as with plain strings:
 
 ```Python hl_lines="1  8-10  13  18"
-{!../../../docs_src/path_operation_configuration/tutorial002b.py!}
+{!../../../docs_src/path_operation_configuration/tutorial001.py!}
 ```
 
 ## Summary and description
 
-You can add a `summary` and `description`:
+`summary` 和 `description` 参数
 
 === "Python 3.10+"
 
     ```Python hl_lines="18-19"
-    {!> ../../../docs_src/path_operation_configuration/tutorial003_py310.py!}
+    {!../../../docs_src/path_operation_configuration/tutorial003.py!}
     ```
 
 === "Python 3.9+"
 
     ```Python hl_lines="20-21"
-    {!> ../../../docs_src/path_operation_configuration/tutorial003_py39.py!}
+    !!! warning "警告"
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="20-21"
-    {!> ../../../docs_src/path_operation_configuration/tutorial003.py!}
+    路径装饰器还支持 <code>summary</code> 和 <code>description</code> 这两个参数：
     ```
+ 和 description 这两个参数：
+</code>
 
 ## Description from docstring
 
-As descriptions tend to be long and cover multiple lines, you can declare the *path operation* description in the function <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr> and **FastAPI** will read it from there.
+描述内容比较长且占用多行时，可以在函数的 <abbr title="函数中作为第一个表达式，用于文档目的的一个多行字符串（并没有被分配个任何变量）">docstring</abbr> 中声明*路径操作*的描述，**FastAPI** 支持从文档字符串中读取描述内容。
 
-You can write <a href="https://en.wikipedia.org/wiki/Markdown" class="external-link" target="_blank">Markdown</a> in the docstring, it will be interpreted and displayed correctly (taking into account docstring indentation).
+文档字符串支持 <a href="https://en.wikipedia.org/wiki/Markdown" class="external-link" target="_blank">Markdown</a>，能正确解析和显示 Markdown 的内容，但要注意文档字符串的缩进。
 
 === "Python 3.10+"
 
     ```Python hl_lines="17-25"
-    {!> ../../../docs_src/path_operation_configuration/tutorial004_py310.py!}
+    {!../../../docs_src/path_operation_configuration/tutorial004.py!}
     ```
 
 === "Python 3.9+"
 
     ```Python hl_lines="19-27"
-    {!> ../../../docs_src/path_operation_configuration/tutorial004_py39.py!}
+    下图为 Markdown 文本在 API 文档中的显示效果：
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="19-27"
-    {!> ../../../docs_src/path_operation_configuration/tutorial004.py!}
+    文档字符串（<code>docstring</code>）
     ```
+）
+</code>
 
 It will be used in the interactive docs:
 
 <img src="/img/tutorial/path-operation-configuration/image02.png" />
 
-## Response description
+## 响应描述
 
-You can specify the response description with the parameter `response_description`:
+`response_description` 参数用于定义响应的描述说明：
 
 === "Python 3.10+"
 
     ```Python hl_lines="19"
-    {!> ../../../docs_src/path_operation_configuration/tutorial005_py310.py!}
+    !!! info "说明"
     ```
 
 === "Python 3.9+"
 
     ```Python hl_lines="21"
-    {!> ../../../docs_src/path_operation_configuration/tutorial005_py39.py!}
+    !!! note "技术细节"
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="21"
-    {!> ../../../docs_src/path_operation_configuration/tutorial005.py!}
+    <code>tags</code> 参数
     ```
+ 参数
+</code>
 
 !!! info
     Notice that `response_description` refers specifically to the response, the `description` refers to the *path operation* in general.
 
-!!! check
-    OpenAPI specifies that each *path operation* requires a response description.
+!!! OpenAPI 规定每个*路径操作*都要有响应描述。
 
-    So, if you don't provide one, **FastAPI** will automatically generate one of "Successful response".
+    如果没有定义响应描述，**FastAPI** 则自动生成内容为 "Successful response" 的响应描述。
 
 <img src="/img/tutorial/path-operation-configuration/image03.png" />
 
-## Deprecate a *path operation*
+## 弃用*路径操作*
 
-If you need to mark a *path operation* as <abbr title="obsolete, recommended not to use it">deprecated</abbr>, but without removing it, pass the parameter `deprecated`:
+`deprecated` 参数可以把*路径操作*标记为<abbr title="过时，建议不要使用">弃用</abbr>，无需直接删除：
 
 ```Python hl_lines="16"
 {!../../../docs_src/path_operation_configuration/tutorial006.py!}
@@ -170,10 +174,10 @@ It will be clearly marked as deprecated in the interactive docs:
 
 <img src="/img/tutorial/path-operation-configuration/image04.png" />
 
-Check how deprecated and non-deprecated *path operations* look like:
+下图显示了正常*路径操作*与弃用*路径操作* 的区别：
 
 <img src="/img/tutorial/path-operation-configuration/image05.png" />
 
 ## Recap
 
-You can configure and add metadata for your *path operations* easily by passing parameters to the *path operation decorators*.
+通过传递参数给*路径操作装饰器* ，即可轻松地配置*路径操作*、添加元数据。
