@@ -1,3 +1,5 @@
 files:
   - source: /docs/en/docs/**/*.md
+    ignore:
+      - docs/en/docs/release-notes.md
     translation: /docs/%two_letters_code%/docs/**/%original_file_name%
