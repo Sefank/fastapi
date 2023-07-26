@@ -1,66 +1,130 @@
-# 额外数据类型
+# Extra Data Types
 
-到目前为止，您一直在使用常见的数据类型，如:
+Up to now, you have been using common data types, like:
 
 * `int`
 * `float`
 * `str`
 * `bool`
 
-但是您也可以使用更复杂的数据类型。
+But you can also use more complex data types.
 
-您仍然会拥有现在已经看到的相同的特性:
+And you will still have the same features as seen up to now:
 
-* 很棒的编辑器支持。
-* 传入请求的数据转换。
-* 响应数据转换。
-* 数据验证。
-* 自动补全和文档。
+* Great editor support.
+* Data conversion from incoming requests.
+* Data conversion for response data.
+* Data validation.
+* Automatic annotation and documentation.
 
-## 其他数据类型
+## Other data types
 
-下面是一些你可以使用的其他数据类型:
+Here are some of the additional data types you can use:
 
 * `UUID`:
-    * 一种标准的 "通用唯一标识符" ，在许多数据库和系统中用作ID。
-    * 在请求和响应中将以 `str` 表示。
+    * A standard "Universally Unique Identifier", common as an ID in many databases and systems.
+    * In requests and responses will be represented as a `str`.
 * `datetime.datetime`:
-    * 一个 Python `datetime.datetime`.
-    * 在请求和响应中将表示为 ISO 8601 格式的 `str` ，比如: `2008-09-15T15:53:00+05:00`.
+    * A Python `datetime.datetime`.
+    * In requests and responses will be represented as a `str` in ISO 8601 format, like: `2008-09-15T15:53:00+05:00`.
 * `datetime.date`:
     * Python `datetime.date`.
-    * 在请求和响应中将表示为 ISO 8601 格式的 `str` ，比如: `2008-09-15`.
+    * In requests and responses will be represented as a `str` in ISO 8601 format, like: `2008-09-15`.
 * `datetime.time`:
-    * 一个 Python `datetime.time`.
-    * 在请求和响应中将表示为 ISO 8601 格式的 `str` ，比如:  `14:23:55.003`.
+    * A Python `datetime.time`.
+    * In requests and responses will be represented as a `str` in ISO 8601 format, like: `14:23:55.003`.
 * `datetime.timedelta`:
-    * 一个 Python `datetime.timedelta`.
-    * 在请求和响应中将表示为 `float` 代表总秒数。
-    * Pydantic 也允许将其表示为 "ISO 8601 时间差异编码", <a href="https://pydantic-docs.helpmanual.io/usage/exporting_models/#json_encoders" class="external-link" target="_blank">查看文档了解更多信息</a>。
+    * A Python `datetime.timedelta`.
+    * In requests and responses will be represented as a `float` of total seconds.
+    * Pydantic also allows representing it as a "ISO 8601 time diff encoding", <a href="https://pydantic-docs.helpmanual.io/usage/exporting_models/#json_encoders" class="external-link" target="_blank">see the docs for more info</a>.
 * `frozenset`:
-    * 在请求和响应中，作为 `set` 对待：
-        * 在请求中，列表将被读取，消除重复，并将其转换为一个 `set`。
-        * 在响应中 `set` 将被转换为 `list` 。
-        * 产生的模式将指定那些 `set` 的值是唯一的 (使用 JSON 模式的 `uniqueItems`)。
+    * In requests and responses, treated the same as a `set`:
+        * In requests, a list will be read, eliminating duplicates and converting it to a `set`.
+        * In responses, the `set` will be converted to a `list`.
+        * The generated schema will specify that the `set` values are unique (using JSON Schema's `uniqueItems`).
 * `bytes`:
-    * 标准的 Python `bytes`。
-    * 在请求和相应中被当作 `str` 处理。
-    * 生成的模式将指定这个 `str` 是 `binary` "格式"。
+    * Standard Python `bytes`.
+    * In requests and responses will be treated as `str`.
+    * The generated schema will specify that it's a `str` with `binary` "format".
 * `Decimal`:
-    * 标准的 Python `Decimal`。
-    * 在请求和相应中被当做 `float` 一样处理。
-* 您可以在这里检查所有有效的pydantic数据类型: <a href="https://pydantic-docs.helpmanual.io/usage/types" class="external-link" target="_blank">Pydantic data types</a>.
+    * Standard Python `Decimal`.
+    * In requests and responses, handled the same as a `float`.
+* You can check all the valid pydantic data types here: <a href="https://pydantic-docs.helpmanual.io/usage/types" class="external-link" target="_blank">Pydantic data types</a>.
 
-## 例子
+## Example
 
-下面是一个*路径操作*的示例，其中的参数使用了上面的一些类型。
+Here's an example *path operation* with parameters using some of the above types.
 
-```Python hl_lines="1  3  12-16"
-{!../../../docs_src/extra_data_types/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-注意，函数内的参数有原生的数据类型，你可以，例如，执行正常的日期操作，如:
+    ```Python hl_lines="1  3  12-16"
+    {!> ../../../docs_src/extra_data_types/tutorial001_an_py310.py!}
+    ```
 
-```Python hl_lines="18-19"
-{!../../../docs_src/extra_data_types/tutorial001.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="1  3  12-16"
+    {!> ../../../docs_src/extra_data_types/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  3  13-17"
+    {!> ../../../docs_src/extra_data_types/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1  2  11-15"
+    {!> ../../../docs_src/extra_data_types/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1  2  12-16"
+    {!> ../../../docs_src/extra_data_types/tutorial001.py!}
+    ```
+
+Note that the parameters inside the function have their natural data type, and you can, for example, perform normal date manipulations, like:
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="18-19"
+    {!> ../../../docs_src/extra_data_types/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="18-19"
+    {!> ../../../docs_src/extra_data_types/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="19-20"
+    {!> ../../../docs_src/extra_data_types/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="17-18"
+    {!> ../../../docs_src/extra_data_types/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="18-19"
+    {!> ../../../docs_src/extra_data_types/tutorial001.py!}
+    ```
