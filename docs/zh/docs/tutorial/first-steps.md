@@ -1,14 +1,14 @@
-# 第一步
+# First Steps
 
-最简单的 FastAPI 文件可能像下面这样：
+The simplest FastAPI file could look like this:
 
 ```Python
 {!../../../docs_src/first_steps/tutorial001.py!}
 ```
 
-将其复制到 `main.py` 文件中。
+Copy that to a file `main.py`.
 
-运行实时服务器：
+Run the live server:
 
 <div class="termy">
 
@@ -25,83 +25,81 @@ $ uvicorn main:app --reload
 </div>
 
 !!! note
-    `uvicorn main:app` 命令含义如下:
+    The command `uvicorn main:app` refers to:
 
-    * `main`：`main.py` 文件（一个 Python「模块」）。
-    * `app`：在 `main.py` 文件中通过 `app = FastAPI()` 创建的对象。
-    * `--reload`：让服务器在更新代码后重新启动。仅在开发时使用该选项。
+    * `main`: the file `main.py` (the Python "module").
+    * `app`: the object created inside of `main.py` with the line `app = FastAPI()`.
+    * `--reload`: make the server restart after code changes. Only use for development.
 
-
-在输出中，会有一行信息像下面这样：
+In the output, there's a line with something like:
 
 ```hl_lines="4"
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 ```
 
+That line shows the URL where your app is being served, in your local machine.
 
-该行显示了你的应用在本机所提供服务的 URL 地址。
+### Check it
 
-### 查看
+Open your browser at <a href="http://127.0.0.1:8000" class="external-link" target="_blank">http://127.0.0.1:8000</a>.
 
-打开浏览器访问 <a href="http://127.0.0.1:8000" class="external-link" target="_blank">http://127.0.0.1:8000</a>。
-
-你将看到如下的 JSON 响应：
+You will see the JSON response as:
 
 ```JSON
 {"message": "Hello World"}
 ```
 
-### 交互式 API 文档
+### Interactive API docs
 
-跳转到 <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a>。
+Now go to <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a>.
 
-你将会看到自动生成的交互式 API 文档（由 <a href="https://github.com/swagger-api/swagger-ui" class="external-link" target="_blank">Swagger UI</a> 提供）：
+You will see the automatic interactive API documentation (provided by <a href="https://github.com/swagger-api/swagger-ui" class="external-link" target="_blank">Swagger UI</a>):
 
 ![Swagger UI](https://fastapi.tiangolo.com/img/index/index-01-swagger-ui-simple.png)
 
-### 可选的 API 文档
+### Alternative API docs
 
-前往 <a href="http://127.0.0.1:8000/redoc" class="external-link" target="_blank">http://127.0.0.1:8000/redoc</a>。
+And now, go to <a href="http://127.0.0.1:8000/redoc" class="external-link" target="_blank">http://127.0.0.1:8000/redoc</a>.
 
-你将会看到可选的自动生成文档 （由 <a href="https://github.com/Rebilly/ReDoc" class="external-link" target="_blank">ReDoc</a> 提供)：
+You will see the alternative automatic documentation (provided by <a href="https://github.com/Rebilly/ReDoc" class="external-link" target="_blank">ReDoc</a>):
 
 ![ReDoc](https://fastapi.tiangolo.com/img/index/index-02-redoc-simple.png)
 
 ### OpenAPI
 
-**FastAPI** 使用定义 API 的 **OpenAPI** 标准将你的所有 API 转换成「模式」。
+**FastAPI** generates a "schema" with all your API using the **OpenAPI** standard for defining APIs.
 
-#### 「模式」
+#### "Schema"
 
-「模式」是对事物的一种定义或描述。它并非具体的实现代码，而只是抽象的描述。
+A "schema" is a definition or description of something. Not the code that implements it, but just an abstract description.
 
-#### API「模式」
+#### API "schema"
 
-在这种场景下，OpenAPI 是一种规定如何定义 API 模式的规范。
+In this case, <a href="https://github.com/OAI/OpenAPI-Specification" class="external-link" target="_blank">OpenAPI</a> is a specification that dictates how to define a schema of your API.
 
-定义的 OpenAPI 模式将包括你的 API 路径，以及它们可能使用的参数等等。
+This schema definition includes your API paths, the possible parameters they take, etc.
 
-#### 数据「模式」
+#### Data "schema"
 
-「模式」这个术语也可能指的是某些数据比如 JSON 的结构。
+The term "schema" might also refer to the shape of some data, like a JSON content.
 
-在这种情况下，它可以表示 JSON 的属性及其具有的数据类型，等等。
+In that case, it would mean the JSON attributes, and data types they have, etc.
 
-#### OpenAPI 和 JSON Schema
+#### OpenAPI and JSON Schema
 
-OpenAPI 为你的 API 定义 API 模式。该模式中包含了你的 API 发送和接收的数据的定义（或称为「模式」），这些定义通过 JSON 数据模式标准 **JSON Schema** 所生成。
+OpenAPI defines an API schema for your API. And that schema includes definitions (or "schemas") of the data sent and received by your API using **JSON Schema**, the standard for JSON data schemas.
 
-#### 查看 `openapi.json`
+#### Check the `openapi.json`
 
-如果你对原始的 OpenAPI 模式长什么样子感到好奇，其实它只是一个自动生成的包含了所有 API 描述的 JSON。
+If you are curious about how the raw OpenAPI schema looks like, FastAPI automatically generates a JSON (schema) with the descriptions of all your API.
 
-你可以直接在：<a href="http://127.0.0.1:8000/openapi.json" class="external-link" target="_blank">http://127.0.0.1:8000/openapi.json</a> 看到它。
+You can see it directly at: <a href="http://127.0.0.1:8000/openapi.json" class="external-link" target="_blank">http://127.0.0.1:8000/openapi.json</a>.
 
-它将显示以如下内容开头的 JSON：
+It will show a JSON starting with something like:
 
 ```JSON
 {
-    "openapi": "3.0.2",
+    "openapi": "3.1.0",
     "info": {
         "title": "FastAPI",
         "version": "0.1.0"
@@ -120,40 +118,40 @@ OpenAPI 为你的 API 定义 API 模式。该模式中包含了你的 API 发送
 ...
 ```
 
-#### OpenAPI 的用途
+#### What is OpenAPI for
 
-驱动 FastAPI 内置的 2 个交互式文档系统的正是 OpenAPI 模式。
+The OpenAPI schema is what powers the two interactive documentation systems included.
 
-并且还有数十种替代方案，它们全部都基于 OpenAPI。你可以轻松地将这些替代方案中的任何一种添加到使用 **FastAPI** 构建的应用程序中。
+And there are dozens of alternatives, all based on OpenAPI. You could easily add any of those alternatives to your application built with **FastAPI**.
 
-你还可以使用它自动生成与你的 API 进行通信的客户端代码。例如 web 前端，移动端或物联网嵌入程序。
+You could also use it to generate code automatically, for clients that communicate with your API. For example, frontend, mobile or IoT applications.
 
-## 分步概括
+## Recap, step by step
 
-### 步骤 1：导入 `FastAPI`
+### Step 1: import `FastAPI`
 
 ```Python hl_lines="1"
 {!../../../docs_src/first_steps/tutorial001.py!}
 ```
 
-`FastAPI` 是一个为你的 API 提供了所有功能的 Python 类。
+`FastAPI` is a Python class that provides all the functionality for your API.
 
-!!! note "技术细节"
-    `FastAPI` 是直接从 `Starlette` 继承的类。
+!!! note "Technical Details"
+    `FastAPI` is a class that inherits directly from `Starlette`.
 
-    你可以通过 `FastAPI` 使用所有的 Starlette 的功能。
+    You can use all the <a href="https://www.starlette.io/" class="external-link" target="_blank">Starlette</a> functionality with `FastAPI` too.
 
-### 步骤 2：创建一个 `FastAPI`「实例」
+### Step 2: create a `FastAPI` "instance"
 
 ```Python hl_lines="3"
 {!../../../docs_src/first_steps/tutorial001.py!}
 ```
 
-这里的变量 `app` 会是 `FastAPI` 类的一个「实例」。
+Here the `app` variable will be an "instance" of the class `FastAPI`.
 
-这个实例将是创建你所有 API 的主要交互对象。
+This will be the main point of interaction to create all your API.
 
-这个 `app` 同样在如下命令中被 `uvicorn` 所引用：
+This `app` is the same one referred by `uvicorn` in the command:
 
 <div class="termy">
 
@@ -165,13 +163,13 @@ $ uvicorn main:app --reload
 
 </div>
 
-如果你像下面这样创建应用：
+If you create your app like:
 
 ```Python hl_lines="3"
 {!../../../docs_src/first_steps/tutorial002.py!}
 ```
 
-将代码放入 `main.py` 文件中，然后你可以像下面这样运行 `uvicorn`：
+And put it in a file `main.py`, then you would call `uvicorn` like:
 
 <div class="termy">
 
@@ -183,93 +181,92 @@ $ uvicorn main:my_awesome_api --reload
 
 </div>
 
-### 步骤 3：创建一个*路径操作*
+### Step 3: create a *path operation*
 
-#### 路径
+#### Path
 
-这里的「路径」指的是 URL 中从第一个 `/` 起的后半部分。
+"Path" here refers to the last part of the URL starting from the first `/`.
 
-所以，在一个这样的 URL 中：
+So, in a URL like:
 
 ```
 https://example.com/items/foo
 ```
 
-...路径会是：
+...the path would be:
 
 ```
 /items/foo
 ```
 
 !!! info
-    「路径」也通常被称为「端点」或「路由」。
+    A "path" is also commonly called an "endpoint" or a "route".
 
-开发 API 时，「路径」是用来分离「关注点」和「资源」的主要手段。
+While building an API, the "path" is the main way to separate "concerns" and "resources".
 
-#### 操作
+#### Operation
 
-这里的「操作」指的是一种 HTTP「方法」。
+"Operation" here refers to one of the HTTP "methods".
 
-下列之一：
+One of:
 
 * `POST`
 * `GET`
 * `PUT`
 * `DELETE`
 
-...以及更少见的几种：
+...and the more exotic ones:
 
 * `OPTIONS`
 * `HEAD`
 * `PATCH`
 * `TRACE`
 
-在 HTTP 协议中，你可以使用以上的其中一种（或多种）「方法」与每个路径进行通信。
+In the HTTP protocol, you can communicate to each path using one (or more) of these "methods".
 
 ---
 
-在开发 API 时，你通常使用特定的 HTTP 方法去执行特定的行为。
+When building APIs, you normally use these specific HTTP methods to perform a specific action.
 
-通常使用：
+Normally you use:
 
-* `POST`：创建数据。
-* `GET`：读取数据。
-* `PUT`：更新数据。
-* `DELETE`：删除数据。
+* `POST`: to create data.
+* `GET`: to read data.
+* `PUT`: to update data.
+* `DELETE`: to delete data.
 
-因此，在 OpenAPI 中，每一个 HTTP 方法都被称为「操作」。
+So, in OpenAPI, each of the HTTP methods is called an "operation".
 
-我们也打算称呼它们为「操作」。
+We are going to call them "**operations**" too.
 
-#### 定义一个*路径操作装饰器*
+#### Define a *path operation decorator*
 
 ```Python hl_lines="6"
 {!../../../docs_src/first_steps/tutorial001.py!}
 ```
 
-`@app.get("/")` 告诉 **FastAPI** 在它下方的函数负责处理如下访问请求：
+The `@app.get("/")` tells **FastAPI** that the function right below is in charge of handling requests that go to:
 
-* 请求路径为 `/`
-* 使用 <abbr title="HTTP GET 方法"><code>get</code> 操作</abbr>
+* the path `/`
+* using a <abbr title="an HTTP GET method"><code>get</code> operation</abbr>
 
-!!! info "`@decorator` Info"
-    `@something` 语法在 Python 中被称为「装饰器」。
+!!! info "`@decorator` Info" That `@something` syntax in Python is called a "decorator".
 
-    像一顶漂亮的装饰帽一样，将它放在一个函数的上方（我猜测这个术语的命名就是这么来的）。
+    You put it on top of a function. Like a pretty decorative hat (I guess that's where the term came from).
+    
+    A "decorator" takes the function below and does something with it.
+    
+    In our case, this decorator tells **FastAPI** that the function below corresponds to the **path** `/` with an **operation** `get`.
+    
+    It is the "**path operation decorator**".
 
-    装饰器接收位于其下方的函数并且用它完成一些工作。
-
-    在我们的例子中，这个装饰器告诉 **FastAPI** 位于其下方的函数对应着**路径** `/` 加上 `get` **操作**。
-
-    它是一个「**路径操作装饰器**」。
-
-你也可以使用其他的操作：
+You can also use the other operations:
 
 * `@app.post()`
 * `@app.put()`
 * `@app.delete()`
 
-以及更少见的：
+And the more exotic ones:
 
 * `@app.options()`
 * `@app.head()`
@@ -277,59 +274,59 @@ https://example.com/items/foo
 * `@app.trace()`
 
 !!! tip
-    您可以随意使用任何一个操作（HTTP方法）。
+    You are free to use each operation (HTTP method) as you wish.
 
-    **FastAPI** 没有强制要求操作有任何特定的含义。
+    **FastAPI** doesn't enforce any specific meaning.
+    
+    The information here is presented as a guideline, not a requirement.
+    
+    For example, when using GraphQL you normally perform all the actions using only `POST` operations.
 
-    此处提供的信息仅作为指导，而不是要求。
+### Step 4: define the **path operation function**
 
-    比如，当使用 GraphQL 时通常你所有的动作都通过 `post` 一种方法执行。
+This is our "**path operation function**":
 
-### 步骤 4：定义**路径操作函数**
-
-这是我们的「**路径操作函数**」：
-
-* **路径**：是 `/`。
-* **操作**：是 `get`。
-* **函数**：是位于「装饰器」下方的函数（位于 `@app.get("/")` 下方）。
+* **path**: is `/`.
+* **operation**: is `get`.
+* **function**: is the function below the "decorator" (below `@app.get("/")`).
 
 ```Python hl_lines="7"
 {!../../../docs_src/first_steps/tutorial001.py!}
 ```
 
-这是一个 Python 函数。
+This is a Python function.
 
-每当 **FastAPI** 接收一个使用 `GET` 方法访问 URL「`/`」的请求时这个函数会被调用。
+It will be called by **FastAPI** whenever it receives a request to the URL "`/`" using a `GET` operation.
 
-在这个例子中，它是一个 `async` 函数。
+In this case, it is an `async` function.
 
 ---
 
-你也可以将其定义为常规函数而不使用 `async def`:
+You could also define it as a normal function instead of `async def`:
 
 ```Python hl_lines="7"
 {!../../../docs_src/first_steps/tutorial003.py!}
 ```
 
 !!! note
-    如果你不知道两者的区别，请查阅 [Async: *"In a hurry?"*](https://fastapi.tiangolo.com/async/#in-a-hurry){.internal-link target=_blank}。
+    If you don't know the difference, check the [Async: *"In a hurry?"*](../async.md#in-a-hurry){.internal-link target=_blank}.
 
-### 步骤 5：返回内容
+### Step 5: return the content
 
 ```Python hl_lines="8"
 {!../../../docs_src/first_steps/tutorial001.py!}
 ```
 
-你可以返回一个 `dict`、`list`，像 `str`、`int` 一样的单个值，等等。
+You can return a `dict`, `list`, singular values as `str`, `int`, etc.
 
-你还可以返回 Pydantic 模型（稍后你将了解更多）。
+You can also return Pydantic models (you'll see more about that later).
 
-还有许多其他将会自动转换为 JSON 的对象和模型（包括 ORM 对象等）。尝试下使用你最喜欢的一种，它很有可能已经被支持。
+There are many other objects and models that will be automatically converted to JSON (including ORMs, etc). Try using your favorite ones, it's highly probable that they are already supported.
 
-## 总结
+## Recap
 
-* 导入 `FastAPI`。
-* 创建一个 `app` 实例。
-* 编写一个**路径操作装饰器**（如 `@app.get("/")`）。
-* 编写一个**路径操作函数**（如上面的 `def root(): ...`）。
-* 运行开发服务器（如 `uvicorn main:app --reload`）。
+* Import `FastAPI`.
+* Create an `app` instance.
+* Write a **path operation decorator** (like `@app.get("/")`).
+* Write a **path operation function** (like `def root(): ...` above).
+* Run the development server (like `uvicorn main:app --reload`).
