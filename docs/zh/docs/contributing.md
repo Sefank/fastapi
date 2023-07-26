@@ -1,14 +1,14 @@
-# Development - Contributing
+# 开发 - 贡献
 
-First, you might want to see the basic ways to [help FastAPI and get help](help-fastapi.md){.internal-link target=_blank}.
+首先，你最好先了解 [帮助 FastAPI 及获取帮助](help-fastapi.md){.internal-link target=_blank}的基本方式。
 
-## Developing
+## 开发
 
-If you already cloned the repository and you know that you need to deep dive in the code, here are some guidelines to set up your environment.
+如果你已经克隆了源码仓库，并且需要深入研究代码，下面是设置开发环境的指南。
 
-### Virtual environment with `venv`
+### 通过 `venv` 管理虚拟环境
 
-You can create a virtual environment in a directory using Python's `venv` module:
+你可以使用 Python 的 `venv` 模块在一个目录中创建虚拟环境：
 
 <div class="termy">
 
@@ -18,11 +18,11 @@ $ python -m venv env
 
 </div>
 
-That will create a directory `./env/` with the Python binaries and then you will be able to install packages for that isolated environment.
+这将使用 Python 程序创建一个 `./env/` 目录，然后你将能够为这个隔离的环境安装软件包。
 
-### Activate the environment
+### 激活虚拟环境
 
-Activate the new environment with:
+使用以下方法激活新环境：
 
 === "Linux, macOS"
 
@@ -59,7 +59,7 @@ Activate the new environment with:
 
     </div>
 
-To check it worked, use:
+要检查操作是否成功，运行：
 
 === "Linux, macOS, Windows Bash"
 
@@ -87,7 +87,7 @@ To check it worked, use:
 
     </div>
 
-If it shows the `pip` binary at `env/bin/pip` then it worked. 🎉
+如果显示 `pip` 程序文件位于 `env/bin/pip` 则说明激活成功。 🎉
 
 Make sure you have the latest pip version on your virtual environment to avoid errors on the next steps:
 
@@ -101,14 +101,14 @@ $ python -m pip install --upgrade pip
 
 </div>
 
-!!! tip
-    Every time you install a new package with `pip` under that environment, activate the environment again.
+!!! !!! tip
+    每一次你在该环境下使用 `pip` 安装了新软件包时，请再次激活该环境。
 
-    This makes sure that if you use a terminal program installed by that package, you use the one from your local environment and not any other that could be installed globally.
+    这样可以确保你在使用由该软件包安装的终端程序时使用的是当前虚拟环境中的程序，而不是其他的可能是全局安装的程序。
 
 ### pip
 
-After activating the environment as described above:
+如上所述激活环境后：
 
 <div class="termy">
 
@@ -120,24 +120,24 @@ $ pip install -r requirements.txt
 
 </div>
 
-It will install all the dependencies and your local FastAPI in your local environment.
+这将在虚拟环境中安装所有依赖和本地版本的 FastAPI。
 
-#### Using your local FastAPI
+#### 使用本地 FastAPI
 
-If you create a Python file that imports and uses FastAPI, and run it with the Python from your local environment, it will use your local FastAPI source code.
+并且如果你更改该本地 FastAPI 的源码，由于它是通过 `-e` 安装的，当你再次运行那个 Python 文件，它将使用你刚刚编辑过的最新版本的 FastAPI。
 
-And if you update that local FastAPI source code when you run that Python file again, it will use the fresh version of FastAPI you just edited.
+如果你创建一个导入并使用 FastAPI 的 Python 文件，然后使用虚拟环境中的 Python 运行它，它将使用你本地的 FastAPI 源码。
 
-That way, you don't have to "install" your local version to be able to test every change.
+这样，你不必再去重新"安装"你的本地版本即可测试所有更改。
 
 !!! note "Technical Details"
     This only happens when you install using this included `requiements.txt` instead of installing `pip install fastapi` directly.
 
     That is because inside of the `requirements.txt` file, the local version of FastAPI is marked to be installed in "editable" mode, with the `-e` option.
 
-### Format
+### 格式化
 
-There is a script that you can run that will format and clean all your code:
+你可以运行下面的脚本来格式化和清理所有代码：
 
 <div class="termy">
 
@@ -147,42 +147,42 @@ $ bash scripts/format.sh
 
 </div>
 
-It will also auto-sort all your imports.
+它还会自动对所有导入代码进行整理。
 
-For it to sort them correctly, you need to have FastAPI installed locally in your environment, with the command in the section above using `-e`.
+为了使整理正确进行，你需要在当前环境中安装本地的 FastAPI，即在运行上述段落中的命令时添加 `-e`。
 
-## Docs
+## 文档
 
-First, make sure you set up your environment as described above, that will install all the requirements.
+首先，请确保按上述步骤设置好环境，这将安装所有需要的依赖。
 
-The documentation uses <a href="https://www.mkdocs.org/" class="external-link" target="_blank">MkDocs</a>.
+文档使用 <a href="https://www.mkdocs.org/" class="external-link" target="_blank">MkDocs</a> 生成。
 
-And there are extra tools/scripts in place to handle translations in `./scripts/docs.py`.
+并且在 `./scripts/docs.py` 中还有适用的额外工具/脚本来处理翻译。
 
-!!! tip
-    You don't need to see the code in `./scripts/docs.py`, you just use it in the command line.
+!!! !!! tip
+    你不需要去了解 `./scripts/docs.py` 中的代码，只需在命令行中使用它即可。
 
-All the documentation is in Markdown format in the directory `./docs/en/`.
+所有文档均在 `./docs/en/` 目录中以 Markdown 文件格式保存。
 
-Many of the tutorials have blocks of code.
+许多的教程章节里包含有代码块。
 
-In most of the cases, these blocks of code are actual complete applications that can be run as is.
+在大多数情况下，这些代码块是可以直接运行的真实完整的应用程序。
 
-In fact, those blocks of code are not written inside the Markdown, they are Python files in the `./docs_src/` directory.
+实际上，这些代码块不是写在 Markdown 文件内的，它们是位于 `./docs_src/` 目录中的 Python 文件。
 
-And those Python files are included/injected in the documentation when generating the site.
+生成站点时，这些 Python 文件会被包含/注入到文档中。
 
-### Docs for tests
+### 用于测试的文档
 
-Most of the tests actually run against the example source files in the documentation.
+大多数的测试实际上都是针对文档中的示例源文件运行的。
 
-This helps making sure that:
+这有助于确保：
 
 * The documentation is up to date.
-* The documentation examples can be run as is.
-* Most of the features are covered by the documentation, ensured by test coverage.
+* 文档示例可以直接运行。
+* 绝大多数特性既在文档中得以阐述，又通过测试覆盖进行保障。
 
-During local development, there is a script that builds the site and checks for any changes, live-reloading:
+在本地开发期间，有一个脚本可以实时重载地构建站点并用来检查所做的任何更改：
 
 <div class="termy">
 
@@ -196,9 +196,9 @@ $ python ./scripts/docs.py live
 
 </div>
 
-It will serve the documentation on `http://127.0.0.1:8008`.
+它将在 `http://127.0.0.1:8008` 提供对文档的访问。
 
-That way, you can edit the documentation/source files and see the changes live.
+这样，你可以编辑文档/源文件并实时查看更改。
 
 !!! tip
     Alternatively, you can perform the same steps that scripts does manually.
@@ -206,7 +206,7 @@ That way, you can edit the documentation/source files and see the changes live.
     Go into the language directory, for the main docs in English it's at `docs/en/`:
 
     ```console
-    $ cd docs/en/
+    docs/es/docs/mkdocs.yml
     ```
 
 
@@ -216,13 +216,13 @@ That way, you can edit the documentation/source files and see the changes live.
     $ mkdocs serve --dev-addr 8008
     ```
 
-#### Typer CLI (optional)
+#### Typer CLI （可选）
 
-The instructions here show you how to use the script at `./scripts/docs.py` with the `python` program directly.
+本指引向你展示了如何直接用 `python` 程序运行 `./scripts/docs.py` 中的脚本。
 
-But you can also use <a href="https://typer.tiangolo.com/typer-cli/" class="external-link" target="_blank">Typer CLI</a>, and you will get autocompletion in your terminal for the commands after installing completion.
+但你也可以使用 <a href="https://typer.tiangolo.com/typer-cli/" class="external-link" target="_blank">Typer CLI</a>，而且在安装了补全功能后，你将可以在终端中对命令进行自动补全。
 
-If you install Typer CLI, you can install completion with:
+如果你打算安装 Typer CLI ，可以使用以下命令安装自动补全功能：
 
 <div class="termy">
 
@@ -232,12 +232,14 @@ $ typer --install-completion
 zsh completion installed in /home/user/.bashrc.
 Completion will take effect once you restart the terminal.
 ```
+Completion will take effect once you restart the terminal.
+```
 
 </div>
 
-### Apps and docs at the same time
+### 应用和文档同时运行
 
-If you run the examples with, e.g.:
+如果你使用以下方式运行示例程序：
 
 <div class="termy">
 
@@ -249,49 +251,49 @@ $ uvicorn tutorial001:app --reload
 
 </div>
 
-as Uvicorn by default will use the port `8000`, the documentation on port `8008` won't clash.
+由于 Uvicorn 默认使用 `8000` 端口 ，因此运行在 `8008` 端口上的文档不会与之冲突。
 
-### Translations
+### 翻译
 
-Help with translations is VERY MUCH appreciated! And it can't be done without the help from the community. 🌎 🚀
+非常感谢你能够参与文档的翻译！ 这项工作需要社区的帮助才能完成。 🌎 🚀
 
-Here are the steps to help with translations.
+以下是参与帮助翻译的步骤。
 
-#### Tips and guidelines
+#### 建议和指南
 
-* Check the currently <a href="https://github.com/tiangolo/fastapi/pulls" class="external-link" target="_blank">existing pull requests</a> for your language and add reviews requesting changes or approving them.
+* 在当前 <a href="https://github.com/tiangolo/fastapi/pulls" class="external-link" target="_blank">已有的 pull requests</a> 中查找你使用的语言，添加要求修改或同意合并的评审意见。
 
-!!! tip
-    You can <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request" class="external-link" target="_blank">add comments with change suggestions</a> to existing pull requests.
+!!! !!! tip
+    你可以为已有的 pull requests <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request" class="external-link" target="_blank">添加包含修改建议的评论</a>。
 
-    Check the docs about <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-request-reviews" class="external-link" target="_blank">adding a pull request review</a> to approve it or request changes.
+    详情可查看关于 <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-request-reviews" class="external-link" target="_blank">添加 pull request 评审意见</a> 以同意合并或要求修改的文档。
 
 * Check if there's a <a href="https://github.com/tiangolo/fastapi/discussions/categories/translations" class="external-link" target="_blank">GitHub Discussion</a> to coordinate translations for your language. You can subscribe to it, and when there's a new pull request to review, an automatic comment will be added to the discussion.
 
-* Add a single pull request per page translated. That will make it much easier for others to review it.
+* 每翻译一个页面新增一个 pull request。 这将使其他人更容易对其进行评审。
 
-For the languages I don't speak, I'll wait for several others to review the translation before merging.
+对于我（译注：作者使用西班牙语和英语）不懂的语言，我将在等待其他人评审翻译之后将其合并。
 
-* You can also check if there are translations for your language and add a review to them, that will help me know that the translation is correct and I can merge it.
-    * You could check in the <a href="https://github.com/tiangolo/fastapi/discussions/categories/translations" class="external-link" target="_blank">GitHub Discussions</a> for your language.
+* 你还可以查看是否有你所用语言的翻译，并对其进行评审，这将帮助我了解翻译是否正确以及能否将其合并。
+    * 在 <a href="https://github.com/tiangolo/fastapi/issues" class="external-link" target="_blank">issues</a> 中查找是否有对你所用语言所进行的协作翻译。
     * Or you can filter the existing PRs by the ones with the label for your language, for example, for Spanish, the label is <a href="https://github.com/tiangolo/fastapi/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc+label%3Alang-es+label%3A%22awaiting+review%22" class="external-link" target="_blank">`lang-es`</a>.
 
-* Use the same Python examples and only translate the text in the docs. You don't have to change anything for this to work.
+* 使用相同的 Python 示例并且仅翻译文档中的文本。 无需进行任何其他更改示例也能正常工作。
 
-* Use the same images, file names, and links. You don't have to change anything for it to work.
+* 使用相同的图片、文件名以及链接地址。 无需进行任何其他调整来让它们兼容。
 
-* To check the 2-letter code for the language you want to translate you can use the table <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" class="external-link" target="_blank">List of ISO 639-1 codes</a>.
+* 你可以从 <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" class="external-link" target="_blank">ISO 639-1 代码列表</a> 表中查找你想要翻译语言的两位字母代码。
 
-#### Existing language
+#### 已有的语言
 
-Let's say you want to translate a page for a language that already has translations for some pages, like Spanish.
+假设你想将某个页面翻译成已经翻译了一些页面的语言，例如西班牙语。
 
-In the case of Spanish, the 2-letter code is `es`. So, the directory for Spanish translations is located at `docs/es/`.
+对于西班牙语来说，它的两位字母代码是 `es`。 所以西班牙语翻译的目录位于 `docs/es/`。
 
-!!! tip
-    The main ("official") language is English, located at `docs/en/`.
+!!! !!! tip
+    主要（"官方"）语言是英语，位于 `docs/en/`目录。
 
-Now run the live server for the docs in Spanish:
+现在为西班牙语文档运行实时服务器：
 
 <div class="termy">
 
@@ -312,7 +314,9 @@ $ python ./scripts/docs.py live es
     Go into the language directory, for the Spanish translations it's at `docs/es/`:
 
     ```console
-    $ cd docs/es/
+    ```console
+$ bash scripts/format-imports.sh
+```
     ```
 
 
@@ -322,40 +326,40 @@ $ python ./scripts/docs.py live es
     $ mkdocs serve --dev-addr 8008
     ```
 
-Now you can go to <a href="http://127.0.0.1:8008" class="external-link" target="_blank">http://127.0.0.1:8008</a> and see your changes live.
+现在你可以访问 <a href="http://127.0.0.1:8008" class="external-link" target="_blank">http://127.0.0.1:8008</a> 实时查看你所做的更改。
 
-You will see that every language has all the pages. But some pages are not translated and have a notification about the missing translation.
+如果你查看 FastAPI 的线上文档网站，会看到每种语言都有所有页面。 但是某些页面并未被翻译并且会有一处关于缺少翻译的提示。
 
-Now let's say that you want to add a translation for the section [Features](features.md){.internal-link target=_blank}.
+现在假设你要为 [Features](features.md){.internal-link target=_blank} 章节添加翻译。
 
-* Copy the file at:
+* 复制下面的文件：
 
 ```
 docs/en/docs/features.md
 ```
 
-* Paste it in exactly the same location but for the language you want to translate, e.g.:
+* 粘贴到你想要翻译语言目录的相同位置，比如：
 
 ```
 docs/es/docs/features.md
 ```
 
-!!! tip
-    Notice that the only change in the path and file name is the language code, from `en` to `es`.
+!!! !!! tip
+    注意路径和文件名的唯一变化是语言代码，从 `en` 更改为 `es`。
 
-If you go to your browser you will see that now the docs show your new section. 🎉
+打开浏览器，现在你将看到文档展示了你所加入的新章节。 🎉
 
-Now you can translate it all and see how it looks as you save the file.
+现在，你可以将它全部翻译完并在保存文件后进行预览。
 
-#### New Language
+#### 新语言
 
-Let's say that you want to add translations for a language that is not yet translated, not even some pages.
+假设你想要为尚未有任何页面被翻译的语言添加翻译。
 
-Let's say you want to add translations for Creole, and it's not yet there in the docs.
+假设你想要添加克里奥尔语翻译，而且文档中还没有该语言的翻译。
 
-Checking the link from above, the code for "Creole" is `ht`.
+点击上面提到的链接，可以查到"克里奥尔语"的代码为 `ht`。
 
-The next step is to run the script to generate a new translation directory:
+下一步是运行脚本以生成新的翻译目录：
 
 <div class="termy">
 
@@ -364,34 +368,36 @@ The next step is to run the script to generate a new translation directory:
 $ python ./scripts/docs.py new-lang ht
 
 Successfully initialized: docs/ht
+Updating ht
+Updating en
 ```
 
 </div>
 
-Now you can check in your code editor the newly created directory `docs/ht/`.
+现在，你可以在编辑器中查看新创建的目录 `docs/ht/`。
 
-That command created a file `docs/ht/mkdocs.yml` with a simple config that inherits everything from the `en` version:
+这将在 `./docs_build/` 目录中为每一种语言生成全部的文档。
 
 ```yaml
-INHERIT: ../en/mkdocs.yml
+docs/en/docs/mkdocs.yml
 ```
 
 !!! tip
     You could also simply create that file with those contents manually.
 
-That command also created a dummy file `docs/ht/index.md` for the main page, you can start by translating that one.
+首先翻译文档主页 `docs/ht/index.md`。
 
 You can continue with the previous instructions for an "Existing Language" for that process.
 
-You can make the first pull request with those two files, `docs/ht/mkdocs.yml` and `docs/ht/index.md`. 🎉
+这样当你在翻译第一个页面时，其他人可以帮助翻译其他页面。 🚀
 
-#### Preview the result
+#### 预览结果
 
-You can use the `./scripts/docs.py` with the `live` command to preview the results (or `mkdocs serve`).
+当你通过 `live` 命令使用 `./scripts/docs.py` 中的脚本时，该脚本仅展示当前语言已有的文件和翻译。
 
-Once you are done, you can also test it all as it would look online, including all the other languages.
+但是当你完成翻译后，你可以像在线上展示一样测试所有内容。
 
-To do that, first build all the docs:
+为此，首先构建所有文档：
 
 <div class="termy">
 
@@ -399,16 +405,19 @@ To do that, first build all the docs:
 // Use the command "build-all", this will take a bit
 $ python ./scripts/docs.py build-all
 
+Updating es
+Updating en
 Building docs for: en
 Building docs for: es
 Successfully built docs for: es
+Copying en index.md to README.md
 ```
 
 </div>
 
-This builds all those independent MkDocs sites for each language, combines them, and generates the final output at `./site/`.
+然后，它针对每种语言构建独立的 MkDocs 站点，将它们组合在一起，并在 `./site/` 目录中生成最终的输出。
 
-Then you can serve that with the command `serve`:
+然后你可以使用命令 `serve` 来运行生成的站点：
 
 <div class="termy">
 
@@ -420,13 +429,17 @@ Warning: this is a very simple server. For development, use mkdocs serve instead
 This is here only to preview a site with translations already built.
 Make sure you run the build-all command first.
 Serving at: http://127.0.0.1:8008
+``` For development, use mkdocs serve instead.
+This is here only to preview a site with translations already built.
+Make sure you run the build-all command first.
+Serving at: http://127.0.0.1:8008
 ```
 
 </div>
 
-## Tests
+## 测试
 
-There is a script that you can run locally to test all the code and generate coverage reports in HTML:
+你可以在本地运行下面的脚本来测试所有代码并生成 HTML 格式的覆盖率报告：
 
 <div class="termy">
 
@@ -436,4 +449,4 @@ $ bash scripts/test-cov-html.sh
 
 </div>
 
-This command generates a directory `./htmlcov/`, if you open the file `./htmlcov/index.html` in your browser, you can explore interactively the regions of code that are covered by the tests, and notice if there is any region missing.
+该命令生成了一个 `./htmlcov/` 目录，如果你在浏览器中打开 `./htmlcov/index.html` 文件，你可以交互式地浏览被测试所覆盖的代码区块，并注意是否缺少了任何区块。
