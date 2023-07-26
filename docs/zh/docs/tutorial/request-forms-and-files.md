@@ -1,37 +1,69 @@
-# 请求表单与文件
+# Request Forms and Files
 
-FastAPI 支持同时使用 `File` 和 `Form` 定义文件和表单字段。
+You can define files and form fields at the same time using `File` and `Form`.
 
-!!! info "说明"
+!!! info
+    To receive uploaded files and/or form data, first install <a href="https://andrew-d.github.io/python-multipart/" class="external-link" target="_blank">`python-multipart`</a>.
 
-    接收上传文件或表单数据，要预先安装 <a href="https://andrew-d.github.io/python-multipart/" class="external-link" target="_blank">`python-multipart`</a>。
+    E.g. `pip install python-multipart`.
 
-    例如，`pip install python-multipart`。
+## Import `File` and `Form`
 
-## 导入 `File` 与 `Form`
+=== "Python 3.9+"
 
-```Python hl_lines="1"
-{!../../../docs_src/request_forms_and_files/tutorial001.py!}
-```
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/request_forms_and_files/tutorial001_an_py39.py!}
+    ```
 
-## 定义 `File` 与 `Form` 参数
+=== "Python 3.6+"
 
-创建文件和表单参数的方式与 `Body` 和 `Query` 一样：
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/request_forms_and_files/tutorial001_an.py!}
+    ```
 
-```Python hl_lines="8"
-{!../../../docs_src/request_forms_and_files/tutorial001.py!}
-```
+=== "Python 3.6+ non-Annotated"
 
-文件和表单字段作为表单数据上传与接收。
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-声明文件可以使用 `bytes` 或 `UploadFile` 。
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/request_forms_and_files/tutorial001.py!}
+    ```
 
-!!! warning "警告"
+## Define `File` and `Form` parameters
 
-    可在一个*路径操作*中声明多个 `File` 与 `Form` 参数，但不能同时声明要接收 JSON 的 `Body` 字段。因为此时请求体的编码为 `multipart/form-data`，不是 `application/json`。
+Create file and form parameters the same way you would for `Body` or `Query`:
 
-    这不是 **FastAPI** 的问题，而是 HTTP 协议的规定。
+=== "Python 3.9+"
 
-## 小结
+    ```Python hl_lines="10-12"
+    {!> ../../../docs_src/request_forms_and_files/tutorial001_an_py39.py!}
+    ```
 
-在同一个请求中接收数据和文件时，应同时使用 `File` 和 `Form`。
+=== "Python 3.6+"
+
+    ```Python hl_lines="9-11"
+    {!> ../../../docs_src/request_forms_and_files/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/request_forms_and_files/tutorial001.py!}
+    ```
+
+The files and form fields will be uploaded as form data and you will receive the files and form fields.
+
+And you can declare some of the files as `bytes` and some as `UploadFile`.
+
+!!! warning
+    You can declare multiple `File` and `Form` parameters in a *path operation*, but you can't also declare `Body` fields that you expect to receive as JSON, as the request will have the body encoded using `multipart/form-data` instead of `application/json`.
+
+    This is not a limitation of **FastAPI**, it's part of the HTTP protocol.
+
+## Recap
+
+Use `File` and `Form` together when you need to receive data and files in the same request.
