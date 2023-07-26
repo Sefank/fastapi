@@ -1,18 +1,18 @@
-# 教程 - 用户指南
+# Tutorial - User Guide
 
-本教程将一步步向你展示如何使用 **FastAPI** 的绝大部分特性。
+This tutorial shows you how to use **FastAPI** with most of its features, step by step.
 
-各个章节的内容循序渐进，但是又围绕着单独的主题，所以你可以直接跳转到某个章节以解决你的特定需求。
+Each section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.
 
-本教程同样可以作为将来的参考手册。
+It is also built to work as a future reference.
 
-你可以随时回到本教程并查阅你需要的内容。
+So you can come back and see exactly what you need.
 
-## 运行代码
+## Run the code
 
-所有代码片段都可以复制后直接使用（它们实际上是经过测试的 Python 文件）。
+All the code blocks can be copied and used directly (they are actually tested Python files).
 
-要运行任何示例，请将代码复制到 `main.py` 文件中，然后使用以下命令启动 `uvicorn`：
+To run any of the examples, copy the code to a file `main.py`, and start `uvicorn` with:
 
 <div class="termy">
 
@@ -28,17 +28,17 @@ $ uvicorn main:app --reload
 
 </div>
 
-强烈建议你在本地编写或复制代码，对其进行编辑并运行。
+It is **HIGHLY encouraged** that you write or copy the code, edit it and run it locally.
 
-在编辑器中使用 FastAPI 会真正地展现出它的优势：只需要编写很少的代码，所有的类型检查，代码补全等等。
+Using it in your editor is what really shows you the benefits of FastAPI, seeing how little code you have to write, all the type checks, autocompletion, etc.
 
 ---
 
-## 安装 FastAPI
+## Install FastAPI
 
-第一个步骤是安装 FastAPI。
+The first step is to install FastAPI.
 
-为了使用本教程，你可能需要安装所有的可选依赖及对应功能：
+For the tutorial, you might want to install it with all the optional dependencies and features:
 
 <div class="termy">
 
@@ -50,31 +50,33 @@ $ pip install "fastapi[all]"
 
 </div>
 
-......以上安装还包括了 `uvicorn`，你可以将其用作运行代码的服务器。
+...that also includes `uvicorn`, that you can use as the server that runs your code.
 
 !!! note
-    你也可以分开来安装。
+    You can also install it part by part.
 
-    假如你想将应用程序部署到生产环境，你可能要执行以下操作：
+    This is what you would probably do once you want to deploy your application to production:
 
     ```
     pip install fastapi
     ```
 
-    并且安装`uvicorn`来作为服务器：
+
+    Also install `uvicorn` to work as the server:
 
     ```
     pip install "uvicorn[standard]"
     ```
 
-    然后对你想使用的每个可选依赖项也执行相同的操作。
 
-## 进阶用户指南
+    And the same for each of the optional dependencies that you want to use.
 
-在本**教程-用户指南**之后，你可以阅读**进阶用户指南**。
+## Advanced User Guide
 
-**进阶用户指南**以本教程为基础，使用相同的概念，并教授一些额外的特性。
+There is also an **Advanced User Guide** that you can read later after this **Tutorial - User guide**.
 
-但是你应该先阅读**教程-用户指南**（即你现在正在阅读的内容）。
+The **Advanced User Guide**, builds on this, uses the same concepts, and teaches you some extra features.
 
-教程经过精心设计，使你可以仅通过**教程-用户指南**来开发一个完整的应用程序，然后根据你的需要，使用**进阶用户指南**中的一些其他概念，以不同的方式来扩展它。
+But you should first read the **Tutorial - User Guide** (what you are reading right now).
+
+It's designed so that you can build a complete application with just the **Tutorial - User Guide**, and then extend it in different ways, depending on your needs, using some of the additional ideas from the **Advanced User Guide**.
