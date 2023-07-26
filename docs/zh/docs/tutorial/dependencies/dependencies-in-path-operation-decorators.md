@@ -1,73 +1,139 @@
-# 路径操作装饰器依赖项
+# Dependencies in path operation decorators
 
-有时，我们并不需要在*路径操作函数*中使用依赖项的返回值。
+In some cases you don't really need the return value of a dependency inside your *path operation function*.
 
-或者说，有些依赖项不返回值。
+Or the dependency doesn't return a value.
 
-但仍要执行或解析该依赖项。
+But you still need it to be executed/solved.
 
-对于这种情况，不必在声明*路径操作函数*的参数时使用 `Depends`，而是可以在*路径操作装饰器*中添加一个由 `dependencies` 组成的 `list`。
+For those cases, instead of declaring a *path operation function* parameter with `Depends`, you can add a `list` of `dependencies` to the *path operation decorator*.
 
-## 在*路径操作装饰器*中添加 `dependencies` 参数
+## Add `dependencies` to the *path operation decorator*
 
-*路径操作装饰器*支持可选参数 ~ `dependencies`。
+The *path operation decorator* receives an optional argument `dependencies`.
 
-该参数的值是由 `Depends()` 组成的 `list`：
+It should be a `list` of `Depends()`:
 
-```Python hl_lines="17"
-{!../../../docs_src/dependencies/tutorial006.py!}
-```
+=== "Python 3.9+"
 
-路径操作装饰器依赖项（以下简称为**“路径装饰器依赖项”**）的执行或解析方式和普通依赖项一样，但就算这些依赖项会返回值，它们的值也不会传递给*路径操作函数*。
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial006_an_py39.py!}
+    ```
 
-!!! tip "提示"
+=== "Python 3.6+"
 
-    有些编辑器会检查代码中没使用过的函数参数，并显示错误提示。
+    ```Python hl_lines="18"
+    {!> ../../../docs_src/dependencies/tutorial006_an.py!}
+    ```
 
-    在*路径操作装饰器*中使用 `dependencies` 参数，可以确保在执行依赖项的同时，避免编辑器显示错误提示。
+=== "Python 3.6 non-Annotated"
 
-    使用路径装饰器依赖项还可以避免开发新人误会代码中包含无用的未使用参数。
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-!!! info "说明"
+    ```Python hl_lines="17"
+    {!> ../../../docs_src/dependencies/tutorial006.py!}
+    ```
 
-    本例中，使用的是自定义响应头 `X-Key` 和 `X-Token`。
+These dependencies will be executed/solved the same way normal dependencies. But their value (if they return any) won't be passed to your *path operation function*.
 
-    但实际开发中，尤其是在实现安全措施时，最好使用 FastAPI 内置的[安全工具](../security/index.md){.internal-link target=_blank}（详见下一章）。
+!!! tip
+    Some editors check for unused function parameters, and show them as errors.
 
-## 依赖项错误和返回值
+    Using these `dependencies` in the *path operation decorator* you can make sure they are executed while avoiding editor/tooling errors.
+    
+    It might also help avoid confusion for new developers that see an unused parameter in your code and could think it's unnecessary.
 
-路径装饰器依赖项也可以使用普通的依赖项*函数*。
+!!! info
+    In this example we use invented custom headers `X-Key` and `X-Token`.
 
-### 依赖项的需求项
+    But in real cases, when implementing security, you would get more benefits from using the integrated [Security utilities (the next chapter)](../security/index.md){.internal-link target=_blank}.
 
-路径装饰器依赖项可以声明请求的需求项（比如响应头）或其他子依赖项：
+## Dependencies errors and return values
 
-```Python hl_lines="6  11"
-{!../../../docs_src/dependencies/tutorial006.py!}
-```
+You can use the same dependency *functions* you use normally.
 
-### 触发异常
+### Dependency requirements
 
-路径装饰器依赖项与正常的依赖项一样，可以 `raise` 异常：
+They can declare request requirements (like headers) or other sub-dependencies:
 
-```Python hl_lines="8  13"
-{!../../../docs_src/dependencies/tutorial006.py!}
-```
+=== "Python 3.9+"
 
-### 返回值
+    ```Python hl_lines="8  13"
+    {!> ../../../docs_src/dependencies/tutorial006_an_py39.py!}
+    ```
 
-无论路径装饰器依赖项是否返回值，路径操作都不会使用这些值。
+=== "Python 3.6+"
 
-因此，可以复用在其他位置使用过的、（能返回值的）普通依赖项，即使没有使用这个值，也会执行该依赖项：
+    ```Python hl_lines="7  12"
+    {!> ../../../docs_src/dependencies/tutorial006_an.py!}
+    ```
 
-```Python hl_lines="9  14"
-{!../../../docs_src/dependencies/tutorial006.py!}
-```
+=== "Python 3.6 non-Annotated"
 
-## 为一组路径操作定义依赖项
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-稍后，[大型应用 - 多文件](../../tutorial/bigger-applications.md){.internal-link target=\_blank}一章中会介绍如何使用多个文件创建大型应用程序，在这一章中，您将了解到如何为一组*路径操作*声明单个 `dependencies` 参数。
+    ```Python hl_lines="6  11"
+    {!> ../../../docs_src/dependencies/tutorial006.py!}
+    ```
 
-## 全局依赖项
+### Raise exceptions
 
-接下来，我们将学习如何为 `FastAPI` 应用程序添加全局依赖项，创建应用于每个*路径操作*的依赖项。
+These dependencies can `raise` exceptions, the same as normal dependencies:
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="10  15"
+    {!> ../../../docs_src/dependencies/tutorial006_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9  14"
+    {!> ../../../docs_src/dependencies/tutorial006_an.py!}
+    ```
+
+=== "Python 3.6 non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="8  13"
+    {!> ../../../docs_src/dependencies/tutorial006.py!}
+    ```
+
+### Return values
+
+And they can return values or not, the values won't be used.
+
+So, you can re-use a normal dependency (that returns a value) you already use somewhere else, and even though the value won't be used, the dependency will be executed:
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="11  16"
+    {!> ../../../docs_src/dependencies/tutorial006_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10  15"
+    {!> ../../../docs_src/dependencies/tutorial006_an.py!}
+    ```
+
+=== "Python 3.6 non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9  14"
+    {!> ../../../docs_src/dependencies/tutorial006.py!}
+    ```
+
+## Dependencies for a group of *path operations*
+
+Later, when reading about how to structure bigger applications ([Bigger Applications - Multiple Files](../../tutorial/bigger-applications.md){.internal-link target=_blank}), possibly with multiple files, you will learn how to declare a single `dependencies` parameter for a group of *path operations*.
+
+## Global Dependencies
+
+Next we will see how to add dependencies to the whole `FastAPI` application, so that they apply to each *path operation*.
