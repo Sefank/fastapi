@@ -1,107 +1,103 @@
 # WebSockets
 
-You can use <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API" class="external-link" target="_blank">WebSockets</a> with **FastAPI**.
+您可以在 **FastAPI** 中使用 [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)。
 
-## Install `WebSockets`
+## 安装 `WebSockets`
 
-First you need to install `WebSockets`:
+首先，您需要安装 `WebSockets`：
 
 <div class="termy">
 
-```console
 $ pip install websockets
 
----> 100%
-```
+---&gt; 100%
 
 </div>
 
-## WebSockets client
+## WebSockets 客户端
 
-### In production
+### 在生产环境中
 
-In your production system, you probably have a frontend created with a modern framework like React, Vue.js or Angular.
+在您的生产系统中，您可能使用现代框架（如React、Vue.js或Angular）创建了一个前端。
 
-And to communicate using WebSockets with your backend you would probably use your frontend's utilities.
+要使用 WebSockets 与后端进行通信，您可能会使用前端的工具。
 
-Or you might have a native mobile application that communicates with your WebSocket backend directly, in native code.
+或者，您可能有一个原生移动应用程序，直接使用原生代码与 WebSocket 后端通信。
 
-Or you might have any other way to communicate with the WebSocket endpoint.
+或者，您可能有其他与 WebSocket 终端通信的方式。
 
 ---
 
-But for this example, we'll use a very simple HTML document with some JavaScript, all inside a long string.
+但是，在本示例中，我们将使用一个非常简单的HTML文档，其中包含一些JavaScript，全部放在一个长字符串中。
 
-This, of course, is not optimal and you wouldn't use it for production.
+当然，这并不是最优的做法，您不应该在生产环境中使用它。
 
-In production you would have one of the options above.
+在生产环境中，您应该选择上述任一选项。
 
-But it's the simplest way to focus on the server-side of WebSockets and have a working example:
+但这是一种专注于 WebSockets 的服务器端并提供一个工作示例的最简单方式：
 
 ```Python hl_lines="2  6-38  41-43"
 {!../../../docs_src/websockets/tutorial001.py!}
 ```
 
-## Create a `websocket`
+## 创建 `websocket`
 
-In your **FastAPI** application, create a `websocket`:
+在您的 **FastAPI** 应用程序中，创建一个 `websocket`：
 
 ```Python hl_lines="1  46-47"
 {!../../../docs_src/websockets/tutorial001.py!}
 ```
 
-!!! note "Technical Details"
-    You could also use `from starlette.websockets import WebSocket`.
+!!! !!! note "技术细节"
+    您也可以使用 `from starlette.websockets import WebSocket`。
 
-    **FastAPI** provides the same `WebSocket` directly just as a convenience for you, the developer. But it comes directly from Starlette.
+    **FastAPI** 直接提供了相同的 `WebSocket`，只是为了方便开发人员。 但它直接来自 Starlette。
 
-## Await for messages and send messages
+## 等待消息并发送消息
 
-In your WebSocket route you can `await` for messages and send messages.
+在您的 WebSocket 路由中，您可以使用 `await` 等待消息并发送消息。
 
 ```Python hl_lines="48-52"
 {!../../../docs_src/websockets/tutorial001.py!}
 ```
 
-You can receive and send binary, text, and JSON data.
+您可以接收和发送二进制、文本和 JSON 数据。
 
-## Try it
+## 尝试一下
 
-If your file is named `main.py`, run your application with:
+如果您的文件名为 `main.py`，请使用以下命令运行应用程序：
 
 <div class="termy">
 
-```console
 $ uvicorn main:app --reload
 
-<span style="color: green;">INFO</span>:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-```
+&lt;span style="color: green;"&gt;INFO&lt;/span&gt;:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 
 </div>
 
-Open your browser at <a href="http://127.0.0.1:8000" class="external-link" target="_blank">http://127.0.0.1:8000</a>.
+在浏览器中打开 <a href="http://127.0.0.1:8000" class="external-link" target="_blank">http://127.0.0.1:8000</a>。
 
-You will see a simple page like:
+您将看到一个简单的页面，如下所示：
 
 <img src="/img/tutorial/websockets/image01.png" />
 
-You can type messages in the input box, and send them:
+您可以在输入框中输入消息并发送：
 
 <img src="/img/tutorial/websockets/image02.png" />
 
-And your **FastAPI** application with WebSockets will respond back:
+您的 **FastAPI** 应用程序将回复：
 
 <img src="/img/tutorial/websockets/image03.png" />
 
-You can send (and receive) many messages:
+您可以发送（和接收）多条消息：
 
 <img src="/img/tutorial/websockets/image04.png" />
 
-And all of them will use the same WebSocket connection.
+所有这些消息都将使用同一个 WebSocket 连
 
-## Using `Depends` and others
+## 使用 `Depends` 和其他依赖项
 
-In WebSocket endpoints you can import from `fastapi` and use:
+在 WebSocket 端点中，您可以从 `fastapi` 导入并使用以下内容：
 
 * `Depends`
 * `Security`
@@ -110,7 +106,7 @@ In WebSocket endpoints you can import from `fastapi` and use:
 * `Path`
 * `Query`
 
-They work the same way as for other FastAPI endpoints/*path operations*:
+它们的工作方式与其他 FastAPI 端点/ *路径操作* 相同：
 
 === "Python 3.10+"
 
@@ -130,60 +126,58 @@ They work the same way as for other FastAPI endpoints/*path operations*:
     {!> ../../../docs_src/websockets/tutorial002_an.py!}
     ```
 
-=== "Python 3.10+ non-Annotated"
+=== "Python 3.6+ 非带注解版本"
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+    !!! !!! tip
+        如果可能，请尽量使用 `Annotated` 版本。
 
     ```Python hl_lines="66-67  79"
     {!> ../../../docs_src/websockets/tutorial002_py310.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.10+ 非带注解版本"
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+    !!! !!! tip
+        如果可能，请尽量使用 `Annotated` 版本。
 
     ```Python hl_lines="68-69  81"
     {!> ../../../docs_src/websockets/tutorial002.py!}
     ```
 
-!!! info
-    As this is a WebSocket it doesn't really make sense to raise an `HTTPException`, instead we raise a `WebSocketException`.
+!!! !!! info
+    由于这是一个 WebSocket，抛出 `HTTPException` 并不是很合理，而是抛出 `WebSocketException`。
 
-    You can use a closing code from the <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1" class="external-link" target="_blank">valid codes defined in the specification</a>.
+    您可以使用<a href="https://tools.ietf.org/html/rfc6455#section-7.4.1" class="external-link" target="_blank">规范中定义的有效代码</a>。
 
-### Try the WebSockets with dependencies
+### 尝试带有依赖项的 WebSockets
 
-If your file is named `main.py`, run your application with:
+如果您的文件名为 `main.py`，请使用以下命令运行应用程序：
 
 <div class="termy">
 
-```console
 $ uvicorn main:app --reload
 
-<span style="color: green;">INFO</span>:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-```
+&lt;span style="color: green;"&gt;INFO&lt;/span&gt;:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 
 </div>
 
-Open your browser at <a href="http://127.0.0.1:8000" class="external-link" target="_blank">http://127.0.0.1:8000</a>.
+在浏览器中打开 <a href="http://127.0.0.1:8000" class="external-link" target="_blank">http://127.0.0.1:8000</a>。
 
-There you can set:
+在页面中，您可以设置：
 
-* The "Item ID", used in the path.
-* The "Token" used as a query parameter.
+* "Item ID"，用于路径。
+* "Token"，作为查询参数。
 
-!!! tip
-    Notice that the query `token` will be handled by a dependency.
+!!! !!! tip
+    注意，查询参数 `token` 将由依赖项处理。
 
-With that you can connect the WebSocket and then send and receive messages:
+通过这样，您可以连接 WebSocket，然后发送和接收消息：
 
 <img src="/img/tutorial/websockets/image05.png" />
 
-## Handling disconnections and multiple clients
+## 处理断开连接和多个客户端
 
-When a WebSocket connection is closed, the `await websocket.receive_text()` will raise a `WebSocketDisconnect` exception, which you can then catch and handle like in this example.
+当 WebSocket 连接关闭时，`await websocket.receive_text()` 将引发 `WebSocketDisconnect` 异常，您可以捕获并处理该异常，就像本示例中的示例一样。
 
 === "Python 3.9+"
 
@@ -197,28 +191,28 @@ When a WebSocket connection is closed, the `await websocket.receive_text()` will
     {!> ../../../docs_src/websockets/tutorial003.py!}
     ```
 
-To try it out:
+尝试以下操作：
 
-* Open the app with several browser tabs.
+* 使用多个浏览器选项卡打开应用程序。
 * Write messages from them.
-* Then close one of the tabs.
+* 然后关闭其中一个选项卡。
 
-That will raise the `WebSocketDisconnect` exception, and all the other clients will receive a message like:
+这将引发 `WebSocketDisconnect` 异常，并且所有其他客户端都会收到类似以下的消息：
 
 ```
 Client #1596980209979 left the chat
 ```
 
-!!! tip
-    The app above is a minimal and simple example to demonstrate how to handle and broadcast messages to several WebSocket connections.
+!!! !!! tip
+    上面的应用程序是一个最小和简单的示例，用于演示如何处理和向多个 WebSocket 连接广播消息。
 
-    But have in mind that, as everything is handled in memory, in a single list, it will only work while the process is running, and will only work with a single process.
+    但请记住，由于所有内容都在内存中以单个列表的形式处理，因此它只能在进程运行时工作，并且只能使用单个进程。
     
-    If you need something easy to integrate with FastAPI but that is more robust, supported by Redis, PostgreSQL or others, check <a href="https://github.com/encode/broadcaster" class="external-link" target="_blank">encode/broadcaster</a>.
+    如果您需要与 FastAPI 集成更简单但更强大的功能，支持 Redis、PostgreSQL 或其他功能，请查看 [encode/broadcaster](https://github.com/encode/broadcaster)。
 
-## More info
+## 更多信息
 
-To learn more about the options, check Starlette's documentation for:
+要了解更多选项，请查看 Starlette 的文档：
 
-* <a href="https://www.starlette.io/websockets/" class="external-link" target="_blank">The `WebSocket` class</a>.
-* <a href="https://www.starlette.io/endpoints/#websocketendpoint" class="external-link" target="_blank">Class-based WebSocket handling</a>.
+* WebSocket 类
+* [基于类的 WebSocket 处理](https://www.starlette.io/endpoints/#websocketendpoint)。
