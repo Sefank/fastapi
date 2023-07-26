@@ -1,34 +1,34 @@
-# 包含 WSGI - Flask，Django，其它
+# Including WSGI - Flask, Django, others
 
-您可以挂载多个 WSGI 应用，正如您在 [Sub Applications - Mounts](./sub-applications.md){.internal-link target=_blank}, [Behind a Proxy](./behind-a-proxy.md){.internal-link target=_blank} 中所看到的那样。
+You can mount WSGI applications as you saw with [Sub Applications - Mounts](./sub-applications.md){.internal-link target=_blank}, [Behind a Proxy](./behind-a-proxy.md){.internal-link target=_blank}.
 
-为此, 您可以使用 `WSGIMiddleware` 来包装你的 WSGI 应用，如：Flask，Django，等等。
+For that, you can use the `WSGIMiddleware` and use it to wrap your WSGI application, for example, Flask, Django, etc.
 
-## 使用 `WSGIMiddleware`
+## Using `WSGIMiddleware`
 
-您需要导入 `WSGIMiddleware`。
+You need to import `WSGIMiddleware`.
 
-然后使用该中间件包装 WSGI 应用（例如 Flask）。
+Then wrap the WSGI (e.g. Flask) app with the middleware.
 
-之后将其挂载到某一个路径下。
+And then mount that under a path.
 
-```Python hl_lines="2-3  22"
+```Python hl_lines="2-3  23"
 {!../../../docs_src/wsgi/tutorial001.py!}
 ```
 
-## 检查
+## Check it
 
-现在，所有定义在 `/v1/` 路径下的请求将会被 Flask 应用处理。
+Now, every request under the path `/v1/` will be handled by the Flask application.
 
-其余的请求则会被 **FastAPI** 处理。
+And the rest will be handled by **FastAPI**.
 
-如果您使用 Uvicorn 运行应用实例并且访问 <a href="http://localhost:8000/v1/" class="external-link" target="_blank">http://localhost:8000/v1/</a>，您将会看到由 Flask 返回的响应：
+If you run it with Uvicorn and go to <a href="http://localhost:8000/v1/" class="external-link" target="_blank">http://localhost:8000/v1/</a> you will see the response from Flask:
 
 ```txt
 Hello, World from Flask!
 ```
 
-并且如果您访问 <a href="http://localhost:8000/v2" class="external-link" target="_blank">http://localhost:8000/v2</a>，您将会看到由 FastAPI 返回的响应：
+And if you go to <a href="http://localhost:8000/v2" class="external-link" target="_blank">http://localhost:8000/v2</a> you will see the response from FastAPI:
 
 ```JSON
 {
