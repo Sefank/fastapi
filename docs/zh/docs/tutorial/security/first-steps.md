@@ -1,40 +1,57 @@
-# 安全 - 第一步
+# Security - First Steps
 
-假设**后端** API 在某个域。
+Let's imagine that you have your **backend** API in some domain.
 
-**前端**在另一个域，或（移动应用中）在同一个域的不同路径下。
+And you have a **frontend** in another domain or in a different path of the same domain (or in a mobile application).
 
-并且，前端要使用后端的 **username** 与 **password** 验证用户身份。
+And you want to have a way for the frontend to authenticate with the backend, using a **username** and **password**.
 
-固然，**FastAPI** 支持 **OAuth2** 身份验证。
+We can use **OAuth2** to build that with **FastAPI**.
 
-但为了节省开发者的时间，不要只为了查找很少的内容，不得不阅读冗长的规范文档。
+But let's save you the time of reading the full long specification just to find those little pieces of information you need.
 
-我们建议使用 **FastAPI** 的安全工具。
+Let's use the tools provided by **FastAPI** to handle security.
 
-## 概览
+## How it looks
 
-首先，看看下面的代码是怎么运行的，然后再回过头来了解其背后的原理。
+Let's first just use the code and see how it works, and then we'll come back to understand what's happening.
 
-## 创建 `main.py`
+## Create `main.py`
 
-把下面的示例代码复制到 `main.py`：
+Copy the example in a file `main.py`:
 
-```Python
-{!../../../docs_src/security/tutorial001.py!}
-```
+=== "Python 3.9+"
 
-## 运行
+    ```Python
+    {!> ../../../docs_src/security/tutorial001_an_py39.py!}
+    ```
 
-!!! info "说明"
+=== "Python 3.6+"
 
-    先安装 <a href="https://andrew-d.github.io/python-multipart/" class="external-link" target="_blank">`python-multipart`</a>。
+    ```Python
+    {!> ../../../docs_src/security/tutorial001_an.py!}
+    ```
 
-    安装命令： `pip install python-multipart`。
+=== "Python 3.6+ non-Annotated"
 
-    这是因为 **OAuth2** 使用**表单数据**发送 `username` 与 `password`。
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-用下面的命令运行该示例：
+    ```Python
+    {!> ../../../docs_src/security/tutorial001.py!}
+    ```
+
+
+## Run it
+
+!!! info
+    First install <a href="https://andrew-d.github.io/python-multipart/" class="external-link" target="_blank">`python-multipart`</a>.
+
+    E.g. `pip install python-multipart`.
+    
+    This is because **OAuth2** uses "form data" for sending the `username` and `password`.
+
+Run the example with:
 
 <div class="termy">
 
@@ -46,144 +63,172 @@ $ uvicorn main:app --reload
 
 </div>
 
-## 查看文档
+## Check it
 
-打开 API 文档： <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs。</a>
+Go to the interactive docs at: <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a>.
 
-界面如下图所示：
+You will see something like this:
 
-<img src="/img/tutorial/security/image01.png">
+<img src="/img/tutorial/security/image01.png" />
 
-!!! check "Authorize 按钮！"
+!!! check "Authorize button!"
+    You already have a shiny new "Authorize" button.
 
-    页面右上角出现了一个「**Authorize**」按钮。
+    And your *path operation* has a little lock in the top-right corner that you can click.
 
-    *路径操作*的右上角也出现了一个可以点击的小锁图标。
+And if you click it, you have a little authorization form to type a `username` and `password` (and other optional fields):
 
-点击 **Authorize** 按钮，弹出授权表单，输入 `username` 与 `password` 及其它可选字段：
+<img src="/img/tutorial/security/image02.png" />
 
-<img src="/img/tutorial/security/image02.png">
+!!! note
+    It doesn't matter what you type in the form, it won't work yet. But we'll get there.
 
-!!! note "笔记"
+This is of course not the frontend for the final users, but it's a great automatic tool to document interactively all your API.
 
-    目前，在表单中输入内容不会有任何反应，后文会介绍相关内容。
+It can be used by the frontend team (that can also be yourself).
 
-虽然此文档不是给前端最终用户使用的，但这个自动工具非常实用，可在文档中与所有 API 交互。
+It can be used by third party applications and systems.
 
-前端团队（可能就是开发者本人）可以使用本工具。
+And it can also be used by yourself, to debug, check and test the same application.
 
-第三方应用与系统也可以调用本工具。
+## The `password` flow
 
-开发者也可以用它来调试、检查、测试应用。
+Now let's go back a bit and understand what is all that.
 
-## 密码流
+The `password` "flow" is one of the ways ("flows") defined in OAuth2, to handle security and authentication.
 
-现在，我们回过头来介绍这段代码的原理。
+OAuth2 was designed so that the backend or API could be independent of the server that authenticates the user.
 
-`Password` **流**是 OAuth2 定义的，用于处理安全与身份验证的方式（**流**）。
+But in this case, the same **FastAPI** application will handle the API and the authentication.
 
-OAuth2 的设计目标是为了让后端或 API 独立于服务器验证用户身份。
+So, let's review it from that simplified point of view:
 
-但在本例中，**FastAPI** 应用会处理 API 与身份验证。
+* The user types the `username` and `password` in the frontend, and hits `Enter`.
+* The frontend (running in the user's browser) sends that `username` and `password` to a specific URL in our API (declared with `tokenUrl="token"`).
+* The API checks that `username` and `password`, and responds with a "token" (we haven't implemented any of this yet).
+    * A "token" is just a string with some content that we can use later to verify this user.
+    * Normally, a token is set to expire after some time.
+        * So, the user will have to log in again at some point later.
+        * And if the token is stolen, the risk is less. It is not like a permanent key that will work forever (in most of the cases).
+* The frontend stores that token temporarily somewhere.
+* The user clicks in the frontend to go to another section of the frontend web app.
+* The frontend needs to fetch some more data from the API.
+    * But it needs authentication for that specific endpoint.
+    * So, to authenticate with our API, it sends a header `Authorization` with a value of `Bearer` plus the token.
+    * If the token contains `foobar`, the content of the `Authorization` header would be: `Bearer foobar`.
 
-下面，我们来看一下简化的运行流程：
+## **FastAPI**'s `OAuth2PasswordBearer`
 
-- 用户在前端输入 `username` 与`password`，并点击**回车**
-- （用户浏览器中运行的）前端把 `username` 与`password` 发送至 API 中指定的 URL（使用 `tokenUrl="token"` 声明）
-- API 检查 `username` 与`password`，并用令牌（`Token`） 响应（暂未实现此功能）：
-  - 令牌只是用于验证用户的字符串
-  - 一般来说，令牌会在一段时间后过期
-    - 过时后，用户要再次登录
-    - 这样一来，就算令牌被人窃取，风险也较低。因为它与永久密钥不同，**在绝大多数情况下**不会长期有效
-- 前端临时将令牌存储在某个位置
-- 用户点击前端，前往前端应用的其它部件
-- 前端需要从 API 中提取更多数据：
-    - 为指定的端点（Endpoint）进行身份验证
-    - 因此，用 API 验证身份时，要发送值为 `Bearer` + 令牌的请求头 `Authorization`
-    - 假如令牌为 `foobar`，`Authorization` 请求头就是： `Bearer foobar`
+**FastAPI** provides several tools, at different levels of abstraction, to implement these security features.
 
-## **FastAPI** 的 `OAuth2PasswordBearer`
+In this example we are going to use **OAuth2**, with the **Password** flow, using a **Bearer** token. We do that using the `OAuth2PasswordBearer` class.
 
-**FastAPI** 提供了不同抽象级别的安全工具。
+!!! info
+    A "bearer" token is not the only option.
 
-本例使用 **OAuth2** 的 **Password** 流以及 **Bearer** 令牌（`Token`）。为此要使用 `OAuth2PasswordBearer` 类。
+    But it's the best one for our use case.
+    
+    And it might be the best for most use cases, unless you are an OAuth2 expert and know exactly why there's another option that suits better your needs.
+    
+    In that case, **FastAPI** also provides you with the tools to build it.
 
-!!! info "说明"
+When we create an instance of the `OAuth2PasswordBearer` class we pass in the `tokenUrl` parameter. This parameter contains the URL that the client (the frontend running in the user's browser) will use to send the `username` and `password` in order to get a token.
 
-    `Bearer` 令牌不是唯一的选择。
+=== "Python 3.9+"
 
-    但它是最适合这个用例的方案。
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/security/tutorial001_an_py39.py!}
+    ```
 
-    甚至可以说，它是适用于绝大多数用例的最佳方案，除非您是 OAuth2 的专家，知道为什么其它方案更合适。
+=== "Python 3.6+"
 
-    本例中，**FastAPI** 还提供了构建工具。
+    ```Python  hl_lines="7"
+    {!> ../../../docs_src/security/tutorial001_an.py!}
+    ```
 
-创建 `OAuth2PasswordBearer` 的类实例时，要传递 `tokenUrl` 参数。该参数包含客户端（用户浏览器中运行的前端） 的 URL，用于发送 `username` 与 `password`，并获取令牌。
+=== "Python 3.6+ non-Annotated"
 
-```Python hl_lines="6"
-{!../../../docs_src/security/tutorial001.py!}
-```
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-!!! tip "提示"
+    ```Python hl_lines="6"
+    {!> ../../../docs_src/security/tutorial001.py!}
+    ```
 
-    在此，`tokenUrl="token"` 指向的是暂未创建的相对 URL `token`。这个相对 URL 相当于 `./token`。
+!!! tip
+    Here `tokenUrl="token"` refers to a relative URL `token` that we haven't created yet. As it's a relative URL, it's equivalent to `./token`.
 
-    因为使用的是相对 URL，如果 API 位于 `https://example.com/`，则指向 `https://example.com/token`。但如果 API 位于 `https://example.com/api/v1/`，它指向的就是`https://example.com/api/v1/token`。
+    Because we are using a relative URL, if your API was located at `https://example.com/`, then it would refer to `https://example.com/token`. But if your API was located at `https://example.com/api/v1/`, then it would refer to `https://example.com/api/v1/token`.
+    
+    Using a relative URL is important to make sure your application keeps working even in an advanced use case like [Behind a Proxy](../../advanced/behind-a-proxy.md){.internal-link target=_blank}.
 
-    使用相对 URL 非常重要，可以确保应用在遇到[使用代理](../../advanced/behind-a-proxy.md){.internal-link target=_blank}这样的高级用例时，也能正常运行。
+This parameter doesn't create that endpoint / *path operation*, but declares that the URL `/token` will be the one that the client should use to get the token. That information is used in OpenAPI, and then in the interactive API documentation systems.
 
-该参数不会创建端点或*路径操作*，但会声明客户端用来获取令牌的 URL `/token` 。此信息用于 OpenAPI 及 API 文档。
+We will soon also create the actual path operation.
 
-接下来，学习如何创建实际的路径操作。
+!!! info
+    If you are a very strict "Pythonista" you might dislike the style of the parameter name `tokenUrl` instead of `token_url`.
 
-!!! info "说明"
+    That's because it is using the same name as in the OpenAPI spec. So that if you need to investigate more about any of these security schemes you can just copy and paste it to find more information about it.
 
-    严苛的 **Pythonista** 可能不喜欢用 `tokenUrl` 这种命名风格代替 `token_url`。
+The `oauth2_scheme` variable is an instance of `OAuth2PasswordBearer`, but it is also a "callable".
 
-    这种命名方式是因为要使用与 OpenAPI 规范中相同的名字。以便在深入校验安全方案时，能通过复制粘贴查找更多相关信息。
-
-`oauth2_scheme` 变量是 `OAuth2PasswordBearer` 的实例，也是**可调用项**。
-
-以如下方式调用：
+It could be called as:
 
 ```Python
 oauth2_scheme(some, parameters)
 ```
 
-因此，`Depends` 可以调用 `oauth2_scheme` 变量。
+So, it can be used with `Depends`.
 
-### 使用
+### Use it
 
-接下来，使用 `Depends` 把 `oauth2_scheme` 传入依赖项。
+Now you can pass that `oauth2_scheme` in a dependency with `Depends`.
 
-```Python hl_lines="10"
-{!../../../docs_src/security/tutorial001.py!}
-```
+=== "Python 3.9+"
 
-该依赖项使用字符串（`str`）接收*路径操作函数*的参数 `token` 。
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/security/tutorial001_an_py39.py!}
+    ```
 
-**FastAPI** 使用依赖项在 OpenAPI 概图（及 API 文档）中定义**安全方案**。
+=== "Python 3.6+"
 
-!!! info "技术细节"
+    ```Python  hl_lines="11"
+    {!> ../../../docs_src/security/tutorial001_an.py!}
+    ```
 
-    **FastAPI** 使用（在依赖项中声明的）类 `OAuth2PasswordBearer` 在 OpenAPI 中定义安全方案，这是因为它继承自 `fastapi.security.oauth2.OAuth2`，而该类又是继承自`fastapi.security.base.SecurityBase`。
+=== "Python 3.6+ non-Annotated"
 
-    所有与 OpenAPI（及 API 文档）集成的安全工具都继承自 `SecurityBase`， 这就是为什么 **FastAPI** 能把它们集成至 OpenAPI 的原因。
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-## 实现的操作
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/security/tutorial001.py!}
+    ```
 
-FastAPI 校验请求中的 `Authorization` 请求头，核对请求头的值是不是由 `Bearer ` ＋ 令牌组成， 并返回令牌字符串（`str`）。
+This dependency will provide a `str` that is assigned to the parameter `token` of the *path operation function*.
 
-如果没有找到 `Authorization` 请求头，或请求头的值不是 `Bearer ` ＋ 令牌。FastAPI 直接返回 401 错误状态码（`UNAUTHORIZED`）。
+**FastAPI** will know that it can use this dependency to define a "security scheme" in the OpenAPI schema (and the automatic API docs).
 
-开发者不需要检查错误信息，查看令牌是否存在，只要该函数能够执行，函数中就会包含令牌字符串。
+!!! info "Technical Details"
+    **FastAPI** will know that it can use the class `OAuth2PasswordBearer` (declared in a dependency) to define the security scheme in OpenAPI because it inherits from `fastapi.security.oauth2.OAuth2`, which in turn inherits from `fastapi.security.base.SecurityBase`.
 
-正如下图所示，API 文档已经包含了这项功能：
+    All the security utilities that integrate with OpenAPI (and the automatic API docs) inherit from `SecurityBase`, that's how **FastAPI** can know how to integrate them in OpenAPI.
 
-<img src="/img/tutorial/security/image03.png">
+## What it does
 
-目前，暂时还没有实现验证令牌是否有效的功能，不过后文很快就会介绍的。
+It will go and look in the request for that `Authorization` header, check if the value is `Bearer` plus some token, and will return the token as a `str`.
 
-## 小结
+If it doesn't see an `Authorization` header, or the value doesn't have a `Bearer` token, it will respond with a 401 status code error (`UNAUTHORIZED`) directly.
 
-看到了吧，只要多写三四行代码，就可以添加基础的安全表单。
+You don't even have to check if the token exists to return an error. You can be sure that if your function is executed, it will have a `str` in that token.
+
+You can try it already in the interactive docs:
+
+<img src="/img/tutorial/security/image03.png" />
+
+We are not verifying the validity of the token yet, but that's a start already.
+
+## Recap
+
+So, in just 3 or 4 extra lines, you already have some primitive form of security.
