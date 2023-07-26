@@ -1,11 +1,11 @@
-# Path Operation Advanced Configuration
+# 路径操作的高级配置
 
-## OpenAPI operationId
+## OpenAPI 的 operationId
 
-!!! warning
-    If you are not an "expert" in OpenAPI, you probably don't need this.
+!!! !!! warning
+    如果你并非 OpenAPI 的「专家」，你可能不需要这部分内容。
 
-You can set the OpenAPI `operationId` to be used in your *path operation* with the parameter `operation_id`.
+你可以在路径操作中通过参数 `operation_id` 设置要使用的 OpenAPI `operationId`。
 
 You would have to make sure that it is unique for each operation.
 
@@ -13,39 +13,39 @@ You would have to make sure that it is unique for each operation.
 {!../../../docs_src/path_operation_advanced_configuration/tutorial001.py!}
 ```
 
-### Using the *path operation function* name as the operationId
+### 使用 *路径操作函数* 的函数名作为 operationId
 
-If you want to use your APIs' function names as `operationId`s, you can iterate over all of them and override each *path operation's* `operation_id` using their `APIRoute.name`.
+如果你想用你的 API 的函数名作为 `operationId` 的名字，你可以遍历一遍 API 的函数名，然后使用他们的 `APIRoute.name` 重写每个 *路径操作* 的 `operation_id`。
 
-You should do it after adding all your *path operations*.
+你应该在添加了所有 *路径操作* 之后执行此操作。
 
 ```Python hl_lines="2  12-21  24"
 {!../../../docs_src/path_operation_advanced_configuration/tutorial002.py!}
 ```
 
-!!! tip
-    If you manually call `app.openapi()`, you should update the `operationId`s before that.
+!!! !!! tip
+    如果你手动调用 `app.openapi()`，你应该在此之前更新 `operationId`。
 
-!!! warning
-    If you do this, you have to make sure each one of your *path operation functions* has a unique name.
+!!! !!! warning
+    如果你这样做，务必确保你的每个 *路径操作函数* 的名字唯一。
 
-    Even if they are in different modules (Python files).
+    即使它们在不同的模块中（Python 文件）。
 
-## Exclude from OpenAPI
+## 从 OpenAPI 中排除
 
-To exclude a *path operation* from the generated OpenAPI schema (and thus, from the automatic documentation systems), use the parameter `include_in_schema` and set it to `False`:
+使用参数 `include_in_schema` 并将其设置为 `False` ，来从生成的 OpenAPI 方案中排除一个 *路径操作*（这样一来，就从自动化文档系统中排除掉了）。
 
 ```Python hl_lines="6"
 {!../../../docs_src/path_operation_advanced_configuration/tutorial003.py!}
 ```
 
-## Advanced description from docstring
+## docstring 的高级描述
 
-You can limit the lines used from the docstring of a *path operation function* for OpenAPI.
+你可以限制 *路径操作函数* 的 `docstring` 中用于 OpenAPI 的行数。
 
-Adding an `\f` (an escaped "form feed" character) causes **FastAPI** to truncate the output used for OpenAPI at this point.
+添加一个 `\f` （一个「换页」的转义字符）可以使 **FastAPI** 在那一位置截断用于 OpenAPI 的输出。
 
-It won't show up in the documentation, but other tools (such as Sphinx) will be able to use the rest.
+剩余部分不会出现在文档中，但是其他工具（比如 Sphinx）可以使用剩余部分。
 
 ```Python hl_lines="19-29"
 {!../../../docs_src/path_operation_advanced_configuration/tutorial004.py!}
