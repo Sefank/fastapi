@@ -1,15 +1,15 @@
-# Bigger Applications - Multiple Files
+# 更大的应用 - 多个文件
 
-If you are building an application or a web API, it's rarely the case that you can put everything on a single file.
+如果你正在开发一个应用程序或 Web API，很少会将所有的内容都放在一个文件中。
 
-**FastAPI** provides a convenience tool to structure your application while keeping all the flexibility.
+**FastAPI** 提供了一个方便的工具，可以在保持所有灵活性的同时构建你的应用程序。
 
-!!! info
-    If you come from Flask, this would be the equivalent of Flask's Blueprints.
+!!! !!! info
+    如果你来自 Flask，那这将相当于 Flask 的 Blueprints。
 
-## An example file structure
+## 一个文件结构示例
 
-Let's say you have a file structure like this:
+假设你的文件结构如下：
 
 ```
 .
@@ -26,29 +26,29 @@ Let's say you have a file structure like this:
 │       └── admin.py
 ```
 
-!!! tip
-    There are several `__init__.py` files: one in each directory or subdirectory.
+!!! !!! tip
+    上面有几个 `__init__.py` 文件：每个目录或子目录中都有一个。
 
-    This is what allows importing code from one file into another.
+    这就是能将代码从一个文件导入到另一个文件的原因。
     
-    For example, in `app/main.py` you could have a line like:
+    例如，在 `app/main.py` 中，你可以有如下一行：
 
     ```
     from app.routers import items
     ```
 
-* The `app` directory contains everything. And it has an empty file `app/__init__.py`, so it is a "Python package" (a collection of "Python modules"): `app`.
-* It contains an `app/main.py` file. As it is inside a Python package (a directory with a file `__init__.py`), it is a "module" of that package: `app.main`.
-* There's also an `app/dependencies.py` file, just like `app/main.py`, it is a "module": `app.dependencies`.
-* There's a subdirectory `app/routers/` with another file `__init__.py`, so it's a "Python subpackage": `app.routers`.
-* The file `app/routers/items.py` is inside a package, `app/routers/`, so, it's a submodule: `app.routers.items`.
-* The same with `app/routers/users.py`, it's another submodule: `app.routers.users`.
-* There's also a subdirectory `app/internal/` with another file `__init__.py`, so it's another "Python subpackage": `app.internal`.
-* And the file `app/internal/admin.py` is another submodule: `app.internal.admin`.
+* `app` 目录包含了所有内容。 并且它有一个空文件 `app/__init__.py`，因此它是一个「Python 包」（「Python 模块」的集合）：`app`。
+* 它包含一个 `app/main.py` 文件。 由于它位于一个 Python 包（一个包含 `__init__.py` 文件的目录）中，因此它是该包的一个「模块」：`app.main`。
+* 还有一个 `app/dependencies.py` 文件，就像 `app/main.py` 一样，它是一个「模块」：`app.dependencies`。
+* 有一个子目录 `app/routers/` 包含另一个 `__init__.py` 文件，因此它是一个「Python 子包」：`app.routers`。
+* 文件 `app/routers/items.py` 位于 `app/routers/` 包中，因此它是一个子模块：`app.routers.items`。
+* 同样适用于 `app/routers/users.py`，它是另一个子模块：`app.routers.users`。
+* 还有一个子目录 `app/internal/` 包含另一个 `__init__.py` 文件，因此它是又一个「Python 子包」：`app.internal`。
+* `app/internal/admin.py` 是另一个子模块：`app.internal.admin`。
 
 <img src="/img/tutorial/bigger-applications/package.svg" />
 
-The same file structure with comments:
+带有注释的同一文件结构：
 
 ```
 .
@@ -67,61 +67,72 @@ The same file structure with comments:
 
 ## `APIRouter`
 
-Let's say the file dedicated to handling just users is the submodule at `/app/routers/users.py`.
+假设专门用于处理用户逻辑的文件是位于 `/app/routers/users.py` 的子模块。
 
-You want to have the *path operations* related to your users separated from the rest of the code, to keep it organized.
+你希望将与用户相关的*路径操作*与其他代码分开，以使其井井有条。
 
-But it's still part of the same **FastAPI** application/web API (it's part of the same "Python Package").
+但它仍然是同一 **FastAPI** 应用程序/web API 的一部分（它是同一「Python 包」的一部分）。
 
-You can create the *path operations* for that module using `APIRouter`.
+你可以使用 `APIRouter` 为该模块创建*路径操作*。
 
-### Import `APIRouter`
+### 导入 `APIRouter`
 
-You import it and create an "instance" the same way you would with the class `FastAPI`:
+你可以导入它并通过与 `FastAPI` 类相同的方式创建一个「实例」：
 
 ```Python hl_lines="1  3"
 {!../../../docs_src/bigger_applications/app/routers/users.py!}
 ```
 
-### *Path operations* with `APIRouter`
+### 使用 `APIRouter` 的*路径操作*
 
-And then you use it to declare your *path operations*.
+然后你可以使用它来声明*路径操作*。
 
-Use it the same way you would use the `FastAPI` class:
+使用方式与 `FastAPI` 类相同：
 
 ```Python hl_lines="6  11  16"
 {!../../../docs_src/bigger_applications/app/routers/users.py!}
 ```
 
-You can think of `APIRouter` as a "mini `FastAPI`" class.
+你可以将 `APIRouter` 视为一个「迷你 `FastAPI`」类。
 
-All the same options are supported.
+所有相同的选项都得到支持。
 
-All the same `parameters`, `responses`, `dependencies`, `tags`, etc.
+所有相同的 `parameters`、`responses`、`dependencies`、`tags` 等等。
 
-!!! tip
-    In this example, the variable is called `router`, but you can name it however you want.
+!!! !!! tip
+    在此示例中，该变量被命名为 `router`，但你可以根据你的想法自由命名。
 
-We are going to include this `APIRouter` in the main `FastAPI` app, but first, let's check the dependencies and another `APIRouter`.
+我们将在主 `FastAPI` 应用中包含该 `APIRouter`，但首先，让我们来看看依赖项和另一个 `APIRouter`。
 
-## Dependencies
+## 依赖项
 
-We see that we are going to need some dependencies used in several places of the application.
+我们了解到我们将需要一些在应用程序的好几个地方所使用的依赖项。
 
-So we put them in their own `dependencies` module (`app/dependencies.py`).
+因此，我们将它们放在它们自己的 `dependencies` 模块（`app/dependencies.py`）中。
 
-We will now use a simple dependency to read a custom `X-Token` header:
+现在我们将使用一个简单的依赖项来读取一个自定义的 `X-Token` 请求首部：
 
 === "Python 3.9+"
 
     ```Python hl_lines="3  6-8"
-    {!> ../../../docs_src/bigger_applications/app_an_py39/dependencies.py!}
+    .
+├── app
+│   ├── __init__.py
+│   ├── main.py
+│   ├── dependencies.py
+│   └── routers
+│   │   ├── __init__.py
+│   │   ├── items.py
+│   │   └── users.py
+│   └── internal
+│       ├── __init__.py
+│       └── admin.py
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="1  5-7"
-    {!> ../../../docs_src/bigger_applications/app_an/dependencies.py!}
+    {!../../../docs_src/bigger_applications/app/dependencies.py!}
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -130,41 +141,53 @@ We will now use a simple dependency to read a custom `X-Token` header:
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="1  4-6"
-    {!> ../../../docs_src/bigger_applications/app/dependencies.py!}
+    .
+├── app                  # 「app」是一个 Python 包
+│   ├── __init__.py      # 这个文件使「app」成为一个 Python 包
+│   ├── main.py          # 「main」模块，例如 import app.main
+│   ├── dependencies.py  # 「dependencies」模块，例如 import app.dependencies
+│   └── routers          # 「routers」是一个「Python 子包」
+│   │   ├── __init__.py  # 使「routers」成为一个「Python 子包」
+│   │   ├── items.py     # 「items」子模块，例如 import app.routers.items
+│   │   └── users.py     # 「users」子模块，例如 import app.routers.users
+│   └── internal         # 「internal」是一个「Python 子包」
+│       ├── __init__.py  # 使「internal」成为一个「Python 子包」
+│       └── admin.py     # 「admin」子模块，例如 import app.internal.admin
     ```
 
 !!! tip
     We are using an invented header to simplify this example.
 
-    But in real cases you will get better results using the integrated [Security utilities](./security/index.md){.internal-link target=_blank}.
+    但在实际情况下，使用集成的[安全性实用工具](./security/index.md){.internal-link target=_blank}会得到更好的效果。
 
-## Another module with `APIRouter`
+## 其他使用 `APIRouter` 的模块
 
-Let's say you also have the endpoints dedicated to handling "items" from your application in the module at `app/routers/items.py`.
+假设你在位于 `app/routers/items.py` 的模块中还有专门用于处理应用程序中「项目」的端点。
 
-You have *path operations* for:
+你具有以下*路径操作*：
 
 * `/items/`
 * `/items/{item_id}`
 
-It's all the same structure as with `app/routers/users.py`.
+这和 `app/routers/users.py` 的结构完全相同。
 
-But we want to be smarter and simplify the code a bit.
+但是我们想变得更聪明并简化一些代码。
 
-We know all the *path operations* in this module have the same:
+我们知道此模块中的所有*路径操作*都有相同的：
 
-* Path `prefix`: `/items`.
-* `tags`: (just one tag: `items`).
-* Extra `responses`.
-* `dependencies`: they all need that `X-Token` dependency we created.
+* 路径 `prefix`：`/items`。
+* `tags`：（仅有一个 `items` 标签）。
+* 额外的 `responses`。
+* `dependencies`：它们都需要我们创建的 `X-Token` 依赖项。
 
-So, instead of adding all that to each *path operation*, we can add it to the `APIRouter`.
+!!! note "技术细节"
+    实际上，它将在内部为声明在 `APIRouter` 中的每个*路径操作*创建一个*路径操作*。
 
 ```Python hl_lines="5-10  16  21"
 {!../../../docs_src/bigger_applications/app/routers/items.py!}
 ```
 
-As the path of each *path operation* has to start with `/`, like in:
+由于每个*路径操作*的路径都必须以 `/` 开头，例如：
 
 ```Python hl_lines="1"
 @router.get("/{item_id}")
@@ -172,93 +195,93 @@ async def read_item(item_id: str):
     ...
 ```
 
-...the prefix must not include a final `/`.
+...前缀不能以 `/` 作为结尾。
 
-So, the prefix in this case is `/items`.
+因此，本例中的前缀为 `/items`。
 
-We can also add a list of `tags` and extra `responses` that will be applied to all the *path operations* included in this router.
+我们还可以添加一个 `tags` 列表和额外的 `responses` 列表，这些参数将应用于此路由器中包含的所有*路径操作*。
 
-And we can add a list of `dependencies` that will be added to all the *path operations* in the router and will be executed/solved for each request made to them.
+我们可以添加一个 `dependencies` 列表，这些依赖项将被添加到路由器中的所有*路径操作*中，并将针对向它们发起的每个请求执行/解决。
 
-!!! tip
-    Note that, much like [dependencies in *path operation decorators*](dependencies/dependencies-in-path-operation-decorators.md){.internal-link target=_blank}, no value will be passed to your *path operation function*.
+!!! !!! tip
+    请注意，和[*路径操作装饰器*中的依赖项](dependencies/dependencies-in-path-operation-decorators.md){.internal-link target=_blank}很类似，没有值会被传递给你的*路径操作函数*。
 
-The end result is that the item paths are now:
+最终结果是项目相关的路径现在为：
 
 * `/items/`
 * `/items/{item_id}`
 
-...as we intended.
+...如我们所愿。
 
-* They will be marked with a list of tags that contain a single string `"items"`.
-    * These "tags" are especially useful for the automatic interactive documentation systems (using OpenAPI).
-* All of them will include the predefined `responses`.
-* All these *path operations* will have the list of `dependencies` evaluated/executed before them.
-    * If you also declare dependencies in a specific *path operation*, **they will be executed too**.
-    * The router dependencies are executed first, then the [`dependencies` in the decorator](dependencies/dependencies-in-path-operation-decorators.md){.internal-link target=_blank}, and then the normal parameter dependencies.
-    * You can also add [`Security` dependencies with `scopes`](../advanced/security/oauth2-scopes.md){.internal-link target=_blank}.
+* 它们将被标记为仅包含单个字符串 `"items"` 的标签列表。
+    * 这些「标签」对于自动化交互式文档系统（使用 OpenAPI）特别有用。
+* 所有的路径操作都将包含预定义的 `responses`。
+* 所有的这些*路径操作*都将在自身之前计算/执行 `dependencies` 列表。
+    * 如果你还在一个具体的*路径操作*中声明了依赖项，**它们也会被执行**。
+    * 路由器的依赖项最先执行，然后是[装饰器中的 `dependencies`](dependencies/dependencies-in-path-operation-decorators.md){.internal-link target=_blank}，再然后是普通的参数依赖项。
+    * 你还可以添加[具有 `scopes` 的 `Security` 依赖项](../advanced/security/oauth2-scopes.md){.internal-link target=_blank}。
 
-!!! tip
-    Having `dependencies` in the `APIRouter` can be used, for example, to require authentication for a whole group of *path operations*. Even if the dependencies are not added individually to each one of them.
+!!! !!! tip
+    在 `APIRouter`中具有 `dependencies` 可以用来，例如，对一整组的*路径操作*要求身份认证。 即使这些依赖项并没有分别添加到每个路径操作中。
 
-!!! check
-    The `prefix`, `tags`, `responses`, and `dependencies` parameters are (as in many other cases) just a feature from **FastAPI** to help you avoid code duplication.
+!!! !!! check
+    `prefix`、`tags`、`responses` 以及 `dependencies` 参数只是（和其他很多情况一样）**FastAPI** 的一个用于帮助你避免代码重复的功能。
 
-### Import the dependencies
+### 导入依赖项
 
-This code lives in the module `app.routers.items`, the file `app/routers/items.py`.
+这些代码位于 `app.routers.items` 模块，`app/routers/items.py` 文件中。
 
-And we need to get the dependency function from the module `app.dependencies`, the file `app/dependencies.py`.
+我们需要从 `app.dependencies` 模块即 `app/dependencies.py` 文件中获取依赖函数。
 
-So we use a relative import with `..` for the dependencies:
+因此，我们通过 `..` 对依赖项使用了相对导入：
 
 ```Python hl_lines="3"
 {!../../../docs_src/bigger_applications/app/routers/items.py!}
 ```
 
-#### How relative imports work
+#### 相对导入如何工作
 
-!!! tip
-    If you know perfectly how imports work, continue to the next section below.
+!!! !!! tip
+    如果你完全了解导入的工作原理，请从下面的下一部分继续。
 
-A single dot `.`, like in:
+一个单点 `.`，例如：
 
 ```Python
 from .dependencies import get_token_header
 ```
 
-would mean:
+表示：
 
-* Starting in the same package that this module (the file `app/routers/items.py`) lives in (the directory `app/routers/`)...
-* find the module `dependencies` (an imaginary file at `app/routers/dependencies.py`)...
-* and from it, import the function `get_token_header`.
+* 从该模块（`app/routers/items.py` 文件）所在的同一个包（`app/routers/` 目录）开始...
+* 找到 `dependencies` 模块（一个位于 `app/routers/dependencies.py` 的虚构文件）...
+* 然后从中导入函数 `get_token_header`。
 
-But that file doesn't exist, our dependencies are in a file at `app/dependencies.py`.
+但是该文件并不存在，我们的依赖项位于 `app/dependencies.py` 文件中。
 
-Remember how our app/file structure looks like:
+请记住我们的程序/文件结构是怎样的：
 
 <img src="/img/tutorial/bigger-applications/package.svg" />
 
 ---
 
-The two dots `..`, like in:
+两个点 `..`，例如：
 
 ```Python
 from ..dependencies import get_token_header
 ```
 
-mean:
+那将意味着：
 
-* Starting in the same package that this module (the file `app/routers/items.py`) lives in (the directory `app/routers/`)...
-* go to the parent package (the directory `app/`)...
-* and in there, find the module `dependencies` (the file at `app/dependencies.py`)...
-* and from it, import the function `get_token_header`.
+* 从该模块（`app/routers/items.py` 文件）所在的同一个包（`app/routers/` 目录）开始...
+* 跳转到其父包（`app/` 目录）...
+* 在该父包中，找到 `dependencies` 模块（位于 `app/dependencies.py` 的文件）...
+* 然后从中导入函数 `get_token_header`。
 
-That works correctly! 🎉
+正常工作了！ 🎉
 
 ---
 
-The same way, if we had used three dots `...`, like in:
+同样，如果我们使用了三个点 `...`，例如：
 
 ```Python
 from ...dependencies import get_token_header
@@ -266,62 +289,62 @@ from ...dependencies import get_token_header
 
 that would mean:
 
-* Starting in the same package that this module (the file `app/routers/items.py`) lives in (the directory `app/routers/`)...
-* go to the parent package (the directory `app/`)...
-* then go to the parent of that package (there's no parent package, `app` is the top level 😱)...
-* and in there, find the module `dependencies` (the file at `app/dependencies.py`)...
-* and from it, import the function `get_token_header`.
+* 从该模块（`app/routers/items.py` 文件）所在的同一个包（`app/routers/` 目录）开始...
+* 跳转到其父包（`app/` 目录）...
+* 然后跳转到该包的父包（该父包并不存在，`app` 已经是最顶层的包 😱）...
+* 在该父包中，找到 `dependencies` 模块（位于 `app/` 更上一级目录中的 `dependencies.py` 文件）...
+* 然后从中导入函数 `get_token_header`。
 
-That would refer to some package above `app/`, with its own file `__init__.py`, etc. But we don't have that. So, that would throw an error in our example. 🚨
+这将引用 `app/` 的往上一级，带有其自己的 `__init __.py` 等文件的某个包。 但是我们并没有这个包。 因此，这将在我们的示例中引发错误。 🚨
 
-But now you know how it works, so you can use relative imports in your own apps no matter how complex they are. 🤓
+但是现在你知道了它的工作原理，因此无论它们多么复杂，你都可以在自己的应用程序中使用相对导入。 🤓
 
-### Add some custom `tags`, `responses`, and `dependencies`
+### 添加一些自定义的 `tags`、`responses` 和 `dependencies`
 
-We are not adding the prefix `/items` nor the `tags=["items"]` to each *path operation* because we added them to the `APIRouter`.
+我们不打算在每个*路径操作*中添加前缀 `/items` 或 `tags =["items"]`，因为我们将它们添加到了 `APIRouter` 中。
 
-But we can still add _more_ `tags` that will be applied to a specific *path operation*, and also some extra `responses` specific to that *path operation*:
+但是我们仍然可以添加*更多*将会应用于特定的*路径操作*的 `tags`，以及一些特定于该*路径操作*的额外 `responses`：
 
 ```Python hl_lines="30-31"
 {!../../../docs_src/bigger_applications/app/routers/items.py!}
 ```
 
-!!! tip
-    This last path operation will have the combination of tags: `["items", "custom"]`.
+!!! !!! tip
+    最后的这个路径操作将包含标签的组合：`["items"，"custom"]`。
 
-    And it will also have both responses in the documentation, one for `404` and one for `403`.
+    并且在文档中也会有两个响应，一个用于 `404`，一个用于 `403`。
 
-## The main `FastAPI`
+## `FastAPI` 主体
 
-Now, let's see the module at `app/main.py`.
+现在，让我们来看看位于 `app/main.py` 的模块。
 
-Here's where you import and use the class `FastAPI`.
+你可以像平常一样导入并创建一个 `FastAPI` 类。
 
-This will be the main file in your application that ties everything together.
+这将是你的应用程序中将所有内容联结在一起的主文件。
 
-And as most of your logic will now live in its own specific module, the main file will be quite simple.
+并且由于你的大部分逻辑现在都存在于其自己的特定模块中，因此主文件的内容将非常简单。
 
-### Import `FastAPI`
+### 导入 `FastAPI`
 
-You import and create a `FastAPI` class as normally.
+在这里你导入并使用 `FastAPI` 类。
 
-And we can even declare [global dependencies](dependencies/global-dependencies.md){.internal-link target=_blank} that will be combined with the dependencies for each `APIRouter`:
+我们甚至可以声明[全局依赖项](dependencies/global-dependencies.md){.internal-link target=_blank}，它会和每个 `APIRouter` 的依赖项组合在一起：
 
 ```Python hl_lines="1  3  7"
 {!../../../docs_src/bigger_applications/app/main.py!}
 ```
 
-### Import the `APIRouter`
+### 导入 `APIRouter`
 
-Now we import the other submodules that have `APIRouter`s:
+现在，我们导入具有 `APIRouter` 的其他子模块：
 
 ```Python hl_lines="5"
 {!../../../docs_src/bigger_applications/app/main.py!}
 ```
 
-As the files `app/routers/users.py` and `app/routers/items.py` are submodules that are part of the same Python package `app`, we can use a single dot `.` to import them using "relative imports".
+由于文件 `app/routers/users.py` 和 `app/routers/items.py` 是同一 Python 包 `app` 一个部分的子模块，因此我们可以使用单个点 `.` 通过「相对导入」来导入它们。
 
-### How the importing works
+### 导入是如何工作的
 
 The section:
 
@@ -329,148 +352,148 @@ The section:
 from .routers import items, users
 ```
 
-Means:
+表示：
 
-* Starting in the same package that this module (the file `app/main.py`) lives in (the directory `app/`)...
-* look for the subpackage `routers` (the directory at `app/routers/`)...
-* and from it, import the submodule `items` (the file at `app/routers/items.py`) and `users` (the file at `app/routers/users.py`)...
+* 从该模块（`app/main.py` 文件）所在的同一个包（`app/` 目录）开始...
+* 寻找 `routers` 子包（位于 `app/routers/` 的目录）...
+* 从该包中，导入子模块 `items` (位于 `app/routers/items.py` 的文件) 以及 `users` (位于 `app/routers/users.py` 的文件)...
 
-The module `items` will have a variable `router` (`items.router`). This is the same one we created in the file `app/routers/items.py`, it's an `APIRouter` object.
+`items` 模块将具有一个 `router` 变量（`items.router`）。 这与我们在 `app/routers/items.py` 文件中创建的变量相同，它是一个 `APIRouter` 对象。
 
-And then we do the same for the module `users`.
+然后我们对 `users` 模块进行相同的操作。
 
-We could also import them like:
+我们也可以像这样导入它们：
 
 ```Python
 from app.routers import items, users
 ```
 
-!!! info
-    The first version is a "relative import":
+!!! !!! info
+    第一个版本是「相对导入」：
 
     ```Python
     from .routers import items, users
     ```
 
 
-    The second version is an "absolute import":
+    第二个版本是「绝对导入」：
 
     ```Python
     from app.routers import items, users
     ```
 
 
-    To learn more about Python Packages and Modules, read <a href="https://docs.python.org/3/tutorial/modules.html" class="external-link" target="_blank">the official Python documentation about Modules</a>.
+    要了解有关 Python 包和模块的更多信息，请查阅<a href="https://docs.python.org/3/tutorial/modules.html" class="external-link" target="_blank">关于 Modules 的 Python 官方文档</a>。
 
-### Avoid name collisions
+### 避免名称冲突
 
-We are importing the submodule `items` directly, instead of importing just its variable `router`.
+我们将直接导入 `items` 子模块，而不是仅导入其 `router` 变量。
 
-This is because we also have another variable named `router` in the submodule `users`.
+这是因为我们在 `users` 子模块中也有另一个名为 `router` 的变量。
 
-If we had imported one after the other, like:
+如果我们一个接一个地导入，例如：
 
 ```Python
 from .routers.items import router
 from .routers.users import router
 ```
 
-The `router` from `users` would overwrite the one from `items` and we wouldn't be able to use them at the same time.
+来自 `users` 的 `router` 将覆盖来自 `items` 中的 `router`，我们将无法同时使用它们。
 
-So, to be able to use both of them in the same file, we import the submodules directly:
+因此，为了能够在同一个文件中使用它们，我们直接导入子模块：
 
 ```Python hl_lines="4"
 {!../../../docs_src/bigger_applications/app/main.py!}
 ```
 
-### Include the `APIRouter`s for `users` and `items`
+### 包含 `users` 和 `items` 的 `APIRouter`
 
-Now, let's include the `router`s from the submodules `users` and `items`:
+现在，让我们来包含来自 `users` 和 `items` 子模块的 `router`。
 
 ```Python hl_lines="10-11"
 {!../../../docs_src/bigger_applications/app/main.py!}
 ```
 
-!!! info
-    `users.router` contains the `APIRouter` inside of the file `app/routers/users.py`.
+!!! !!! info
+    `users.router` 包含了 `app/routers/users.py` 文件中的 `APIRouter`。
 
-    And `items.router` contains the `APIRouter` inside of the file `app/routers/items.py`.
+    `items.router` 包含了 `app/routers/items.py` 文件中的 `APIRouter`。
 
-With `app.include_router()` we can add each `APIRouter` to the main `FastAPI` application.
+使用 `app.include_router()`，我们可以将每个 `APIRouter` 添加到主 `FastAPI` 应用程序中。
 
-It will include all the routes from that router as part of it.
+它将包含来自该路由器的所有路由作为其一部分。
 
 !!! note "Technical Details"
     It will actually internally create a *path operation* for each *path operation* that was declared in the `APIRouter`.
 
-    So, behind the scenes, it will actually work as if everything was the same single app.
+    所以，在幕后，它实际上会像所有的东西都是同一个应用程序一样工作。
 
-!!! check
-    You don't have to worry about performance when including routers.
+!!! !!! check
+    包含路由器时，你不必担心性能问题。
 
-    This will take microseconds and will only happen at startup.
+    这将花费几微秒时间，并且只会在启动时发生。
     
-    So it won't affect performance. ⚡
+    因此，它不会影响性能。 ⚡
 
-### Include an `APIRouter` with a custom `prefix`, `tags`, `responses`, and `dependencies`
+### 包含一个有自定义 `prefix`、`tags`、`responses` 和 `dependencies` 的 `APIRouter`
 
-Now, let's imagine your organization gave you the `app/internal/admin.py` file.
+现在，假设你的组织为你提供了 `app/internal/admin.py` 文件。
 
-It contains an `APIRouter` with some admin *path operations* that your organization shares between several projects.
+它包含一个带有一些由你的组织在多个项目之间共享的管理员*路径操作*的 `APIRouter`。
 
-For this example it will be super simple. But let's say that because it is shared with other projects in the organization, we cannot modify it and add a `prefix`, `dependencies`, `tags`, etc. directly to the `APIRouter`:
+对于此示例，它将非常简单。 但是假设由于它是与组织中的其他项目所共享的，因此我们无法对其进行修改，以及直接在 `APIRouter` 中添加 `prefix`、`dependencies`、`tags` 等：
 
 ```Python hl_lines="3"
 {!../../../docs_src/bigger_applications/app/internal/admin.py!}
 ```
 
-But we still want to set a custom `prefix` when including the `APIRouter` so that all its *path operations* start with `/admin`, we want to secure it with the `dependencies` we already have for this project, and we want to include `tags` and `responses`.
+但是我们仍然希望在包含 `APIRouter` 时设置一个自定义的 `prefix`，以便其所有*路径操作*以 `/admin` 开头，我们希望使用本项目已经有的 `dependencies` 保护它，并且我们希望它包含自定义的 `tags` 和 `responses`。
 
-We can declare all that without having to modify the original `APIRouter` by passing those parameters to `app.include_router()`:
+但这只会影响我们应用中的 `APIRouter`，而不会影响使用它的任何其他代码。
 
 ```Python hl_lines="14-17"
 {!../../../docs_src/bigger_applications/app/main.py!}
 ```
 
-That way, the original `APIRouter` will keep unmodified, so we can still share that same `app/internal/admin.py` file with other projects in the organization.
+这样，原始的 `APIRouter` 将保持不变，因此我们仍然可以与组织中的其他项目共享相同的 `app/internal/admin.py` 文件。
 
-The result is that in our app, each of the *path operations* from the `admin` module will have:
+结果是在我们的应用程序中，来自 `admin` 模块的每个*路径操作*都将具有：
 
-* The prefix `/admin`.
-* The tag `admin`.
-* The dependency `get_token_header`.
-* The response `418`. 🍵
+* `/admin` 前缀 。
+* `admin` 标签。
+* `get_token_header` 依赖项。
+* `418` 响应。 🍵
 
-But that will only affect that `APIRouter` in our app, not in any other code that uses it.
+因此，我们可以将其添加到 `APIRouter` 中，而不是将其添加到每个路径操作中。
 
-So, for example, other projects could use the same `APIRouter` with a different authentication method.
+因此，举例来说，其他项目能够以不同的身份认证方法使用相同的 `APIRouter`。
 
-### Include a *path operation*
+### 包含一个*路径操作*
 
-We can also add *path operations* directly to the `FastAPI` app.
+我们还可以直接将*路径操作*添加到 `FastAPI` 应用中。
 
-Here we do it... just to show that we can 🤷:
+这里我们这样做了...只是为了表明我们可以做到🤷：
 
 ```Python hl_lines="21-23"
 {!../../../docs_src/bigger_applications/app/main.py!}
 ```
 
-and it will work correctly, together with all the other *path operations* added with `app.include_router()`.
+它将与通过 `app.include_router()` 添加的所有其他*路径操作*一起正常运行。
 
-!!! info "Very Technical Details"
-    **Note**: this is a very technical detail that you probably can **just skip**.
+!!! !!! info "特别的技术细节"
+    **注意**：这是一个非常技术性的细节，你也许可以**直接跳过**。
 
     ---
     
-    The `APIRouter`s are not "mounted", they are not isolated from the rest of the application.
+    `APIRouter` 没有被「挂载」，它们与应用程序的其余部分没有隔离。
     
-    This is because we want to include their *path operations* in the OpenAPI schema and the user interfaces.
+    这是因为我们想要在 OpenAPI 模式和用户界面中包含它们的*路径操作*。
     
-    As we cannot just isolate them and "mount" them independently of the rest, the *path operations* are "cloned" (re-created), not included directly.
+    由于我们不能仅仅隔离它们并独立于其余部分来「挂载」它们，因此*路径操作*是被「克隆的」（重新创建），而不是直接包含。
 
-## Check the automatic API docs
+## 查看自动化的 API 文档
 
-Now, run `uvicorn`, using the module `app.main` and the variable `app`:
+现在，使用 `app.main` 模块和 `app` 变量运行 `uvicorn`：
 
 <div class="termy">
 
@@ -482,26 +505,26 @@ $ uvicorn app.main:app --reload
 
 </div>
 
-And open the docs at <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a>.
+然后打开位于 <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a> 的文档。
 
-You will see the automatic API docs, including the paths from all the submodules, using the correct paths (and prefixes) and the correct tags:
+你将看到使用了正确路径（和前缀）和正确标签的自动化 API 文档，包括了来自所有子模块的路径：
 
 <img src="/img/tutorial/bigger-applications/image01.png" />
 
-## Include the same router multiple times with different `prefix`
+## 多次使用不同的 `prefix` 包含同一个路由器
 
-You can also use `.include_router()` multiple times with the *same* router using different prefixes.
+你也可以在*同一*路由器上使用不同的前缀来多次使用 `.include_router()`。
 
-This could be useful, for example, to expose the same API under different prefixes, e.g. `/api/v1` and `/api/latest`.
+在有些场景这可能有用，例如以不同的前缀公开同一个的 API，比方说 `/api/v1` 和 `/api/latest`。
 
-This is an advanced usage that you might not really need, but it's there in case you do.
+这是一个你可能并不真正需要的高级用法，但万一你有需要了就能够用上。
 
-## Include an `APIRouter` in another
+## 在另一个 `APIRouter` 中包含一个 `APIRouter`
 
-The same way you can include an `APIRouter` in a `FastAPI` application, you can include an `APIRouter` in another `APIRouter` using:
+与在 `FastAPI` 应用程序中包含 `APIRouter` 的方式相同，你也可以在另一个 `APIRouter` 中包含 `APIRouter`，通过：
 
 ```Python
 router.include_router(other_router)
 ```
 
-Make sure you do it before including `router` in the `FastAPI` app, so that the *path operations* from `other_router` are also included.
+请确保在你将 `router` 包含到 `FastAPI` 应用程序之前进行此操作，以便 `other_router` 中的`路径操作`也能被包含进来。
