@@ -1,51 +1,146 @@
-# 子依赖项
+# Sub-dependencies
 
-FastAPI 支持创建含**子依赖项**的依赖项。
+You can create dependencies that have **sub-dependencies**.
 
-并且，可以按需声明任意**深度**的子依赖项嵌套层级。
+They can be as **deep** as you need them to be.
 
-**FastAPI** 负责处理解析不同深度的子依赖项。
+**FastAPI** will take care of solving them.
 
-### 第一层依赖项
+## First dependency "dependable"
 
-下列代码创建了第一层依赖项：
+You could create a first dependency ("dependable") like:
 
-```Python hl_lines="8-9"
-{!../../../docs_src/dependencies/tutorial005.py!}
-```
+=== "Python 3.10+"
 
-这段代码声明了类型为 `str` 的可选查询参数 `q`，然后返回这个查询参数。
+    ```Python hl_lines="8-9"
+    {!> ../../../docs_src/dependencies/tutorial005_an_py310.py!}
+    ```
 
-这个函数很简单（不过也没什么用），但却有助于让我们专注于了解子依赖项的工作方式。
+=== "Python 3.9+"
 
-### 第二层依赖项
+    ```Python hl_lines="8-9"
+    {!> ../../../docs_src/dependencies/tutorial005_an_py39.py!}
+    ```
 
-接下来，创建另一个依赖项函数，并同时用该依赖项自身再声明一个依赖项（所以这也是一个「依赖项」）：
+=== "Python 3.6+"
 
-```Python hl_lines="13"
-{!../../../docs_src/dependencies/tutorial005.py!}
-```
+    ```Python hl_lines="9-10"
+    {!> ../../../docs_src/dependencies/tutorial005_an.py!}
+    ```
 
-这里重点说明一下声明的参数：
+=== "Python 3.10 non-Annotated"
 
-* 尽管该函数自身是依赖项，但还声明了另一个依赖项（它「依赖」于其他对象）
-    * 该函数依赖 `query_extractor`, 并把 `query_extractor` 的返回值赋给参数 `q`
-* 同时，该函数还声明了类型是 `str` 的可选 cookie（`last_query`）
-    * 用户未提供查询参数 `q` 时，则使用上次使用后保存在 cookie 中的查询
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-### 使用依赖项
+    ```Python hl_lines="6-7"
+    {!> ../../../docs_src/dependencies/tutorial005_py310.py!}
+    ```
 
-接下来，就可以使用依赖项：
+=== "Python 3.6 non-Annotated"
 
-```Python hl_lines="22"
-{!../../../docs_src/dependencies/tutorial005.py!}
-```
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-!!! info "信息"
+    ```Python hl_lines="8-9"
+    {!> ../../../docs_src/dependencies/tutorial005.py!}
+    ```
 
-    注意，这里在*路径操作函数*中只声明了一个依赖项，即 `query_or_cookie_extractor` 。
+It declares an optional query parameter `q` as a `str`, and then it just returns it.
 
-    但 **FastAPI** 必须先处理 `query_extractor`，以便在调用 `query_or_cookie_extractor` 时使用 `query_extractor` 返回的结果。
+This is quite simple (not very useful), but will help us focus on how the sub-dependencies work.
+
+## Second dependency, "dependable" and "dependant"
+
+Then you can create another dependency function (a "dependable") that at the same time declares a dependency of its own (so it is a "dependant" too):
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="13"
+    {!> ../../../docs_src/dependencies/tutorial005_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="13"
+    {!> ../../../docs_src/dependencies/tutorial005_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="14"
+    {!> ../../../docs_src/dependencies/tutorial005_an.py!}
+    ```
+
+=== "Python 3.10 non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/dependencies/tutorial005_py310.py!}
+    ```
+
+=== "Python 3.6 non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="13"
+    {!> ../../../docs_src/dependencies/tutorial005.py!}
+    ```
+
+Let's focus on the parameters declared:
+
+* Even though this function is a dependency ("dependable") itself, it also declares another dependency (it "depends" on something else).
+    * It depends on the `query_extractor`, and assigns the value returned by it to the parameter `q`.
+* It also declares an optional `last_query` cookie, as a `str`.
+    * If the user didn't provide any query `q`, we use the last query used, which we saved to a cookie before.
+
+## Use the dependency
+
+Then we can use the dependency with:
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="23"
+    {!> ../../../docs_src/dependencies/tutorial005_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="23"
+    {!> ../../../docs_src/dependencies/tutorial005_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="24"
+    {!> ../../../docs_src/dependencies/tutorial005_an.py!}
+    ```
+
+=== "Python 3.10 non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial005_py310.py!}
+    ```
+
+=== "Python 3.6 non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="22"
+    {!> ../../../docs_src/dependencies/tutorial005.py!}
+    ```
+
+!!! info
+    Notice that we are only declaring one dependency in the *path operation function*, the `query_or_cookie_extractor`.
+
+    But **FastAPI** will know that it has to solve `query_extractor` first, to pass the results of that to `query_or_cookie_extractor` while calling it.
 
 ```mermaid
 graph TB
@@ -58,31 +153,42 @@ read_query["/items/"]
 query_extractor --> query_or_cookie_extractor --> read_query
 ```
 
-## 多次使用同一个依赖项
+## Using the same dependency multiple times
 
-如果在同一个*路径操作* 多次声明了同一个依赖项，例如，多个依赖项共用一个子依赖项，**FastAPI** 在处理同一请求时，只调用一次该子依赖项。
+If one of your dependencies is declared multiple times for the same *path operation*, for example, multiple dependencies have a common sub-dependency, **FastAPI** will know to call that sub-dependency only once per request.
 
-FastAPI 不会为同一个请求多次调用同一个依赖项，而是把依赖项的返回值进行<abbr title="一个实用程序/系统来存储计算/生成的值，以便重用它们，而不是再次计算它们。">「缓存」</abbr>，并把它传递给同一请求中所有需要使用该返回值的「依赖项」。
+And it will save the returned value in a <abbr title="A utility/system to store computed/generated values, to re-use them instead of computing them again.">"cache"</abbr> and pass it to all the "dependants" that need it in that specific request, instead of calling the dependency multiple times for the same request.
 
-在高级使用场景中，如果不想使用「缓存」值，而是为需要在同一请求的每一步操作（多次）中都实际调用依赖项，可以把 `Depends` 的参数 `use_cache` 的值设置为 `False` :
+In an advanced scenario where you know you need the dependency to be called at every step (possibly multiple times) in the same request instead of using the "cached" value, you can set the parameter `use_cache=False` when using `Depends`:
 
-```Python hl_lines="1"
-async def needy_dependency(fresh_value: str = Depends(get_value, use_cache=False)):
-    return {"fresh_value": fresh_value}
-```
+=== "Python 3.6+"
 
-## 小结
+    ```Python hl_lines="1"
+    async def needy_dependency(fresh_value: Annotated[str, Depends(get_value, use_cache=False)]):
+        return {"fresh_value": fresh_value}
+    ```
 
-千万别被本章里这些花里胡哨的词藻吓倒了，其实**依赖注入**系统非常简单。
+=== "Python 3.6+ non-Annotated"
 
-依赖注入无非是与*路径操作函数*一样的函数罢了。
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-但它依然非常强大，能够声明任意嵌套深度的「图」或树状的依赖结构。
+    ```Python hl_lines="1"
+    async def needy_dependency(fresh_value: str = Depends(get_value, use_cache=False)):
+        return {"fresh_value": fresh_value}
+    ```
 
-!!! tip "提示"
+## Recap
 
-    这些简单的例子现在看上去虽然没有什么实用价值，
+Apart from all the fancy words used here, the **Dependency Injection** system is quite simple.
 
-    但在**安全**一章中，您会了解到这些例子的用途，
+Just functions that look the same as the *path operation functions*.
 
-    以及这些例子所能节省的代码量。
+But still, it is very powerful, and allows you to declare arbitrarily deeply nested dependency "graphs" (trees).
+
+!!! tip
+    All this might not seem as useful with these simple examples.
+
+    But you will see how useful it is in the chapters about **security**.
+    
+    And you will also see the amounts of code it will save you.
