@@ -1,20 +1,34 @@
-# 请求体 - 更新数据
+# Body - Updates
 
-## 用 `PUT` 更新数据
+## Update replacing with `PUT`
 
-更新数据请用 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/PUT" class="external-link" target="_blank">HTTP `PUT`</a> 操作。
+To update an item you can use the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT" class="external-link" target="_blank">HTTP `PUT`</a> operation.
 
-把输入数据转换为以 JSON 格式存储的数据（比如，使用 NoSQL 数据库时），可以使用 `jsonable_encoder`。例如，把 `datetime` 转换为 `str`。
+You can use the `jsonable_encoder` to convert the input data to data that can be stored as JSON (e.g. with a NoSQL database). For example, converting `datetime` to `str`.
 
-```Python hl_lines="30-35"
-{!../../../docs_src/body_updates/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-`PUT` 用于接收替换现有数据的数据。
+    ```Python hl_lines="28-33"
+    {!> ../../../docs_src/body_updates/tutorial001_py310.py!}
+    ```
 
-### 关于更新数据的警告
+=== "Python 3.9+"
 
-用 `PUT` 把数据项 `bar` 更新为以下内容时：
+    ```Python hl_lines="30-35"
+    {!> ../../../docs_src/body_updates/tutorial001_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="30-35"
+    {!> ../../../docs_src/body_updates/tutorial001.py!}
+    ```
+
+`PUT` is used to receive data that should replace the existing data.
+
+### Warning about replacing
+
+That means that if you want to update the item `bar` using `PUT` with a body containing:
 
 ```Python
 {
@@ -24,78 +38,118 @@
 }
 ```
 
-因为上述数据未包含已存储的属性 `"tax": 20.2`，新的输入模型会把 `"tax": 10.5` 作为默认值。
+because it doesn't include the already stored attribute `"tax": 20.2`, the input model would take the default value of `"tax": 10.5`.
 
-因此，本次操作把 `tax` 的值「更新」为 `10.5`。
+And the data would be saved with that "new" `tax` of `10.5`.
 
-## 用 `PATCH` 进行部分更新
+## Partial updates with `PATCH`
 
-<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/PATCH" class="external-link" target="_blank">HTTP `PATCH`</a> 操作用于更新 *部分* 数据。
+You can also use the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH" class="external-link" target="_blank">HTTP `PATCH`</a> operation to *partially* update data.
 
-即，只发送要更新的数据，其余数据保持不变。
+This means that you can send only the data that you want to update, leaving the rest intact.
 
-!!! Note "笔记"
+!!! Note
+    `PATCH` is less commonly used and known than `PUT`.
 
-    `PATCH` 没有 `PUT` 知名，也怎么不常用。
+    And many teams use only `PUT`, even for partial updates.
+    
+    You are **free** to use them however you want, **FastAPI** doesn't impose any restrictions.
+    
+    But this guide shows you, more or less, how they are intended to be used.
 
-    很多人甚至只用 `PUT` 实现部分更新。
+### Using Pydantic's `exclude_unset` parameter
 
-    **FastAPI** 对此没有任何限制，可以**随意**互换使用这两种操作。
+If you want to receive partial updates, it's very useful to use the parameter `exclude_unset` in Pydantic's model's `.dict()`.
 
-    但本指南也会分别介绍这两种操作各自的用途。
+Like `item.dict(exclude_unset=True)`.
 
-### 使用 Pydantic 的 `exclude_unset` 参数
+That would generate a `dict` with only the data that was set when creating the `item` model, excluding default values.
 
-更新部分数据时，可以在 Pydantic 模型的 `.dict()` 中使用 `exclude_unset` 参数。
+Then you can use this to generate a `dict` with only the data that was set (sent in the request), omitting default values:
 
-比如，`item.dict(exclude_unset=True)`。
+=== "Python 3.10+"
 
-这段代码生成的 `dict` 只包含创建 `item` 模型时显式设置的数据，而不包括默认值。
+    ```Python hl_lines="32"
+    {!> ../../../docs_src/body_updates/tutorial002_py310.py!}
+    ```
 
-然后再用它生成一个只含已设置（在请求中所发送）数据，且省略了默认值的 `dict`：
+=== "Python 3.9+"
 
-```Python hl_lines="34"
-{!../../../docs_src/body_updates/tutorial002.py!}
-```
+    ```Python hl_lines="34"
+    {!> ../../../docs_src/body_updates/tutorial002_py39.py!}
+    ```
 
-### 使用 Pydantic 的 `update` 参数
+=== "Python 3.6+"
 
-接下来，用 `.copy()` 为已有模型创建调用 `update` 参数的副本，该参数为包含更新数据的 `dict`。
+    ```Python hl_lines="34"
+    {!> ../../../docs_src/body_updates/tutorial002.py!}
+    ```
 
-例如，`stored_item_model.copy(update=update_data)`：
+### Using Pydantic's `update` parameter
 
-```Python hl_lines="35"
-{!../../../docs_src/body_updates/tutorial002.py!}
-```
+Now, you can create a copy of the existing model using `.copy()`, and pass the `update` parameter with a `dict` containing the data to update.
 
-### 更新部分数据小结
+Like `stored_item_model.copy(update=update_data)`:
 
-简而言之，更新部分数据应：
+=== "Python 3.10+"
 
-* 使用 `PATCH` 而不是 `PUT` （可选，也可以用 `PUT`）；
-* 提取存储的数据；
-* 把数据放入 Pydantic 模型；
-* 生成不含输入模型默认值的 `dict` （使用 `exclude_unset` 参数）；
-    * 只更新用户设置过的值，不用模型中的默认值覆盖已存储过的值。
-* 为已存储的模型创建副本，用接收的数据更新其属性 （使用 `update` 参数）。
-* 把模型副本转换为可存入数据库的形式（比如，使用 `jsonable_encoder`）。
-    * 这种方式与 Pydantic 模型的 `.dict()` 方法类似，但能确保把值转换为适配 JSON 的数据类型，例如， 把 `datetime` 转换为 `str` 。
-* 把数据保存至数据库；
-* 返回更新后的模型。
+    ```Python hl_lines="33"
+    {!> ../../../docs_src/body_updates/tutorial002_py310.py!}
+    ```
 
-```Python hl_lines="30-37"
-{!../../../docs_src/body_updates/tutorial002.py!}
-```
+=== "Python 3.9+"
 
-!!! tip "提示"
+    ```Python hl_lines="35"
+    {!> ../../../docs_src/body_updates/tutorial002_py39.py!}
+    ```
 
-    实际上，HTTP `PUT` 也可以完成相同的操作。
-    但本节以 `PATCH` 为例的原因是，该操作就是为了这种用例创建的。
+=== "Python 3.6+"
 
-!!! note "笔记"
+    ```Python hl_lines="35"
+    {!> ../../../docs_src/body_updates/tutorial002.py!}
+    ```
 
-    注意，输入模型仍需验证。
+### Partial updates recap
 
-    因此，如果希望接收的部分更新数据可以省略其他所有属性，则要把模型中所有的属性标记为可选（使用默认值或 `None`）。
+In summary, to apply partial updates you would:
 
-    为了区分用于**更新**所有可选值的模型与用于**创建**包含必选值的模型，请参照[更多模型](extra-models.md){.internal-link target=_blank} 一节中的思路。
+* (Optionally) use `PATCH` instead of `PUT`.
+* Retrieve the stored data.
+* Put that data in a Pydantic model.
+* Generate a `dict` without default values from the input model (using `exclude_unset`).
+    * This way you can update only the values actually set by the user, instead of overriding values already stored with default values in your model.
+* Create a copy of the stored model, updating it's attributes with the received partial updates (using the `update` parameter).
+* Convert the copied model to something that can be stored in your DB (for example, using the `jsonable_encoder`).
+    * This is comparable to using the model's `.dict()` method again, but it makes sure (and converts) the values to data types that can be converted to JSON, for example, `datetime` to `str`.
+* Save the data to your DB.
+* Return the updated model.
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="28-35"
+    {!> ../../../docs_src/body_updates/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="30-37"
+    {!> ../../../docs_src/body_updates/tutorial002_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="30-37"
+    {!> ../../../docs_src/body_updates/tutorial002.py!}
+    ```
+
+!!! tip
+    You can actually use this same technique with an HTTP `PUT` operation.
+
+    But the example here uses `PATCH` because it was created for these use cases.
+
+!!! note
+    Notice that the input model is still validated.
+
+    So, if you want to receive partial updates that can omit all the attributes, you need to have a model with all the attributes marked as optional (with default values or `None`).
+    
+    To distinguish from the models with all optional values for **updates** and models with required values for **creation**, you can use the ideas described in [Extra Models](extra-models.md){.internal-link target=_blank}.
