@@ -2,11 +2,11 @@
 
 本教程将一步步向你展示如何使用 **FastAPI** 的绝大部分特性。
 
-Each section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.
+各个章节的内容循序渐进，但是又围绕着单独的主题，所以你可以直接跳转到某个章节以解决你的特定需求。
 
-It is also built to work as a future reference.
+本教程同样可以作为将来的参考手册。
 
-So you can come back and see exactly what you need.
+你可以随时回到本教程并查阅你需要的内容。
 
 ## 运行代码
 
@@ -30,7 +30,7 @@ $ uvicorn main:app --reload
 
 </div>
 
-It is **HIGHLY encouraged** that you write or copy the code, edit it and run it locally.
+**强烈建议**你在本地编写或复制代码，对其进行编辑并运行。
 
 在编辑器中使用 FastAPI 会真正地展现出它的优势：只需要编写很少的代码，所有的类型检查，代码补全等等。
 
@@ -54,7 +54,7 @@ $ pip install "fastapi[all]"
 
 ......以上安装还包括了 `uvicorn`，你可以将其用作运行代码的服务器。
 
-!!! !!! note
+!!! note "说明"
     你也可以分开来安装。
 
     假如你想将应用程序部署到生产环境，你可能要执行以下操作：
