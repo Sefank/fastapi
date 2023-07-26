@@ -1,10 +1,10 @@
 # Body - Fields
 
-The same way you can declare additional validation and metadata in *path operation function* parameters with `Query`, `Path` and `Body`, you can declare validation and metadata inside of Pydantic models using Pydantic's `Field`.
+与使用 `Query`、`Path` 和 `Body` 在*路径操作函数*中声明额外的校验和元数据的方式相同，你可以使用 Pydantic 的 `Field` 在 Pydantic 模型内部声明校验和元数据。
 
-## Import `Field`
+## 导入 `Field`
 
-First, you have to import it:
+首先，你必须导入它：
 
 === "Python 3.10+"
 
@@ -21,8 +21,11 @@ First, you have to import it:
 === "Python 3.6+"
 
     ```Python hl_lines="4"
-    {!> ../../../docs_src/body_fields/tutorial001_an.py!}
+    !!! note "技术细节"
+    实际上，<code>Query</code>、<code>Path</code> 和其他你将在之后看到的类，创建的是由一个共同的 <code>Params</code> 类派生的子类的对象，该共同类本身又是 Pydantic 的 <code>FieldInfo</code> 类的子类。
     ```
+、Path 和其他你将在之后看到的类，创建的是由一个共同的 Params 类派生的子类的对象，该共同类本身又是 Pydantic 的 FieldInfo 类的子类。
+</code>
 
 === "Python 3.10+ non-Annotated"
 
@@ -30,7 +33,7 @@ First, you have to import it:
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="2"
-    {!> ../../../docs_src/body_fields/tutorial001_py310.py!}
+    {!../../../docs_src/body_fields/tutorial001.py!}
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -39,20 +42,23 @@ First, you have to import it:
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="4"
-    {!> ../../../docs_src/body_fields/tutorial001.py!}
+    !!! tip
+    注意每个模型属性如何使用类型、默认值和 <code>Field</code> 在代码结构上和<em x-id="3">路径操作函数</em>的参数是相同的，区别是用 <code>Field</code> 替换<code>Path</code>、<code>Query</code> 和 <code>Body</code>。
     ```
+ 在代码结构上和*路径操作函数*的参数是相同的，区别是用 Field 替换Path、Query 和 Body。
+</code>
 
 !!! warning
     Notice that `Field` is imported directly from `pydantic`, not from `fastapi` as are all the rest (`Query`, `Path`, `Body`, etc).
 
-## Declare model attributes
+## 声明模型属性
 
-You can then use `Field` with model attributes:
+然后，你可以对模型属性使用 `Field`：
 
 === "Python 3.10+"
 
     ```Python hl_lines="11-14"
-    {!> ../../../docs_src/body_fields/tutorial001_an_py310.py!}
+    总结
     ```
 
 === "Python 3.9+"
@@ -64,7 +70,7 @@ You can then use `Field` with model attributes:
 === "Python 3.6+"
 
     ```Python hl_lines="12-15"
-    {!> ../../../docs_src/body_fields/tutorial001_an.py!}
+    请求体 - 字段
     ```
 
 === "Python 3.10+ non-Annotated"
@@ -73,7 +79,7 @@ You can then use `Field` with model attributes:
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="9-12"
-    {!> ../../../docs_src/body_fields/tutorial001_py310.py!}
+    {!../../../docs_src/body_fields/tutorial001.py!}
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -82,34 +88,37 @@ You can then use `Field` with model attributes:
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="11-14"
-    {!> ../../../docs_src/body_fields/tutorial001.py!}
+    !!! warning
+    注意，<code>Field</code> 是直接从 <code>pydantic</code> 导入的，而不是像其他的（<code>Query</code>，<code>Path</code>，<code>Body</code> 等）都从 <code>fastapi</code> 导入。
     ```
+ 是直接从 pydantic 导入的，而不是像其他的（Query，Path，Body 等）都从 fastapi 导入。
+</code>
 
-`Field` works the same way as `Query`, `Path` and `Body`, it has all the same parameters, etc.
+`Field` 的工作方式和 `Query`、`Path` 和 `Body` 相同，包括它们的参数等等也完全相同。
 
 !!! note "Technical Details"
     Actually, `Query`, `Path` and others you'll see next create objects of subclasses of a common `Param` class, which is itself a subclass of Pydantic's `FieldInfo` class.
 
-    And Pydantic's `Field` returns an instance of `FieldInfo` as well.
+    Pydantic 的 `Field` 也会返回一个 `FieldInfo` 的实例。
     
-    `Body` also returns objects of a subclass of `FieldInfo` directly. And there are others you will see later that are subclasses of the `Body` class.
+    `Body` 也直接返回 `FieldInfo` 的一个子类的对象。 还有其他一些你之后会看到的类是 `Body` 类的子类。
     
-    Remember that when you import `Query`, `Path`, and others from `fastapi`, those are actually functions that return special classes.
+    请记住当你从 `fastapi` 导入 `Query`、`Path` 等对象时，他们实际上是返回特殊类的函数。
 
 !!! tip
     Notice how each model's attribute with a type, default value and `Field` has the same structure as a *path operation function's* parameter, with `Field` instead of `Path`, `Query` and `Body`.
 
-## Add extra information
+## 添加额外信息
 
-You can declare extra information in `Field`, `Query`, `Body`, etc. And it will be included in the generated JSON Schema.
+你可以在 `Field`、`Query`、`Body` 中声明额外的信息。 这些信息将包含在生成的 JSON Schema 中。
 
-You will learn more about adding extra information later in the docs, when learning to declare examples.
+你将在文档的后面部分学习声明示例时，了解到更多有关添加额外信息的知识。
 
 !!! warning
     Extra keys passed to `Field` will also be present in the resulting OpenAPI schema for your application. As these keys may not necessarily be part of the OpenAPI specification, some OpenAPI tools, for example [the OpenAPI validator](https://validator.swagger.io/), may not work with your generated schema.
 
 ## Recap
 
-You can use Pydantic's `Field` to declare extra validations and metadata for model attributes.
+你可以使用 Pydantic 的 `Field` 为模型属性声明额外的校验和元数据。
 
-You can also use the extra keyword arguments to pass additional JSON Schema metadata.
+你还可以使用额外的关键字参数来传递额外的 JSON Schema 元数据。
