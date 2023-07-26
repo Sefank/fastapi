@@ -1,56 +1,56 @@
-# 测试
+# Testing
 
-感谢 <a href="https://www.starlette.io/testclient/" class="external-link" target="_blank">Starlette</a>，测试**FastAPI** 应用轻松又愉快。
+Thanks to <a href="https://www.starlette.io/testclient/" class="external-link" target="_blank">Starlette</a>, testing **FastAPI** applications is easy and enjoyable.
 
-它基于 <a href="https://www.python-httpx.org" class="external-link" target="_blank">HTTPX</a>， 而HTTPX又是基于Requests设计的，所以很相似且易懂。
+It is based on <a href="https://www.python-httpx.org" class="external-link" target="_blank">HTTPX</a>, which in turn is designed based on Requests, so it's very familiar and intuitive.
 
-有了它，你可以直接与**FastAPI**一起使用 <a href="https://docs.pytest.org/" class="external-link" target="_blank">pytest</a>。
+With it, you can use <a href="https://docs.pytest.org/" class="external-link" target="_blank">pytest</a> directly with **FastAPI**.
 
-## 使用 `TestClient`
+## Using `TestClient`
 
-!!! 信息
-    要使用 `TestClient`，先要安装 <a href="https://www.python-httpx.org" class="external-link" target="_blank">`httpx`</a>.
+!!! info
+    To use `TestClient`, first install <a href="https://www.python-httpx.org" class="external-link" target="_blank">`httpx`</a>.
 
-    例：`pip install httpx`.
+    E.g. `pip install httpx`.
 
-导入 `TestClient`.
+Import `TestClient`.
 
-通过传入你的**FastAPI**应用创建一个 `TestClient` 。
+Create a `TestClient` by passing your **FastAPI** application to it.
 
-创建名字以 `test_` 开头的函数（这是标准的 `pytest` 约定）。
+Create functions with a name that starts with `test_` (this is standard `pytest` conventions).
 
-像使用 `httpx` 那样使用 `TestClient` 对象。
+Use the `TestClient` object the same way as you do with `httpx`.
 
-为你需要检查的地方用标准的Python表达式写个简单的 `assert` 语句（重申，标准的`pytest`）。
+Write simple `assert` statements with the standard Python expressions that you need to check (again, standard `pytest`).
 
 ```Python hl_lines="2  12  15-18"
 {!../../../docs_src/app_testing/tutorial001.py!}
 ```
 
-!!! 提示
-    注意测试函数是普通的 `def`，不是 `async def`。
+!!! tip
+    Notice that the testing functions are normal `def`, not `async def`.
 
-    还有client的调用也是普通的调用，不是用 `await`。
+    And the calls to the client are also normal calls, not using `await`.
+    
+    This allows you to use `pytest` directly without complications.
 
-    这让你可以直接使用 `pytest` 而不会遇到麻烦。
+!!! note "Technical Details"
+    You could also use `from starlette.testclient import TestClient`.
 
-!!! note "技术细节"
-    你也可以用 `from starlette.testclient import TestClient`。
+    **FastAPI** provides the same `starlette.testclient` as `fastapi.testclient` just as a convenience for you, the developer. But it comes directly from Starlette.
 
-    **FastAPI** 提供了和 `starlette.testclient` 一样的 `fastapi.testclient`，只是为了方便开发者。但它直接来自Starlette。
+!!! tip
+    If you want to call `async` functions in your tests apart from sending requests to your FastAPI application (e.g. asynchronous database functions), have a look at the [Async Tests](../advanced/async-tests.md){.internal-link target=_blank} in the advanced tutorial.
 
-!!! 提示
-    除了发送请求之外，如果你还想测试时在FastAPI应用中调用 `async` 函数（例如异步数据库函数）， 可以在高级教程中看下 [Async Tests](../advanced/async-tests.md){.internal-link target=_blank} 。
+## Separating tests
 
-## 分离测试
+In a real application, you probably would have your tests in a different file.
 
-在实际应用中，你可能会把你的测试放在另一个文件里。
+And your **FastAPI** application might also be composed of several files/modules, etc.
 
-您的**FastAPI**应用程序也可能由一些文件/模块组成等等。
+### **FastAPI** app file
 
-### **FastAPI** app 文件
-
-假设你有一个像 [更大的应用](./bigger-applications.md){.internal-link target=_blank} 中所描述的文件结构:
+Let's say you have a file structure as described in [Bigger Applications](./bigger-applications.md){.internal-link target=_blank}:
 
 ```
 .
@@ -59,16 +59,16 @@
 │   └── main.py
 ```
 
-在 `main.py` 文件中你有一个 **FastAPI** app:
+In the file `main.py` you have your **FastAPI** app:
 
 
 ```Python
 {!../../../docs_src/app_testing/main.py!}
 ```
 
-### 测试文件
+### Testing file
 
-然后你会有一个包含测试的文件 `test_main.py` 。app可以像Python包那样存在（一样是目录，但有个 `__init__.py` 文件）：
+Then you could have a file `test_main.py` with your tests. It could live on the same Python package (the same directory with a `__init__.py` file):
 
 ``` hl_lines="5"
 .
@@ -78,21 +78,21 @@
 │   └── test_main.py
 ```
 
-因为这文件在同一个包中，所以你可以通过相对导入从 `main` 模块（`main.py`）导入`app`对象：
+Because this file is in the same package, you can use relative imports to import the object `app` from the `main` module (`main.py`):
 
 ```Python hl_lines="3"
 {!../../../docs_src/app_testing/test_main.py!}
 ```
 
-...然后测试代码和之前一样的。
+...and have the code for the tests just like before.
 
-## 测试：扩展示例
+## Testing: extended example
 
-现在让我们扩展这个例子，并添加更多细节，看下如何测试不同部分。
+Now let's extend this example and add more details to see how to test different parts.
 
-### 扩展后的 **FastAPI** app 文件
+### Extended **FastAPI** app file
 
-让我们继续之前的文件结构：
+Let's continue with the same file structure as before:
 
 ```
 .
@@ -102,13 +102,13 @@
 │   └── test_main.py
 ```
 
-假设现在包含**FastAPI** app的文件 `main.py`  有些其他**路径操作**。
+Let's say that now the file `main.py` with your **FastAPI** app has some other **path operations**.
 
-有个 `GET` 操作会返回错误。
+It has a `GET` operation that could return an error.
 
-有个 `POST` 操作会返回一些错误。
+It has a `POST` operation that could return several errors.
 
-所有*路径操作* 都需要一个`X-Token` 头。
+Both *path operations* require an `X-Token` header.
 
 === "Python 3.10+"
 
@@ -146,36 +146,36 @@
     {!> ../../../docs_src/app_testing/app_b/main.py!}
     ```
 
-### 扩展后的测试文件
+### Extended testing file
 
-然后您可以使用扩展后的测试更新`test_main.py`：
+You could then update `test_main.py` with the extended tests:
 
 ```Python
 {!> ../../../docs_src/app_testing/app_b/test_main.py!}
 ```
 
-每当你需要客户端在请求中传递信息，但你不知道如何传递时，你可以通过搜索（谷歌）如何用 `httpx`做，或者是用 `requests` 做，毕竟HTTPX的设计是基于Requests的设计的。
+Whenever you need the client to pass information in the request and you don't know how to, you can search (Google) how to do it in `httpx`, or even how to do it with `requests`, as HTTPX's design is based on Requests' design.
 
-接着只需在测试中同样操作。
+Then you just do the same in your tests.
 
-示例：
+E.g.:
 
-* 传一个*路径* 或*查询* 参数，添加到URL上。
-* 传一个JSON体，传一个Python对象(例如一个`dict`)到参数 `json`。
-* 如果你需要发送 *Form Data* 而不是 JSON，使用 `data` 参数。
-* 要发送 *headers*，传 `dict` 给 `headers` 参数。
-* 对于 *cookies*，传 `dict` 给 `cookies` 参数。
+* To pass a *path* or *query* parameter, add it to the URL itself.
+* To pass a JSON body, pass a Python object (e.g. a `dict`) to the parameter `json`.
+* If you need to send *Form Data* instead of JSON, use the `data` parameter instead.
+* To pass *headers*, use a `dict` in the `headers` parameter.
+* For *cookies*, a `dict` in the `cookies` parameter.
 
-关于如何传数据给后端的更多信息 (使用`httpx` 或 `TestClient`)，请查阅 <a href="https://www.python-httpx.org" class="external-link" target="_blank">HTTPX 文档</a>.
+For more information about how to pass data to the backend (using `httpx` or the `TestClient`) check the <a href="https://www.python-httpx.org" class="external-link" target="_blank">HTTPX documentation</a>.
 
-!!! 信息
-    注意 `TestClient` 接收可以被转化为JSON的数据，而不是Pydantic模型。
+!!! info
+    Note that the `TestClient` receives data that can be converted to JSON, not Pydantic models.
 
-    如果你在测试中有一个Pydantic模型，并且你想在测试时发送它的数据给应用，你可以使用在[JSON Compatible Encoder](encoder.md){.internal-link target=_blank}介绍的`jsonable_encoder` 。
+    If you have a Pydantic model in your test and you want to send its data to the application during testing, you can use the `jsonable_encoder` described in [JSON Compatible Encoder](encoder.md){.internal-link target=_blank}.
 
-## 运行起来
+## Run it
 
-之后，你只需要安装 `pytest`:
+After that, you just need to install `pytest`:
 
 <div class="termy">
 
@@ -187,9 +187,9 @@ $ pip install pytest
 
 </div>
 
-他会自动检测文件和测试，执行测试，然后向你报告结果。
+It will detect the files and tests automatically, execute them, and report the results back to you.
 
-执行测试：
+Run the tests with:
 
 <div class="termy">
 
