@@ -1,55 +1,63 @@
-# 额外的模型
+# Extra Models
 
-我们从前面的示例继续，拥有多个相关的模型是很常见的。
+Continuing with the previous example, it will be common to have more than one related model.
 
-对用户模型来说尤其如此，因为：
+This is especially the case for user models, because:
 
-* **输入模型**需要拥有密码属性。
-* **输出模型**不应该包含密码。
-* **数据库模型**很可能需要保存密码的哈希值。
+* The **input model** needs to be able to have a password.
+* The **output model** should not have a password.
+* The **database model** would probably need to have a hashed password.
 
 !!! danger
-    永远不要存储用户的明文密码。始终存储一个可以用于验证的「安全哈希值」。
+    Never store user's plaintext passwords. Always store a "secure hash" that you can then verify.
 
-    如果你尚未了解该知识，你可以在[安全章节](security/simple-oauth2.md#password-hashing){.internal-link target=_blank}中学习何为「密码哈希值」。
+    If you don't know, you will learn what a "password hash" is in the [security chapters](security/simple-oauth2.md#password-hashing){.internal-link target=_blank}.
 
-## 多个模型
+## Multiple models
 
-下面是应该如何根据它们的密码字段以及使用位置去定义模型的大概思路：
+Here's a general idea of how the models could look like with their password fields and the places where they are used:
 
-```Python hl_lines="9  11  16  22  24  29-30  33-35  40-41"
-{!../../../docs_src/extra_models/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-### 关于 `**user_in.dict()`
+    ```Python hl_lines="7  9  14  20  22  27-28  31-33  38-39"
+    {!> ../../../docs_src/extra_models/tutorial001_py310.py!}
+    ```
 
-#### Pydantic 的 `.dict()`
+=== "Python 3.6+"
 
-`user_in` 是一个 `UserIn` 类的 Pydantic 模型.
+    ```Python hl_lines="9  11  16  22  24  29-30  33-35  40-41"
+    {!> ../../../docs_src/extra_models/tutorial001.py!}
+    ```
 
-Pydantic 模型具有 `.dict（）` 方法，该方法返回一个拥有模型数据的 `dict`。
+### About `**user_in.dict()`
 
-因此，如果我们像下面这样创建一个 Pydantic 对象 `user_in`：
+#### Pydantic's `.dict()`
+
+`user_in` is a Pydantic model of class `UserIn`.
+
+Pydantic models have a `.dict()` method that returns a `dict` with the model's data.
+
+So, if we create a Pydantic object `user_in` like:
 
 ```Python
 user_in = UserIn(username="john", password="secret", email="john.doe@example.com")
 ```
 
-然后我们调用：
+and then we call:
 
 ```Python
 user_dict = user_in.dict()
 ```
 
-现在我们有了一个数据位于变量 `user_dict` 中的 `dict`（它是一个 `dict` 而不是 Pydantic 模型对象）。
+we now have a `dict` with the data in the variable `user_dict` (it's a `dict` instead of a Pydantic model object).
 
-如果我们调用：
+And if we call:
 
 ```Python
 print(user_dict)
 ```
 
-我们将获得一个这样的 Python `dict`：
+we would get a Python `dict` with:
 
 ```Python
 {
@@ -60,17 +68,17 @@ print(user_dict)
 }
 ```
 
-#### 解包 `dict`
+#### Unwrapping a `dict`
 
-如果我们将 `user_dict` 这样的 `dict` 以 `**user_dict` 形式传递给一个函数（或类），Python将对其进行「解包」。它会将 `user_dict` 的键和值作为关键字参数直接传递。
+If we take a `dict` like `user_dict` and pass it to a function (or class) with `**user_dict`, Python will "unwrap" it. It will pass the keys and values of the `user_dict` directly as key-value arguments.
 
-因此，从上面的 `user_dict` 继续，编写：
+So, continuing with the `user_dict` from above, writing:
 
 ```Python
 UserInDB(**user_dict)
 ```
 
-会产生类似于以下的结果：
+Would result in something equivalent to:
 
 ```Python
 UserInDB(
@@ -81,7 +89,7 @@ UserInDB(
 )
 ```
 
-或者更确切地，直接使用 `user_dict` 来表示将来可能包含的任何内容：
+Or more exactly, using `user_dict` directly, with whatever contents it might have in the future:
 
 ```Python
 UserInDB(
@@ -92,34 +100,34 @@ UserInDB(
 )
 ```
 
-#### 来自于其他模型内容的 Pydantic 模型
+#### A Pydantic model from the contents of another
 
-如上例所示，我们从 `user_in.dict（）` 中获得了 `user_dict`，此代码：
+As in the example above we got `user_dict` from `user_in.dict()`, this code:
 
 ```Python
 user_dict = user_in.dict()
 UserInDB(**user_dict)
 ```
 
-等同于：
+would be equivalent to:
 
 ```Python
 UserInDB(**user_in.dict())
 ```
 
-...因为 `user_in.dict()` 是一个 `dict`，然后我们通过以`**`开头传递给 `UserInDB` 来使 Python「解包」它。
+...because `user_in.dict()` is a `dict`, and then we make Python "unwrap" it by passing it to `UserInDB` prepended with `**`.
 
-这样，我们获得了一个来自于其他 Pydantic 模型中的数据的 Pydantic 模型。
+So, we get a Pydantic model from the data in another Pydantic model.
 
-#### 解包 `dict` 和额外关键字
+#### Unwrapping a `dict` and extra keywords
 
-然后添加额外的关键字参数 `hashed_password=hashed_password`，例如：
+And then adding the extra keyword argument `hashed_password=hashed_password`, like in:
 
 ```Python
 UserInDB(**user_in.dict(), hashed_password=hashed_password)
 ```
 
-...最终的结果如下：
+...ends up being like:
 
 ```Python
 UserInDB(
@@ -132,68 +140,113 @@ UserInDB(
 ```
 
 !!! warning
-    辅助性的额外函数只是为了演示可能的数据流，但它们显然不能提供任何真正的安全性。
+    The supporting additional functions are just to demo a possible flow of the data, but they of course are not providing any real security.
 
-## 减少重复
+## Reduce duplication
 
-减少代码重复是 **FastAPI** 的核心思想之一。
+Reducing code duplication is one of the core ideas in **FastAPI**.
 
-因为代码重复会增加出现 bug、安全性问题、代码失步问题（当你在一个位置更新了代码但没有在其他位置更新）等的可能性。
+As code duplication increments the chances of bugs, security issues, code desynchronization issues (when you update in one place but not in the others), etc.
 
-上面的这些模型都共享了大量数据，并拥有重复的属性名称和类型。
+And these models are all sharing a lot of the data and duplicating attribute names and types.
 
-我们可以做得更好。
+We could do better.
 
-我们可以声明一个 `UserBase` 模型作为其他模型的基类。然后我们可以创建继承该模型属性（类型声明，校验等）的子类。
+We can declare a `UserBase` model that serves as a base for our other models. And then we can make subclasses of that model that inherit its attributes (type declarations, validation, etc).
 
-所有的数据转换、校验、文档生成等仍将正常运行。
+All the data conversion, validation, documentation, etc. will still work as normally.
 
-这样，我们可以仅声明模型之间的差异部分（具有明文的 `password`、具有 `hashed_password` 以及不包括密码）。
+That way, we can declare just the differences between the models (with plaintext `password`, with `hashed_password` and without password):
 
-```Python hl_lines="9  15-16  19-20  23-24"
-{!../../../docs_src/extra_models/tutorial002.py!}
-```
+=== "Python 3.10+"
 
-## `Union` 或者 `anyOf`
+    ```Python hl_lines="7  13-14  17-18  21-22"
+    {!> ../../../docs_src/extra_models/tutorial002_py310.py!}
+    ```
 
-你可以将一个响应声明为两种类型的 `Union`，这意味着该响应将是两种类型中的任何一种。
+=== "Python 3.6+"
 
-这将在 OpenAPI 中使用 `anyOf` 进行定义。
+    ```Python hl_lines="9  15-16  19-20  23-24"
+    {!> ../../../docs_src/extra_models/tutorial002.py!}
+    ```
 
-为此，请使用标准的 Python 类型提示 <a href="https://docs.python.org/3/library/typing.html#typing.Union" class="external-link" target="_blank">`typing.Union`</a>：
+## `Union` or `anyOf`
 
+You can declare a response to be the `Union` of two types, that means, that the response would be any of the two.
+
+It will be defined in OpenAPI with `anyOf`.
+
+To do that, use the standard Python type hint <a href="https://docs.python.org/3/library/typing.html#typing.Union" class="external-link" target="_blank">`typing.Union`</a>:
 
 !!! note
-    定义一个 <a href="https://pydantic-docs.helpmanual.io/usage/types/#unions" class="external-link" target="_blank">`Union`</a> 类型时，首先包括最详细的类型，然后是不太详细的类型。在下面的示例中，更详细的 `PlaneItem` 位于 `Union[PlaneItem，CarItem]` 中的 `CarItem` 之前。
+    When defining a <a href="https://pydantic-docs.helpmanual.io/usage/types/#unions" class="external-link" target="_blank">`Union`</a>, include the most specific type first, followed by the less specific type. In the example below, the more specific `PlaneItem` comes before `CarItem` in `Union[PlaneItem, CarItem]`.
 
-```Python hl_lines="1  14-15  18-20  33"
-{!../../../docs_src/extra_models/tutorial003.py!}
+=== "Python 3.10+"
+
+    ```Python hl_lines="1  14-15  18-20  33"
+    {!> ../../../docs_src/extra_models/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  14-15  18-20  33"
+    {!> ../../../docs_src/extra_models/tutorial003.py!}
+    ```
+
+### `Union` in Python 3.10
+
+In this example we pass `Union[PlaneItem, CarItem]` as the value of the argument `response_model`.
+
+Because we are passing it as a **value to an argument** instead of putting it in a **type annotation**, we have to use `Union` even in Python 3.10.
+
+If it was in a type annotation we could have used the vertical bar, as:
+
+```Python
+some_variable: PlaneItem | CarItem
 ```
 
-## 模型列表
+But if we put that in `response_model=PlaneItem | CarItem` we would get an error, because Python would try to perform an **invalid operation** between `PlaneItem` and `CarItem` instead of interpreting that as a type annotation.
 
-你可以用同样的方式声明由对象列表构成的响应。
+## List of models
 
-为此，请使用标准的 Python `typing.List`：
+The same way, you can declare responses of lists of objects.
 
-```Python hl_lines="1  20"
-{!../../../docs_src/extra_models/tutorial004.py!}
-```
+For that, use the standard Python `typing.List` (or just `list` in Python 3.9 and above):
 
-## 任意 `dict` 构成的响应
+=== "Python 3.9+"
 
-你还可以使用一个任意的普通 `dict` 声明响应，仅声明键和值的类型，而不使用 Pydantic 模型。
+    ```Python hl_lines="18"
+    {!> ../../../docs_src/extra_models/tutorial004_py39.py!}
+    ```
 
-如果你事先不知道有效的字段/属性名称（对于 Pydantic 模型是必需的），这将很有用。
+=== "Python 3.6+"
 
-在这种情况下，你可以使用 `typing.Dict`：
+    ```Python hl_lines="1  20"
+    {!> ../../../docs_src/extra_models/tutorial004.py!}
+    ```
 
-```Python hl_lines="1  8"
-{!../../../docs_src/extra_models/tutorial005.py!}
-```
+## Response with arbitrary `dict`
 
-## 总结
+You can also declare a response using a plain arbitrary `dict`, declaring just the type of the keys and values, without using a Pydantic model.
 
-使用多个 Pydantic 模型，并针对不同场景自由地继承。
+This is useful if you don't know the valid field/attribute names (that would be needed for a Pydantic model) beforehand.
 
-如果一个实体必须能够具有不同的「状态」，你无需为每个状态的实体定义单独的数据模型。以用户「实体」为例，其状态有包含 `password`、包含 `password_hash` 以及不含密码。
+In this case, you can use `typing.Dict` (or just `dict` in Python 3.9 and above):
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="6"
+    {!> ../../../docs_src/extra_models/tutorial005_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  8"
+    {!> ../../../docs_src/extra_models/tutorial005.py!}
+    ```
+
+## Recap
+
+Use multiple Pydantic models and inherit freely for each case.
+
+You don't need to have a single data model per entity if that entity must be able to have different "states". As the case with the user "entity" with a state including `password`, `password_hash` and no password.
