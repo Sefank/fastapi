@@ -1,33 +1,34 @@
-# 设置和环境变量
+# Settings and Environment Variables
 
-在许多情况下，您的应用程序可能需要一些外部设置或配置，例如密钥、数据库凭据、电子邮件服务的凭据等等。
+In many cases your application could need some external settings or configurations, for example secret keys, database credentials, credentials for email services, etc.
 
-这些设置中的大多数是可变的（可以更改的），比如数据库的 URL。而且许多设置可能是敏感的，比如密钥。
+Most of these settings are variable (can change), like database URLs. And many could be sensitive, like secrets.
 
-因此，通常会将它们提供为由应用程序读取的环境变量。
+For this reason it's common to provide them in environment variables that are read by the application.
 
-## 环境变量
+## Environment Variables
 
 !!! tip
-    如果您已经知道什么是"环境变量"以及如何使用它们，请随意跳到下面的下一节。
+    If you already know what "environment variables" are and how to use them, feel free to skip to the next section below.
 
-环境变量（也称为"env var"）是一种存在于 Python 代码之外、存在于操作系统中的变量，可以被您的 Python 代码（或其他程序）读取。
+An <a href="https://en.wikipedia.org/wiki/Environment_variable" class="external-link" target="_blank">environment variable</a> (also known as "env var") is a variable that lives outside of the Python code, in the operating system, and could be read by your Python code (or by other programs as well).
 
-您可以在 shell 中创建和使用环境变量，而无需使用 Python：
+You can create and use environment variables in the shell, without needing Python:
 
-=== "Linux、macOS、Windows Bash"
+=== "Linux, macOS, Windows Bash"
 
     <div class="termy">
 
     ```console
-    // 您可以创建一个名为 MY_NAME 的环境变量
+    // You could create an env var MY_NAME with
     $ export MY_NAME="Wade Wilson"
 
-    // 然后您可以与其他程序一起使用它，例如
+    // Then you could use it with other programs, like
     $ echo "Hello $MY_NAME"
 
     Hello Wade Wilson
     ```
+
 
     </div>
 
@@ -36,22 +37,23 @@
     <div class="termy">
 
     ```console
-    // 创建一个名为 MY_NAME 的环境变量
+    // Create an env var MY_NAME
     $ $Env:MY_NAME = "Wade Wilson"
 
-    // 与其他程序一起使用它，例如
+    // Use it with other programs, like
     $ echo "Hello $Env:MY_NAME"
 
     Hello Wade Wilson
     ```
 
+
     </div>
 
-### 在 Python 中读取环境变量
+### Read env vars in Python
 
-您还可以在 Python 之外的地方（例如终端中或使用任何其他方法）创建环境变量，然后在 Python 中读取它们。
+You could also create environment variables outside of Python, in the terminal (or with any other method), and then read them in Python.
 
-例如，您可以有一个名为 `main.py` 的文件，其中包含以下内容：
+For example you could have a file `main.py` with:
 
 ```Python hl_lines="3"
 import os
@@ -61,54 +63,52 @@ print(f"Hello {name} from Python")
 ```
 
 !!! tip
-    <a href="https://docs.python.org/3.8/library/os.html#os.getenv" class="external-link" target="_blank">`os.getenv()`</a> 的第二个参数是要返回的默认值。
+    The second argument to <a href="https://docs.python.org/3.8/library/os.html#os.getenv" class="external-link" target="_blank">`os.getenv()`</a> is the default value to return.
 
-    如果没有提供默认值，默认为 `None`，此处我们提供了 `"World"` 作为要使用的默认值。
+    If not provided, it's `None` by default, here we provide `"World"` as the default value to use.
 
-然后，您可以调用该 Python 程序：
+Then you could call that Python program:
 
 <div class="termy">
 
 ```console
-// 这里我们还没有设置环境变量
+// Here we don't set the env var yet
 $ python main.py
 
-// 因为我们没有设置环境变量，所以我们得到默认值
+// As we didn't set the env var, we get the default value
 
 Hello World from Python
 
-// 但是如果我们先创建一个环境变量
+// But if we create an environment variable first
 $ export MY_NAME="Wade Wilson"
 
-// 然后再次调用程序
+// And then call the program again
 $ python main.py
 
-// 现在它可以读取环境变量
+// Now it can read the environment variable
 
 Hello Wade Wilson from Python
 ```
 
 </div>
 
-由于环境变量可以在代码之外设置，但可以由代码读取，并且不需要与其他文件一起存储（提交到 `git`），因此通常将它们用于配置或设置。
+As environment variables can be set outside of the code, but can be read by the code, and don't have to be stored (committed to `git`) with the rest of the files, it's common to use them for configurations or settings.
 
+You can also create an environment variable only for a specific program invocation, that is only available to that program, and only for its duration.
 
-
-您还可以仅为特定程序调用创建一个环境变量，该环境变量仅对该程序可用，并且仅在其运行期间有效。
-
-要做到这一点，在程序本身之前的同一行创建它：
+To do that, create it right before the program itself, on the same line:
 
 <div class="termy">
 
 ```console
-// 在此程序调用行中创建一个名为 MY_NAME 的环境变量
+// Create an env var MY_NAME in line for this program call
 $ MY_NAME="Wade Wilson" python main.py
 
-// 现在它可以读取环境变量
+// Now it can read the environment variable
 
 Hello Wade Wilson from Python
 
-// 之后环境变量不再存在
+// The env var no longer exists afterwards
 $ python main.py
 
 Hello World from Python
@@ -117,53 +117,91 @@ Hello World from Python
 </div>
 
 !!! tip
-    您可以在 <a href="https://12factor.net/config" class="external-link" target="_blank">Twelve-Factor App: Config</a> 中阅读更多相关信息。
+    You can read more about it at <a href="https://12factor.net/config" class="external-link" target="_blank">The Twelve-Factor App: Config</a>.
 
-### 类型和验证
+### Types and validation
 
-这些环境变量只能处理文本字符串，因为它们是外部于 Python 的，并且必须与其他程序和整个系统兼容（甚至与不同的操作系统，如 Linux、Windows、macOS）。
+These environment variables can only handle text strings, as they are external to Python and have to be compatible with other programs and the rest of the system (and even with different operating systems, as Linux, Windows, macOS).
 
-这意味着从环境变量中在 Python 中读取的任何值都将是 `str` 类型，任何类型的转换或验证都必须在代码中完成。
+That means that any value read in Python from an environment variable will be a `str`, and any conversion to a different type or validation has to be done in code.
 
-## Pydantic 的 `Settings`
+## Pydantic `Settings`
 
-幸运的是，Pydantic 提供了一个很好的工具来处理来自环境变量的设置，即<a href="https://pydantic-docs.helpmanual.io/usage/settings/" class="external-link" target="_blank">Pydantic: Settings management</a>。
+Fortunately, Pydantic provides a great utility to handle these settings coming from environment variables with <a href="https://docs.pydantic.dev/latest/usage/pydantic_settings/" class="external-link" target="_blank">Pydantic: Settings management</a>.
 
-### 创建 `Settings` 对象
+### Install `pydantic-settings`
 
-从 Pydantic 导入 `BaseSettings` 并创建一个子类，与 Pydantic 模型非常相似。
+First, install the `pydantic-settings` package:
 
-与 Pydantic 模型一样，您使用类型注释声明类属性，还可以指定默认值。
+<div class="termy">
 
-您可以使用与 Pydantic 模型相同的验证功能和工具，比如不同的数据类型和使用 `Field()` 进行附加验证。
-
-```Python hl_lines="2  5-8  11"
-{!../../../docs_src/settings/tutorial001.py!}
+```console
+$ pip install pydantic-settings
+---> 100%
 ```
 
+</div>
+
+It also comes included when you install the `all` extras with:
+
+<div class="termy">
+
+```console
+$ pip install "fastapi[all]"
+---> 100%
+```
+
+</div>
+
+!!! info
+    In Pydantic v1 it came included with the main package. Now it is distributed as this independent package so that you can choose to install it or not if you don't need that functionality.
+
+### Create the `Settings` object
+
+Import `BaseSettings` from Pydantic and create a sub-class, very much like with a Pydantic model.
+
+The same way as with Pydantic models, you declare class attributes with type annotations, and possibly default values.
+
+You can use all the same validation features and tools you use for Pydantic models, like different data types and additional validations with `Field()`.
+
+=== "Pydantic v2"
+
+    ```Python hl_lines="2  5-8  11"
+    {!> ../../../docs_src/settings/tutorial001.py!}
+    ```
+
+=== "Pydantic v1"
+
+    !!! info
+        In Pydantic v1 you would import `BaseSettings` directly from `pydantic` instead of from `pydantic_settings`.
+
+    ```Python hl_lines="2  5-8  11"
+    {!> ../../../docs_src/settings/tutorial001_pv1.py!}
+    ```
+
 !!! tip
-    如果您需要一个快速的复制粘贴示例，请不要使用此示例，而应使用下面的最后一个示例。
+    If you want something quick to copy and paste, don't use this example, use the last one below.
 
-然后，当您创建该 `Settings` 类的实例（在此示例中是 `settings` 对象）时，Pydantic 将以不区分大小写的方式读取环境变量，因此，大写的变量 `APP_NAME` 仍将为属性 `app_name` 读取。
+Then, when you create an instance of that `Settings` class (in this case, in the `settings` object), Pydantic will read the environment variables in a case-insensitive way, so, an upper-case variable `APP_NAME` will still be read for the attribute `app_name`.
 
-然后，它将转换和验证数据。因此，当您使用该 `settings` 对象时，您将获得您声明的类型的数据（例如 `items_per_user` 将为 `int` 类型）。
+Next it will convert and validate the data. So, when you use that `settings` object, you will have data of the types you declared (e.g. `items_per_user` will be an `int`).
 
-### 使用 `settings`
+### Use the `settings`
 
-然后，您可以在应用程序中使用新的 `settings` 对象：
+Then you can use the new `settings` object in your application:
 
 ```Python hl_lines="18-20"
 {!../../../docs_src/settings/tutorial001.py!}
 ```
 
-### 运行服务器
+### Run the server
 
-接下来，您将运行服务器，并将配置作为环境变量传递。例如，您可以设置一个 `ADMIN_EMAIL` 和 `APP_NAME`，如下所示：
+Next, you would run the server passing the configurations as environment variables, for example you could set an `ADMIN_EMAIL` and `APP_NAME` with:
 
 <div class="termy">
 
 ```console
-$ ADMIN_EMAIL="deadpool@example.com" APP_NAME="ChimichangApp"uvicorn main:app
+$ ADMIN_EMAIL="deadpool@example.com" APP_NAME="ChimichangApp" uvicorn main:app
 
 <span style="color: green;">INFO</span>:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 ```
@@ -171,51 +209,52 @@ $ ADMIN_EMAIL="deadpool@example.com" APP_NAME="ChimichangApp"uvicorn main:app
 </div>
 
 !!! tip
-    要为单个命令设置多个环境变量，只需用空格分隔它们，并将它们全部放在命令之前。
+    To set multiple env vars for a single command just separate them with a space, and put them all before the command.
 
-然后，`admin_email` 设置将为 `"deadpool@example.com"`。
+And then the `admin_email` setting would be set to `"deadpool@example.com"`.
 
-`app_name` 将为 `"ChimichangApp"`。
+The `app_name` would be `"ChimichangApp"`.
 
-而 `items_per_user` 将保持其默认值为 `50`。
+And the `items_per_user` would keep its default value of `50`.
 
-## 在另一个模块中设置
+## Settings in another module
 
-您可以将这些设置放在另一个模块文件中，就像您在[Bigger Applications - Multiple Files](../tutorial/bigger-applications.md){.internal-link target=_blank}中所见的那样。
+You could put those settings in another module file as you saw in [Bigger Applications - Multiple Files](../tutorial/bigger-applications.md){.internal-link target=_blank}.
 
-例如，您可以创建一个名为 `config.py` 的文件，其中包含以下内容：
+For example, you could have a file `config.py` with:
 
 ```Python
 {!../../../docs_src/settings/app01/config.py!}
 ```
 
-然后在一个名为 `main.py` 的文件中使用它：
+And then use it in a file `main.py`:
 
 ```Python hl_lines="3  11-13"
 {!../../../docs_src/settings/app01/main.py!}
 ```
+
 !!! tip
-    您还需要一个名为 `__init__.py` 的文件，就像您在[Bigger Applications - Multiple Files](../tutorial/bigger-applications.md){.internal-link target=_blank}中看到的那样。
+    You would also need a file `__init__.py` as you saw on [Bigger Applications - Multiple Files](../tutorial/bigger-applications.md){.internal-link target=_blank}.
 
-## 在依赖项中使用设置
+## Settings in a dependency
 
-在某些情况下，从依赖项中提供设置可能比在所有地方都使用全局对象 `settings` 更有用。
+In some occasions it might be useful to provide the settings from a dependency, instead of having a global object with `settings` that is used everywhere.
 
-这在测试期间尤其有用，因为很容易用自定义设置覆盖依赖项。
+This could be especially useful during testing, as it's very easy to override a dependency with your own custom settings.
 
-### 配置文件
+### The config file
 
-根据前面的示例，您的 `config.py` 文件可能如下所示：
+Coming from the previous example, your `config.py` file could look like:
 
 ```Python hl_lines="10"
 {!../../../docs_src/settings/app02/config.py!}
 ```
 
-请注意，现在我们不创建默认实例 `settings = Settings()`。
+Notice that now we don't create a default instance `settings = Settings()`.
 
-### 主应用程序文件
+### The main app file
 
-现在我们创建一个依赖项，返回一个新的 `config.Settings()`。
+Now we create a dependency that returns a new `config.Settings()`.
 
 === "Python 3.9+"
 
@@ -229,21 +268,21 @@ $ ADMIN_EMAIL="deadpool@example.com" APP_NAME="ChimichangApp"uvicorn main:app
     {!> ../../../docs_src/settings/app02_an/main.py!}
     ```
 
-=== "Python 3.6+ 非注解版本"
+=== "Python 3.6+ non-Annotated"
 
     !!! tip
-        如果可能，请尽量使用 `Annotated` 版本。
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="5  11-12"
     {!> ../../../docs_src/settings/app02/main.py!}
     ```
 
 !!! tip
-    我们稍后会讨论 `@lru_cache()`。
+    We'll discuss the `@lru_cache()` in a bit.
 
-    目前，您可以将 `get_settings()` 视为普通函数。
+    For now you can assume `get_settings()` is a normal function.
 
-然后，我们可以将其作为依赖项从“路径操作函数”中引入，并在需要时使用它。
+And then we can require it from the *path operation function* as a dependency and use it anywhere we need it.
 
 === "Python 3.9+"
 
@@ -257,87 +296,103 @@ $ ADMIN_EMAIL="deadpool@example.com" APP_NAME="ChimichangApp"uvicorn main:app
     {!> ../../../docs_src/settings/app02_an/main.py!}
     ```
 
-=== "Python 3.6+ 非注解版本"
+=== "Python 3.6+ non-Annotated"
 
     !!! tip
-        如果可能，请尽量使用 `Annotated` 版本。
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="16  18-20"
     {!> ../../../docs_src/settings/app02/main.py!}
     ```
 
-### 设置和测试
+### Settings and testing
 
-然后，在测试期间，通过创建 `get_settings` 的依赖项覆盖，很容易提供一个不同的设置对象：
+Then it would be very easy to provide a different settings object during testing by creating a dependency override for `get_settings`:
 
 ```Python hl_lines="9-10  13  21"
 {!../../../docs_src/settings/app02/test_main.py!}
 ```
 
-在依赖项覆盖中，我们在创建新的 `Settings` 对象时为 `admin_email` 设置了一个新值，然后返回该新对象。
+In the dependency override we set a new value for the `admin_email` when creating the new `Settings` object, and then we return that new object.
 
-然后，我们可以测试它是否被使用。
+Then we can test that it is used.
 
-## 从 `.env` 文件中读取设置
+## Reading a `.env` file
 
-如果您有许多可能经常更改的设置，可能在不同的环境中，将它们放在一个文件中，然后从该文件中读取它们，就像它们是环境变量一样，可能非常有用。
+If you have many settings that possibly change a lot, maybe in different environments, it might be useful to put them on a file and then read them from it as if they were environment variables.
 
-这种做法相当常见，有一个名称，这些环境变量通常放在一个名为 `.env` 的文件中，该文件被称为“dotenv”。
-
-!!! tip
-    以点 (`.`) 开头的文件是 Unix-like 系统（如 Linux 和 macOS）中的隐藏文件。
-
-    但是，dotenv 文件实际上不一定要具有确切的文件名。
-
-Pydantic 支持使用外部库从这些类型的文件中读取。您可以在<a href="https://pydantic-docs.helpmanual.io/usage/settings/#dotenv-env-support" class="external-link" target="_blank">Pydantic 设置: Dotenv (.env) 支持</a>中阅读更多相关信息。
+This practice is common enough that it has a name, these environment variables are commonly placed in a file `.env`, and the file is called a "dotenv".
 
 !!! tip
-    要使其工作，您需要执行 `pip install python-dotenv`。
+    A file starting with a dot (`.`) is a hidden file in Unix-like systems, like Linux and macOS.
 
-### `.env` 文件
+    But a dotenv file doesn't really have to have that exact filename.
 
-您可以使用以下内容创建一个名为 `.env` 的文件：
+Pydantic has support for reading from these types of files using an external library. You can read more at <a href="https://pydantic-docs.helpmanual.io/usage/settings/#dotenv-env-support" class="external-link" target="_blank">Pydantic Settings: Dotenv (.env) support</a>.
+
+!!! tip
+    For this to work, you need to `pip install python-dotenv`.
+
+### The `.env` file
+
+You could have a `.env` file with:
 
 ```bash
 ADMIN_EMAIL="deadpool@example.com"
 APP_NAME="ChimichangApp"
 ```
 
-### 从 `.env` 文件中读取设置
+### Read settings from `.env`
 
-然后，您可以使用以下方式更新您的 `config.py`：
+And then update your `config.py` with:
 
-```Python hl_lines="9-10"
-{!../../../docs_src/settings/app03/config.py!}
-```
+=== "Pydantic v2"
 
-在这里，我们在 Pydantic 的 `Settings` 类中创建了一个名为 `Config` 的类，并将 `env_file` 设置为我们想要使用的 dotenv 文件的文件名。
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/settings/app03_an/config.py!}
+    ```
 
-!!! tip
-    `Config` 类仅用于 Pydantic 配置。您可以在<a href="https://pydantic-docs.helpmanual.io/usage/model_config/" class="external-link" target="_blank">Pydantic Model Config</a>中阅读更多相关信息。
 
-### 使用 `lru_cache` 仅创建一次 `Settings`
+    !!! tip
+        The `model_config` attribute is used just for Pydantic configuration. You can read more at <a href="https://docs.pydantic.dev/latest/usage/model_config/" class="external-link" target="_blank">Pydantic Model Config</a>.
 
-从磁盘中读取文件通常是一项耗时的（慢）操作，因此您可能希望仅在首次读取后并重复使用相同的设置对象，而不是为每个请求都读取它。
+=== "Pydantic v1"
 
-但是，每次执行以下操作：
+    ```Python hl_lines="9-10"
+    {!> ../../../docs_src/settings/app03_an/config_pv1.py!}
+    ```
+
+
+    !!! tip
+        The `Config` class is used just for Pydantic configuration. You can read more at <a href="https://docs.pydantic.dev/1.10/usage/model_config/" class="external-link" target="_blank">Pydantic Model Config</a>.
+
+!!! info
+    In Pydantic version 1 the configuration was done in an internal class `Config`, in Pydantic version 2 it's done in an attribute `model_config`. This attribute takes a `dict`, and to get autocompletion and inline errors you can import and use `SettingsConfigDict` to define that `dict`.
+
+Here we define the config `env_file` inside of your Pydantic `Settings` class, and set the value to the filename with the dotenv file we want to use.
+
+### Creating the `Settings` only once with `lru_cache`
+
+Reading a file from disk is normally a costly (slow) operation, so you probably want to do it only once and then re-use the same settings object, instead of reading it for each request.
+
+But every time we do:
 
 ```Python
 Settings()
 ```
 
-都会创建一个新的 `Settings` 对象，并且在创建时会再次读取 `.env` 文件。
+a new `Settings` object would be created, and at creation it would read the `.env` file again.
 
-如果依赖项函数只是这样的：
+If the dependency function was just like:
 
 ```Python
 def get_settings():
     return Settings()
 ```
 
-我们将为每个请求创建该对象，并且将在每个请求中读取 `.env` 文件。 ⚠️
+we would create that object for each request, and we would be reading the `.env` file for each request. ⚠️
 
-但是，由于我们在顶部使用了 `@lru_cache()` 装饰器，因此只有在第一次调用它时，才会创建 `Settings` 对象一次。 ✔️
+But as we are using the `@lru_cache()` decorator on top, the `Settings` object will be created only once, the first time it's called. ✔️
 
 === "Python 3.9+"
 
@@ -351,31 +406,32 @@ def get_settings():
     {!> ../../../docs_src/settings/app03_an/main.py!}
     ```
 
-=== "Python 3.6+ 非注解版本"
+=== "Python 3.6+ non-Annotated"
 
     !!! tip
-        如果可能，请尽量使用 `Annotated` 版本。
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="1  10"
     {!> ../../../docs_src/settings/app03/main.py!}
     ```
 
-然后，在下一次请求的依赖项中对 `get_settings()` 进行任何后续调用时，它不会执行 `get_settings()` 的内部代码并创建新的 `Settings` 对象，而是返回在第一次调用时返回的相同对象，一次又一次。
+Then for any subsequent calls of `get_settings()` in the dependencies for the next requests, instead of executing the internal code of `get_settings()` and creating a new `Settings` object, it will return the same object that was returned on the first call, again and again.
 
-#### `lru_cache` 技术细节
+#### `lru_cache` Technical Details
 
-`@lru_cache()` 修改了它所装饰的函数，以返回第一次返回的相同值，而不是再次计算它，每次都执行函数的代码。
+`@lru_cache()` modifies the function it decorates to return the same value that was returned the first time, instead of computing it again, executing the code of the function every time.
 
-因此，下面的函数将对每个参数组合执行一次。然后，每个参数组合返回的值将在使用完全相同的参数组合调用函数时再次使用。
+So, the function below it will be executed once for each combination of arguments. And then the values returned by each of those combinations of arguments will be used again and again whenever the function is called with exactly the same combination of arguments.
 
-例如，如果您有一个函数：
+For example, if you have a function:
+
 ```Python
 @lru_cache()
 def say_hi(name: str, salutation: str = "Ms."):
     return f"Hello {salutation} {name}"
 ```
 
-您的程序可以像这样执行：
+your program could execute like this:
 
 ```mermaid
 sequenceDiagram
@@ -386,48 +442,48 @@ participant execute as Execute function
 
     rect rgba(0, 255, 0, .1)
         code ->> function: say_hi(name="Camila")
-        function ->> execute: 执行函数代码
-        execute ->> code: 返回结果
+        function ->> execute: execute function code
+        execute ->> code: return the result
     end
 
     rect rgba(0, 255, 255, .1)
         code ->> function: say_hi(name="Camila")
-        function ->> code: 返回存储的结果
+        function ->> code: return stored result
     end
 
     rect rgba(0, 255, 0, .1)
         code ->> function: say_hi(name="Rick")
-        function ->> execute: 执行函数代码
-        execute ->> code: 返回结果
+        function ->> execute: execute function code
+        execute ->> code: return the result
     end
 
     rect rgba(0, 255, 0, .1)
         code ->> function: say_hi(name="Rick", salutation="Mr.")
-        function ->> execute: 执行函数代码
-        execute ->> code: 返回结果
+        function ->> execute: execute function code
+        execute ->> code: return the result
     end
 
     rect rgba(0, 255, 255, .1)
         code ->> function: say_hi(name="Rick")
-        function ->> code: 返回存储的结果
+        function ->> code: return stored result
     end
 
     rect rgba(0, 255, 255, .1)
         code ->> function: say_hi(name="Camila")
-        function ->> code: 返回存储的结果
+        function ->> code: return stored result
     end
 ```
 
-对于我们的依赖项 `get_settings()`，该函数甚至不接受任何参数，因此它始终返回相同的值。
+In the case of our dependency `get_settings()`, the function doesn't even take any arguments, so it always returns the same value.
 
-这样，它的行为几乎就像是一个全局变量。但是由于它使用了依赖项函数，因此我们可以轻松地进行测试时的覆盖。
+That way, it behaves almost as if it was just a global variable. But as it uses a dependency function, then we can override it easily for testing.
 
-`@lru_cache()` 是 `functools` 的一部分，它是 Python 标准库的一部分，您可以在<a href="https://docs.python.org/3/library/functools.html#functools.lru_cache" class="external-link" target="_blank">Python 文档中了解有关 `@lru_cache()` 的更多信息</a>。
+`@lru_cache()` is part of `functools` which is part of Python's standard library, you can read more about it in the <a href="https://docs.python.org/3/library/functools.html#functools.lru_cache" class="external-link" target="_blank">Python docs for `@lru_cache()`</a>.
 
-## 小结
+## Recap
 
-您可以使用 Pydantic 设置处理应用程序的设置或配置，利用 Pydantic 模型的所有功能。
+You can use Pydantic Settings to handle the settings or configurations for your application, with all the power of Pydantic models.
 
-* 通过使用依赖项，您可以简化测试。
-* 您可以使用 `.env` 文件。
-* 使用 `@lru_cache()` 可以避免为每个请求重复读取 dotenv 文件，同时允许您在测试时进行覆盖。
+* By using a dependency you can simplify testing.
+* You can use `.env` files with it.
+* Using `@lru_cache()` lets you avoid reading the dotenv file again and again for each request, while allowing you to override it during testing.
