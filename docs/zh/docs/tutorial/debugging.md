@@ -1,18 +1,18 @@
 # Debugging
 
-You can connect the debugger in your editor, for example with Visual Studio Code or PyCharm.
+你可以在编辑器中连接调试器，例如使用 Visual Studio Code 或 PyCharm。
 
-## Call `uvicorn`
+## 调用 `uvicorn`
 
-In your FastAPI application, import and run `uvicorn` directly:
+在你的 FastAPI 应用中直接导入 `uvicorn` 并运行：
 
 ```Python hl_lines="1  15"
 {!../../../docs_src/debugging/tutorial001.py!}
 ```
 
-### About `__name__ == "__main__"`
+### 关于 `__name__ == "__main__"`
 
-The main purpose of the `__name__ == "__main__"` is to have some code that is executed when your file is called with:
+`__name__ == "__main__"` 的主要目的是使用以下代码调用文件时执行一些代码：
 
 <div class="termy">
 
@@ -22,17 +22,17 @@ $ python myapp.py
 
 </div>
 
-but is not called when another file imports it, like in:
+而当其它文件导入它时并不会被调用，像这样：
 
 ```Python
 from myapp import app
 ```
 
-#### More details
+#### 更多细节
 
-Let's say your file is named `myapp.py`.
+假设你的文件命名为 `myapp.py`。
 
-If you run it with:
+如果你这样运行：
 
 <div class="termy">
 
@@ -42,7 +42,7 @@ $ python myapp.py
 
 </div>
 
-then the internal variable `__name__` in your file, created automatically by Python, will have as value the string `"__main__"`.
+那么文件中由 Python 自动创建的内部变量 `__name__`，会将字符串 `"__main__"` 作为值。
 
 So, the section:
 
@@ -54,9 +54,9 @@ will run.
 
 ---
 
-This won't happen if you import that module (file).
+如果你是导入这个模块（文件）就不会这样。
 
-So, if you have another file `importer.py` with:
+因此，如果你的另一个文件 `importer.py` 像这样：
 
 ```Python
 from myapp import app
@@ -64,7 +64,7 @@ from myapp import app
 # Some more code
 ```
 
-in that case, the automatically created variable inside of `myapp.py` will not have the variable `__name__` with a value of `"__main__"`.
+在这种情况下，`myapp.py` 内部的自动变量不会有值为 `"__main__"` 的变量 `__name__`。
 
 So, the line:
 
@@ -74,39 +74,39 @@ So, the line:
 
 will not be executed.
 
-!!! info
-    For more information, check <a href="https://docs.python.org/3/library/__main__.html" class="external-link" target="_blank">the official Python docs</a>.
+!!! !!! info
+    更多信息请检查 <a href="https://docs.python.org/3/library/__main__.html" class="external-link" target="_blank">Python 官方文档</a>.
 
-## Run your code with your debugger
+## 使用你的调试器运行代码
 
-Because you are running the Uvicorn server directly from your code, you can call your Python program (your FastAPI application) directly from the debugger.
+由于是从代码直接运行的 Uvicorn 服务器，所以你可以从调试器直接调用 Python 程序（你的 FastAPI 应用）。
 
 ---
 
-For example, in Visual Studio Code, you can:
+例如，你可以在 Visual Studio Code 中：
 
 * Go to the "Debug" panel.
-* "Add configuration...".
-* Select "Python"
-* Run the debugger with the option "`Python: Current File (Integrated Terminal)`".
+* 「添加配置...」。
+* 选中「Python」
+* 运行「Python：当前文件（集成终端）」选项的调试器。
 
-It will then start the server with your **FastAPI** code, stop at your breakpoints, etc.
+然后它会使用你的 **FastAPI** 代码开启服务器，停在断点处，等等。
 
-Here's how it might look:
+看起来可能是这样：
 
 <img src="/img/tutorial/debugging/image01.png" />
 
 ---
 
-If you use Pycharm, you can:
+如果使用 Pycharm，你可以：
 
-* Open the "Run" menu.
+* 打开「运行」菜单。
 * Select the option "Debug...".
-* Then a context menu shows up.
-* Select the file to debug (in this case, `main.py`).
+* 然后出现一个上下文菜单。
+* 选择要调试的文件（本例中的 `main.py`）。
 
-It will then start the server with your **FastAPI** code, stop at your breakpoints, etc.
+然后它会使用你的 **FastAPI** 代码开启服务器，停在断点处，等等。
 
-Here's how it might look:
+看起来可能是这样：
 
 <img src="/img/tutorial/debugging/image02.png" />
