@@ -1,5 +1,3 @@
 files:
-  - source: /docs/en/docs/**/*.md
-    ignore:
-      - docs/en/docs/release-notes.md
-    translation: /docs/%two_letters_code%/docs/**/%original_file_name%
+  - source: /docs/en/docs/tutorial/**/*.md
+    translation: /docs/%two_letters_code%/docs/tutorial/**/%original_file_name%
