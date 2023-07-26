@@ -1,53 +1,53 @@
-# Simple OAuth2 with Password and Bearer
+# 使用密码和 Bearer 的简单 OAuth2
 
-Now let's build from the previous chapter and add the missing parts to have a complete security flow.
+现在让我们接着上一章继续开发，并添加缺少的部分以实现一个完整的安全性流程。
 
-## Get the `username` and `password`
+## 获取 `username` 和 `password`
 
-We are going to use **FastAPI** security utilities to get the `username` and `password`.
+我们将使用 **FastAPI** 的安全性实用工具来获取 `username` 和 `password`。
 
-OAuth2 specifies that when using the "password flow" (that we are using) the client/user must send a `username` and `password` fields as form data.
+OAuth2 规定在使用（我们打算用的）「password 流程」时，客户端/用户必须将 `username` 和 `password` 字段作为表单数据发送。
 
-And the spec says that the fields have to be named like that. So `user-name` or `email` wouldn't work.
+而且规范明确了字段必须这样命名。 因此 `user-name` 或 `email` 是行不通的。
 
-But don't worry, you can show it as you wish to your final users in the frontend.
+不过不用担心，你可以在前端按照你的想法将它展示给最终用户。
 
-And your database models can use any other names you want.
+而且你的数据库模型也可以使用你想用的任何其他名称。
 
-But for the login *path operation*, we need to use these names to be compatible with the spec (and be able to, for example, use the integrated API documentation system).
+但是对于登录*路径操作*，我们需要使用这些名称来与规范兼容（以具备例如使用集成的 API 文档系统的能力）。
 
-The spec also states that the `username` and `password` must be sent as form data (so, no JSON here).
+规范还写明了 `username` 和 `password` 必须作为表单数据发送（因此，此处不能使用 JSON）。
 
 ### `scope`
 
-The spec also says that the client can send another form field "`scope`".
+规范还提到客户端可以发送另一个表单字段「`scope`」。
 
-The form field name is `scope` (in singular), but it is actually a long string with "scopes" separated by spaces.
+这个表单字段的名称为 `scope`（单数形式），但实际上它是一个由空格分隔的「作用域」组成的长字符串。
 
 Each "scope" is just a string (without spaces).
 
-They are normally used to declare specific security permissions, for example:
+它们通常用于声明特定的安全权限，例如：
 
-* `users:read` or `users:write` are common examples.
-* `instagram_basic` is used by Facebook / Instagram.
-* `https://www.googleapis.com/auth/drive` is used by Google.
+* `users:read` 或者 `users:write` 是常见的例子。
+* Facebook / Instagram 使用 `instagram_basic`。
+* Google 使用了 `https://www.googleapis.com/auth/drive` 。
 
 !!! info
     In OAuth2 a "scope" is just a string that declares a specific permission required.
 
-    It doesn't matter if it has other characters like `:` or if it is a URL.
+    它有没有 `:` 这样的其他字符或者是不是 URL 都没有关系。
     
-    Those details are implementation specific.
+    这些细节是具体的实现。
     
-    For OAuth2 they are just strings.
+    对 OAuth2 来说它们就只是字符串而已。
 
-## Code to get the `username` and `password`
+## 获取 `username` 和 `password` 的代码
 
-Now let's use the utilities provided by **FastAPI** to handle this.
+现在，让我们使用 **FastAPI** 提供的实用工具来处理此问题。
 
 ### `OAuth2PasswordRequestForm`
 
-First, import `OAuth2PasswordRequestForm`, and use it as a dependency with `Depends` in the *path operation* for `/token`:
+首先，导入 `OAuth2PasswordRequestForm`，然后在 `token` 的*路径操作*中通过 `Depends` 将其作为依赖项使用。
 
 === "Python 3.10+"
 
@@ -58,14 +58,18 @@ First, import `OAuth2PasswordRequestForm`, and use it as a dependency with `Depe
 === "Python 3.9+"
 
     ```Python hl_lines="4  78"
-    {!> ../../../docs_src/security/tutorial003_an_py39.py!}
+    !!! tip
+    在下一章中，你将看到一个真实的安全实现，使用了哈希密码和 <abbr title="JSON Web Tokens">JWT</abbr> 令牌。
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="4  79"
-    {!> ../../../docs_src/security/tutorial003_an.py!}
+    !!! info
+    <code>OAuth2PasswordRequestForm</code> 并不像 <code>OAuth2PasswordBearer</code> 一样是 FastAPI 的一个特殊的类。
     ```
+ 并不像 OAuth2PasswordBearer 一样是 FastAPI 的一个特殊的类。
+</code>
 
 === "Python 3.10+ non-Annotated"
 
@@ -73,7 +77,7 @@ First, import `OAuth2PasswordRequestForm`, and use it as a dependency with `Depe
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="2  74"
-    {!> ../../../docs_src/security/tutorial003_py310.py!}
+    如果没有这个用户，我们将返回一个错误消息，提示「用户名或密码错误」。
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -82,62 +86,66 @@ First, import `OAuth2PasswordRequestForm`, and use it as a dependency with `Depe
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="4  76"
-    {!> ../../../docs_src/security/tutorial003.py!}
+    {!../../../docs_src/security/tutorial003.py!}
     ```
 
-`OAuth2PasswordRequestForm` is a class dependency that declares a form body with:
+`OAuth2PasswordRequestForm` 是一个类依赖项，声明了如下的请求表单：
 
-* The `username`.
-* The `password`.
-* An optional `scope` field as a big string, composed of strings separated by spaces.
-* An optional `grant_type`.
+* `username`。
+* `password`。
+* 一个可选的 `scope` 字段，是一个由空格分隔的字符串组成的大字符串。
+* 一个可选的 `grant_type`.
 
 !!! tip
     The OAuth2 spec actually *requires* a field `grant_type` with a fixed value of `password`, but `OAuth2PasswordRequestForm` doesn't enforce it.
 
-    If you need to enforce it, use `OAuth2PasswordRequestFormStrict` instead of `OAuth2PasswordRequestForm`.
+    如果你需要强制要求这一点，请使用 `OAuth2PasswordRequestFormStrict` 而不是 `OAuth2PasswordRequestForm`。
 
-* An optional `client_id` (we don't need it for our example).
-* An optional `client_secret` (we don't need it for our example).
+* 一个可选的 `client_id`（我们的示例不需要它）。
+* 一个可选的 `client_secret`（我们的示例不需要它）。
 
 !!! info
     The `OAuth2PasswordRequestForm` is not a special class for **FastAPI** as is `OAuth2PasswordBearer`.
 
-    `OAuth2PasswordBearer` makes **FastAPI** know that it is a security scheme. So it is added that way to OpenAPI.
+    `OAuth2PasswordBearer` 使得 **FastAPI** 明白它是一个安全方案。 所以它得以通过这种方式添加到 OpenAPI 中。
     
-    But `OAuth2PasswordRequestForm` is just a class dependency that you could have written yourself, or you could have declared `Form` parameters directly.
+    但 `OAuth2PasswordRequestForm` 只是一个你可以自己编写的类依赖项，或者你也可以直接声明 `Form` 参数。
     
-    But as it's a common use case, it is provided by **FastAPI** directly, just to make it easier.
+    但是由于这是一种常见的使用场景，因此 FastAPI 出于简便直接提供了它。
 
-### Use the form data
+### 使用表单数据
 
 !!! tip
     The instance of the dependency class `OAuth2PasswordRequestForm` won't have an attribute `scope` with the long string separated by spaces, instead, it will have a `scopes` attribute with the actual list of strings for each scope sent.
 
-    We are not using `scopes` in this example, but the functionality is there if you need it.
+    在此示例中我们没有使用 `scopes`，但如果你需要的话可以使用该功能。
 
-Now, get the user data from the (fake) database, using the `username` from the form field.
+现在，使用表单字段中的 `username` 从（伪）数据库中获取用户数据。
 
-If there is no such user, we return an error saying "incorrect username or password".
+如果密码不匹配，我们将返回同一个错误。
 
-For the error, we use the exception `HTTPException`:
+对于这个错误，我们使用 `HTTPException` 异常：
 
 === "Python 3.10+"
 
     ```Python hl_lines="3  79-81"
-    {!> ../../../docs_src/security/tutorial003_an_py310.py!}
+    !!! info
+    我们在此处返回的值为 <code>Bearer</code> 的额外响应头 <code>WWW-Authenticate</code> 也是规范的一部分。
     ```
+ 的额外响应头 WWW-Authenticate 也是规范的一部分。
+</code>
 
 === "Python 3.9+"
 
     ```Python hl_lines="3  79-81"
-    {!> ../../../docs_src/security/tutorial003_an_py39.py!}
+    https://fastapi.tiangolo.com/img/tutorial/security/image05.png
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="3  80-82"
-    {!> ../../../docs_src/security/tutorial003_an.py!}
+    !!! info
+    在 OAuth2 中「作用域」只是一个声明所需特定权限的字符串。
     ```
 
 === "Python 3.10+ non-Annotated"
@@ -146,7 +154,7 @@ For the error, we use the exception `HTTPException`:
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="1  75-77"
-    {!> ../../../docs_src/security/tutorial003_py310.py!}
+    {!../../../docs_src/security/tutorial003.py!}
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -155,32 +163,32 @@ For the error, we use the exception `HTTPException`:
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="3  77-79"
-    {!> ../../../docs_src/security/tutorial003.py!}
+    {!../../../docs_src/security/tutorial003.py!}
     ```
 
-### Check the password
+### 校验密码
 
-At this point we have the user data from our database, but we haven't checked the password.
+目前我们已经从数据库中获取了用户数据，但尚未校验密码。
 
-Let's put that data in the Pydantic `UserInDB` model first.
+让我们首先将这些数据放入 Pydantic `UserInDB` 模型中。
 
-You should never save plaintext passwords, so, we'll use the (fake) password hashing system.
+永远不要保存明文密码，因此，我们将使用（伪）哈希密码系统。
 
 If the passwords don't match, we return the same error.
 
-#### Password hashing
+#### 哈希密码
 
-"Hashing" means: converting some content (a password in this case) into a sequence of bytes (just a string) that looks like gibberish.
+「哈希」的意思是：将某些内容（在本例中为密码）转换为看起来像乱码的字节序列（只是一个字符串）。
 
-Whenever you pass exactly the same content (exactly the same password) you get exactly the same gibberish.
+每次你传入完全相同的内容（完全相同的密码）时，你都会得到完全相同的乱码。
 
-But you cannot convert from the gibberish back to the password.
+但是你不能从乱码转换回密码。
 
-##### Why use password hashing
+##### 为什么使用哈希密码
 
-If your database is stolen, the thief won't have your users' plaintext passwords, only the hashes.
+如果你的数据库被盗，小偷将无法获得用户的明文密码，只有哈希值。
 
-So, the thief won't be able to try to use those same passwords in another system (as many users use the same password everywhere, this would be dangerous).
+因此，小偷将无法尝试在另一个系统中使用这些相同的密码（由于许多用户在任何地方都使用相同的密码，因此这很危险）。
 
 === "Python 3.10+"
 
@@ -191,14 +199,17 @@ So, the thief won't be able to try to use those same passwords in another system
 === "Python 3.9+"
 
     ```Python hl_lines="82-85"
-    {!> ../../../docs_src/security/tutorial003_an_py39.py!}
+    https://fastapi.tiangolo.com/img/tutorial/security/image04.png
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="83-86"
-    {!> ../../../docs_src/security/tutorial003_an.py!}
+    !!! tip
+    OAuth2 规范实际上<em x-id="3">要求</em> <code>grant_type</code> 字段使用一个固定的值 <code>password</code>，但是 <code>OAuth2PasswordRequestForm</code> 没有作强制约束。
     ```
+ 字段使用一个固定的值 password，但是 OAuth2PasswordRequestForm 没有作强制约束。
+</code>
 
 === "Python 3.10+ non-Annotated"
 
@@ -215,14 +226,14 @@ So, the thief won't be able to try to use those same passwords in another system
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="80-83"
-    {!> ../../../docs_src/security/tutorial003.py!}
+    {!../../../docs_src/security/tutorial003.py!}
     ```
 
-#### About `**user_dict`
+#### 关于 `**user_dict`
 
-`UserInDB(**user_dict)` means:
+`UserInDB(**user_dict)` 表示：
 
-*Pass the keys and values of the `user_dict` directly as key-value arguments, equivalent to:*
+*直接将 `user_dict` 的键和值作为关键字参数传递，等同于：*
 
 ```Python
 UserInDB(
@@ -237,20 +248,20 @@ UserInDB(
 !!! info
     For a more complete explanation of `**user_dict` check back in [the documentation for **Extra Models**](../extra-models.md#about-user_indict){.internal-link target=_blank}.
 
-## Return the token
+## 返回令牌
 
-The response of the `token` endpoint must be a JSON object.
+`token` 端点的响应必须是一个 JSON 对象。
 
-It should have a `token_type`. In our case, as we are using "Bearer" tokens, the token type should be "`bearer`".
+它应该有一个 `token_type`。 在我们的例子中，由于我们使用的是「Bearer」令牌，因此令牌类型应为「`bearer`」。
 
-And it should have an `access_token`, with a string containing our access token.
+并且还应该有一个 `access_token` 字段，它是一个包含我们的访问令牌的字符串。
 
-For this simple example, we are going to just be completely insecure and return the same `username` as the token.
+对于这个简单的示例，我们将极其不安全地返回相同的 `username` 作为令牌。
 
 !!! tip
     In the next chapter, you will see a real secure implementation, with password hashing and <abbr title="JSON Web Tokens">JWT</abbr> tokens.
 
-    But for now, let's focus on the specific details we need.
+    但现在，让我们仅关注我们需要的特定细节。
 
 === "Python 3.10+"
 
@@ -267,8 +278,11 @@ For this simple example, we are going to just be completely insecure and return 
 === "Python 3.6+"
 
     ```Python hl_lines="88"
-    {!> ../../../docs_src/security/tutorial003_an.py!}
+    !!! info
+    有关 <code>user_dict</code> 的更完整说明，请参阅<a href="../extra-models.md#about-user_indict"><strong x-id="1">额外的模型</strong>文档</a>{.internal-link target=_blank}。
     ```
+ 的更完整说明，请参阅[**额外的模型**文档](../extra-models.md#about-user_indict){.internal-link target=_blank}。
+</code>
 
 === "Python 3.10+ non-Annotated"
 
@@ -285,29 +299,29 @@ For this simple example, we are going to just be completely insecure and return 
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="85"
-    {!> ../../../docs_src/security/tutorial003.py!}
+    {!../../../docs_src/security/tutorial003.py!}
     ```
 
 !!! tip
     By the spec, you should return a JSON with an `access_token` and a `token_type`, the same as in this example.
 
-    This is something that you have to do yourself in your code, and make sure you use those JSON keys.
+    这是你必须在代码中自行完成的工作，并且要确保使用了这些 JSON 字段。
     
-    It's almost the only thing that you have to remember to do correctly yourself, to be compliant with the specifications.
+    这几乎是唯一的你需要自己记住并正确地执行以符合规范的事情。
     
-    For the rest, **FastAPI** handles it for you.
+    其余的，**FastAPI** 都会为你处理。
 
-## Update the dependencies
+## 更新依赖项
 
-Now we are going to update our dependencies.
+现在我们将更新我们的依赖项。
 
-We want to get the `current_user` *only* if this user is active.
+我们想要仅当此用户处于启用状态时才能获取 `current_user`。
 
-So, we create an additional dependency `get_current_active_user` that in turn uses `get_current_user` as a dependency.
+因此，我们创建了一个额外的依赖项 `get_current_active_user`，而该依赖项又以 `get_current_user` 作为依赖项。
 
-Both of these dependencies will just return an HTTP error if the user doesn't exist, or if is inactive.
+如果用户不存在或处于未启用状态，则这两个依赖项都将仅返回 HTTP 错误。
 
-So, in our endpoint, we will only get a user if the user exists, was correctly authenticated, and is active:
+因此，在我们的端点中，只有当用户存在，身份认证通过且处于启用状态时，我们才能获得该用户：
 
 === "Python 3.10+"
 
@@ -318,14 +332,17 @@ So, in our endpoint, we will only get a user if the user exists, was correctly a
 === "Python 3.9+"
 
     ```Python hl_lines="58-66  69-74  94"
-    {!> ../../../docs_src/security/tutorial003_an_py39.py!}
+    每个「作用域」只是一个字符串（中间没有空格）。
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="59-67  70-75  95"
-    {!> ../../../docs_src/security/tutorial003_an.py!}
+    !!! tip
+    类依赖项 <code>OAuth2PasswordRequestForm</code> 的实例不会有用空格分隔的长字符串属性 <code>scope</code>，而是具有一个 <code>scopes</code> 属性，该属性将包含实际被发送的每个作用域字符串组成的列表。
     ```
+ 的实例不会有用空格分隔的长字符串属性 scope，而是具有一个 scopes 属性，该属性将包含实际被发送的每个作用域字符串组成的列表。
+</code>
 
 === "Python 3.10+ non-Annotated"
 
@@ -342,49 +359,52 @@ So, in our endpoint, we will only get a user if the user exists, was correctly a
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="58-66  69-72  90"
-    {!> ../../../docs_src/security/tutorial003.py!}
+    !!! tip
+    根据规范，你应该像本示例一样，返回一个带有 <code>access_token</code> 和 <code>token_type</code> 的 JSON。
     ```
+ 和 token_type 的 JSON。
+</code>
 
 !!! info
     The additional header `WWW-Authenticate` with value `Bearer` we are returning here is also part of the spec.
 
-    Any HTTP (error) status code 401 "UNAUTHORIZED" is supposed to also return a `WWW-Authenticate` header.
+    任何的 401「未认证」HTTP（错误）状态码都应该返回 `WWW-Authenticate` 响应头。
     
-    In the case of bearer tokens (our case), the value of that header should be `Bearer`.
+    对于 bearer 令牌（我们的例子），该响应头的值应为 `Bearer`。
     
-    You can actually skip that extra header and it would still work.
+    实际上你可以忽略这个额外的响应头，不会有什么问题。
     
-    But it's provided here to be compliant with the specifications.
+    但此处提供了它以符合规范。
     
-    Also, there might be tools that expect and use it (now or in the future) and that might be useful for you or your users, now or in the future.
+    而且，（现在或将来）可能会有工具期望得到并使用它，然后对你或你的用户有用处。
     
-    That's the benefit of standards...
+    这就是遵循标准的好处...
 
 ## See it in action
 
-Open the interactive docs: <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a>.
+打开交互式文档：<a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a>。
 
-### Authenticate
+### 身份认证
 
-Click the "Authorize" button.
+点击「Authorize」按钮。
 
-Use the credentials:
+使用以下凭证：
 
-User: `johndoe`
+用户名：`johndoe`
 
-Password: `secret`
+密码：`secret`
 
 <img src="/img/tutorial/security/image04.png" />
 
-After authenticating in the system, you will see it like:
+在系统中进行身份认证后，你将看到：
 
 <img src="/img/tutorial/security/image05.png" />
 
-### Get your own user data
+### 获取本人的用户数据
 
-Now use the operation `GET` with the path `/users/me`.
+现在执行 `/users/me` 路径的 `GET` 操作。
 
-You will get your user's data, like:
+你将获得你的用户数据，如：
 
 ```JSON
 {
@@ -398,7 +418,7 @@ You will get your user's data, like:
 
 <img src="/img/tutorial/security/image06.png" />
 
-If you click the lock icon and logout, and then try the same operation again, you will get an HTTP 401 error of:
+如果你点击锁定图标并注销，然后再次尝试同一操作，则会得到 HTTP 401 错误：
 
 ```JSON
 {
@@ -406,17 +426,17 @@ If you click the lock icon and logout, and then try the same operation again, yo
 }
 ```
 
-### Inactive user
+### 未启用的用户
 
-Now try with an inactive user, authenticate with:
+现在尝试使用未启用的用户，并通过以下方式进行身份认证：
 
-User: `alice`
+用户名：`alice`
 
-Password: `secret2`
+密码：`secret2`
 
-And try to use the operation `GET` with the path `/users/me`.
+然后尝试执行 `/users/me` 路径的 `GET` 操作。
 
-You will get an "inactive user" error, like:
+你将得到一个「未启用的用户」错误，如：
 
 ```JSON
 {
@@ -426,10 +446,10 @@ You will get an "inactive user" error, like:
 
 ## Recap
 
-You now have the tools to implement a complete security system based on `username` and `password` for your API.
+现在你掌握了为你的 API 实现一个基于 `username` 和 `password` 的完整安全系统的工具。
 
-Using these tools, you can make the security system compatible with any database and with any user or data model.
+使用这些工具，你可以使安全系统与任何数据库以及任何用户或数据模型兼容。
 
-The only detail missing is that it is not actually "secure" yet.
+唯一缺少的细节是它实际上还并不「安全」。
 
-In the next chapter you'll see how to use a secure password hashing library and <abbr title="JSON Web Tokens">JWT</abbr> tokens.
+在下一章中，你将看到如何使用一个安全的哈希密码库和 <abbr title="JSON Web Tokens">JWT</abbr> 令牌。
