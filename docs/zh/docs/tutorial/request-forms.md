@@ -1,63 +1,92 @@
-# 表单数据
+# Form Data
 
-接收的不是 JSON，而是表单字段时，要使用 `Form`。
+When you need to receive form fields instead of JSON, you can use `Form`.
 
-!!! info "说明"
+!!! info
+    To use forms, first install <a href="https://andrew-d.github.io/python-multipart/" class="external-link" target="_blank">`python-multipart`</a>.
 
-    要使用表单，需预先安装 <a href="https://andrew-d.github.io/python-multipart/" class="external-link" target="_blank">`python-multipart`</a>。
+    E.g. `pip install python-multipart`.
 
-    例如，`pip install python-multipart`。
+## Import `Form`
 
-## 导入 `Form`
+Import `Form` from `fastapi`:
 
-从 `fastapi` 导入 `Form`：
+=== "Python 3.9+"
 
-```Python hl_lines="1"
-{!../../../docs_src/request_forms/tutorial001.py!}
-```
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/request_forms/tutorial001_an_py39.py!}
+    ```
 
-## 定义 `Form` 参数
+=== "Python 3.6+"
 
-创建表单（`Form`）参数的方式与 `Body` 和 `Query` 一样：
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/request_forms/tutorial001_an.py!}
+    ```
 
-```Python hl_lines="7"
-{!../../../docs_src/request_forms/tutorial001.py!}
-```
+=== "Python 3.6+ non-Annotated"
 
-例如，OAuth2 规范的 "密码流" 模式规定要通过表单字段发送 `username` 和 `password`。
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-<abbr title="specification">该规范</abbr>要求字段必须命名为 `username` 和 `password`，并通过表单字段发送，不能用 JSON。
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/request_forms/tutorial001.py!}
+    ```
 
-使用 `Form` 可以声明与 `Body` （及 `Query`、`Path`、`Cookie`）相同的元数据和验证。
+## Define `Form` parameters
 
-!!! info "说明"
+Create form parameters the same way you would for `Body` or `Query`:
 
-    `Form` 是直接继承自 `Body` 的类。
+=== "Python 3.9+"
 
-!!! tip "提示"
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/request_forms/tutorial001_an_py39.py!}
+    ```
 
-    声明表单体要显式使用 `Form` ，否则，FastAPI 会把该参数当作查询参数或请求体（JSON）参数。
+=== "Python 3.6+"
 
-## 关于 "表单字段"
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/request_forms/tutorial001_an.py!}
+    ```
 
-与 JSON 不同，HTML 表单（`<form></form>`）向服务器发送数据通常使用「特殊」的编码。
+=== "Python 3.6+ non-Annotated"
 
-**FastAPI** 要确保从正确的位置读取数据，而不是读取 JSON。
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-!!! note "技术细节"
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/request_forms/tutorial001.py!}
+    ```
 
-    表单数据的「媒体类型」编码一般为 `application/x-www-form-urlencoded`。
+For example, in one of the ways the OAuth2 specification can be used (called "password flow") it is required to send a `username` and `password` as form fields.
 
-    但包含文件的表单编码为 `multipart/form-data`。文件处理详见下节。
+The <abbr title="specification">spec</abbr> requires the fields to be exactly named `username` and `password`, and to be sent as form fields, not JSON.
 
-    编码和表单字段详见 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/POST" class="external-link" target="_blank"><abbr title="Mozilla Developer Network">MDN</abbr> Web 文档的 <code>POST</code></a>小节。
+With `Form` you can declare the same configurations as with `Body` (and `Query`, `Path`, `Cookie`), including validation, examples, an alias (e.g. `user-name` instead of `username`), etc.
 
-!!! warning "警告"
+!!! info
+    `Form` is a class that inherits directly from `Body`.
 
-    可在一个*路径操作*中声明多个 `Form` 参数，但不能同时声明要接收 JSON 的 `Body` 字段。因为此时请求体的编码是 `application/x-www-form-urlencoded`，不是 `application/json`。
+!!! tip
+    To declare form bodies, you need to use `Form` explicitly, because without it the parameters would be interpreted as query parameters or body (JSON) parameters.
 
-    这不是 **FastAPI** 的问题，而是 HTTP 协议的规定。
+## About "Form Fields"
 
-## 小结
+The way HTML forms (`<form></form>`) sends the data to the server normally uses a "special" encoding for that data, it's different from JSON.
 
-本节介绍了如何使用 `Form` 声明表单数据输入参数。
+**FastAPI** will make sure to read that data from the right place instead of JSON.
+
+!!! note "Technical Details"
+    Data from forms is normally encoded using the "media type" `application/x-www-form-urlencoded`.
+
+    But when the form includes files, it is encoded as `multipart/form-data`. You'll read about handling files in the next chapter.
+    
+    If you want to read more about these encodings and form fields, head to the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST" class="external-link" target="_blank"><abbr title="Mozilla Developer Network">MDN</abbr> web docs for <code>POST</code></a>.
+
+!!! warning
+    You can declare multiple `Form` parameters in a *path operation*, but you can't also declare `Body` fields that you expect to receive as JSON, as the request will have the body encoded using `application/x-www-form-urlencoded` instead of `application/json`.
+
+    This is not a limitation of **FastAPI**, it's part of the HTTP protocol.
+
+## Recap
+
+Use `Form` to declare form data input parameters.
