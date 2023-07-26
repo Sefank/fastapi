@@ -1,10 +1,10 @@
-# Classes as Dependencies
+# 类作为依赖项
 
-Before diving deeper into the **Dependency Injection** system, let's upgrade the previous example.
+在深入探究 **依赖注入** 系统之前，让我们升级之前的例子。
 
-## A `dict` from the previous example
+## 来自前一个例子的`dict`
 
-In the previous example, we were returning a `dict` from our dependency ("dependable"):
+在前面的例子中, 我们从依赖项 ("可依赖对象") 中返回了一个 `dict`:
 
 === "Python 3.10+"
 
@@ -42,29 +42,29 @@ In the previous example, we were returning a `dict` from our dependency ("depend
     {!> ../../../docs_src/dependencies/tutorial001.py!}
     ```
 
-But then we get a `dict` in the parameter `commons` of the *path operation function*.
+但是后面我们在路径操作函数的参数 `commons` 中得到了一个 `dict`。
 
-And we know that editors can't provide a lot of support (like completion) for `dict`s, because they can't know their keys and value types.
+我们知道编辑器不能为 `dict` 提供很多支持(比如补全)，因为编辑器不知道 `dict` 的键和值类型。
 
-We can do better...
+对此，我们可以做的更好...
 
-## What makes a dependency
+## 什么构成了依赖项？
 
-Up to now you have seen dependencies declared as functions.
+到目前为止，您看到的依赖项都被声明为函数。
 
-But that's not the only way to declare dependencies (although it would probably be the more common).
+但这并不是声明依赖项的唯一方法(尽管它可能是更常见的方法)。
 
 The key factor is that a dependency should be a "callable".
 
-A "**callable**" in Python is anything that Python can "call" like a function.
+Python 中的 "**可调用对象**" 是指任何 Python 可以像函数一样 "调用" 的对象。
 
-So, if you have an object `something` (that might _not_ be a function) and you can "call" it (execute it) like:
+所以，如果你有一个对象 `something` (可能*不是*一个函数)，你可以 "调用" 它(执行它)，就像：
 
 ```Python
 something()
 ```
 
-or
+或者
 
 ```Python
 something(some_argument, some_keyword_argument="foo")
@@ -72,11 +72,11 @@ something(some_argument, some_keyword_argument="foo")
 
 then it is a "callable".
 
-## Classes as dependencies
+## 类作为依赖项
 
-You might notice that to create an instance of a Python class, you use that same syntax.
+您可能会注意到，要创建一个 Python 类的实例，您可以使用相同的语法。
 
-For example:
+举个例子:
 
 ```Python
 class Cat:
@@ -87,21 +87,21 @@ class Cat:
 fluffy = Cat(name="Mr Fluffy")
 ```
 
-In this case, `fluffy` is an instance of the class `Cat`.
+在这个例子中, `fluffy` 是一个 `Cat` 类的实例。
 
-And to create `fluffy`, you are "calling" `Cat`.
+为了创建 `fluffy`，你调用了 `Cat` 。
 
-So, a Python class is also a **callable**.
+所以，Python 类也是 **可调用对象**。
 
-Then, in **FastAPI**, you could use a Python class as a dependency.
+因此，在 **FastAPI** 中，你可以使用一个 Python 类作为一个依赖项。
 
-What FastAPI actually checks is that it is a "callable" (function, class or anything else) and the parameters defined.
+实际上 FastAPI 检查的是它是一个 "可调用对象"（函数，类或其他任何类型）以及定义的参数。
 
-If you pass a "callable" as a dependency in **FastAPI**, it will analyze the parameters for that "callable", and process them in the same way as the parameters for a *path operation function*. Including sub-dependencies.
+如果您在 **FastAPI** 中传递一个 "可调用对象" 作为依赖项，它将分析该 "可调用对象" 的参数，并以处理路径操作函数的参数的方式来处理它们。 包括子依赖项。
 
-That also applies to callables with no parameters at all. The same as it would be for *path operation functions* with no parameters.
+这也适用于完全没有参数的可调用对象。 这与不带参数的路径操作函数一样。
 
-Then, we can change the dependency "dependable" `common_parameters` from above to the class `CommonQueryParams`:
+所以，我们可以将上面的依赖项 "可依赖对象" `common_parameters` 更改为类 `CommonQueryParams`:
 
 === "Python 3.10+"
 
@@ -139,7 +139,7 @@ Then, we can change the dependency "dependable" `common_parameters` from above t
     {!> ../../../docs_src/dependencies/tutorial002.py!}
     ```
 
-Pay attention to the `__init__` method used to create the instance of the class:
+注意用于创建类实例的 `__init__` 方法：
 
 === "Python 3.10+"
 
@@ -177,7 +177,7 @@ Pay attention to the `__init__` method used to create the instance of the class:
     {!> ../../../docs_src/dependencies/tutorial002.py!}
     ```
 
-...it has the same parameters as our previous `common_parameters`:
+...它与我们以前的 `common_parameters` 具有相同的参数：
 
 === "Python 3.10+"
 
@@ -215,19 +215,19 @@ Pay attention to the `__init__` method used to create the instance of the class:
     {!> ../../../docs_src/dependencies/tutorial001.py!}
     ```
 
-Those parameters are what **FastAPI** will use to "solve" the dependency.
+这些参数就是 **FastAPI** 用来 "处理" 依赖项的。
 
-In both cases, it will have:
+在两个例子下，都有：
 
-* An optional `q` query parameter that is a `str`.
-* A `skip` query parameter that is an `int`, with a default of `0`.
-* A `limit` query parameter that is an `int`, with a default of `100`.
+* 一个可选的 `q` 查询参数，是 `str` 类型。
+* 一个 `skip` 查询参数，是 `int` 类型，默认值为 `0`。
+* 一个 `limit` 查询参数，是 `int` 类型，默认值为 `100`。
 
-In both cases the data will be converted, validated, documented on the OpenAPI schema, etc.
+在两个例子下，数据都将被转换、验证、在 OpenAPI schema 上文档化，等等。
 
-## Use it
+## 使用它
 
-Now you can declare your dependency using this class.
+现在，您可以使用这个类来声明你的依赖项了。
 
 === "Python 3.10+"
 
@@ -265,11 +265,11 @@ Now you can declare your dependency using this class.
     {!> ../../../docs_src/dependencies/tutorial002.py!}
     ```
 
-**FastAPI** calls the `CommonQueryParams` class. This creates an "instance" of that class and the instance will be passed as the parameter `commons` to your function.
+**FastAPI** 调用 `CommonQueryParams` 类。 这将创建该类的一个 "实例"，该实例将作为参数 `commons` 被传递给你的函数。
 
-## Type annotation vs `Depends`
+## 类型注解 vs `Depends`
 
-Notice how we write `CommonQueryParams` twice in the above code:
+注意，我们在上面的代码中编写了两次`CommonQueryParams`：
 
 === "Python 3.6+ non-Annotated"
 
@@ -283,27 +283,27 @@ Notice how we write `CommonQueryParams` twice in the above code:
 === "Python 3.6+"
 
     ```Python
-    commons: Annotated[CommonQueryParams, Depends(CommonQueryParams)]
+    ... = Depends(CommonQueryParams)
     ```
 
-The last `CommonQueryParams`, in:
+最后的 `CommonQueryParams`:
 
 ```Python
 ... Depends(CommonQueryParams)
 ```
 
-...is what **FastAPI** will actually use to know what is the dependency.
+...实际上是 **Fastapi** 用来知道依赖项是什么的。
 
-From it is that FastAPI will extract the declared parameters and that is what FastAPI will actually call.
+FastAPI 将从依赖项中提取声明的参数，这才是 FastAPI 实际调用的。
 
 ---
 
-In this case, the first `CommonQueryParams`, in:
+在本例中，第一个 `CommonQueryParams` ：
 
 === "Python 3.6+"
 
     ```Python
-    commons: Annotated[CommonQueryParams, ...
+    这就是 "可调用对象"。
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -315,14 +315,15 @@ In this case, the first `CommonQueryParams`, in:
     commons: CommonQueryParams ...
     ```
 
-...doesn't have any special meaning for **FastAPI**. FastAPI won't use it for data conversion, validation, etc. (as it is using the `Depends(CommonQueryParams)` for that).
+...对于 **FastAPI** 没有任何特殊的意义。 FastAPI 不会使用它进行数据转换、验证等 (因为对于这，它使用 `= Depends(CommonQueryParams)`)。
 
-You could actually write just:
+你实际上可以只这样编写:
 
 === "Python 3.6+"
 
     ```Python
-    commons: Annotated[Any, Depends(CommonQueryParams)]
+    !!! tip
+    如果这看起来更加混乱而不是更加有帮助，那么请忽略它，你不<em x-id="3">需要</em>它。
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -334,7 +335,7 @@ You could actually write just:
     commons = Depends(CommonQueryParams)
     ```
 
-..as in:
+..就像:
 
 === "Python 3.10+"
 
@@ -372,13 +373,13 @@ You could actually write just:
     {!> ../../../docs_src/dependencies/tutorial003.py!}
     ```
 
-But declaring the type is encouraged as that way your editor will know what will be passed as the parameter `commons`, and then it can help you with code completion, type checks, etc:
+但是声明类型是被鼓励的，因为那样你的编辑器就会知道将传递什么作为参数 `commons` ，然后它可以帮助你完成代码，类型检查，等等：
 
 <img src="/img/tutorial/dependencies/image02.png" />
 
-## Shortcut
+## 快捷方式
 
-But you see that we are having some code repetition here, writing `CommonQueryParams` twice:
+但是您可以看到，我们在这里有一些代码重复了，编写了`CommonQueryParams`两次：
 
 === "Python 3.6+ non-Annotated"
 
@@ -395,11 +396,11 @@ But you see that we are having some code repetition here, writing `CommonQueryPa
     commons: Annotated[CommonQueryParams, Depends(CommonQueryParams)]
     ```
 
-**FastAPI** provides a shortcut for these cases, in where the dependency is *specifically* a class that **FastAPI** will "call" to create an instance of the class itself.
+**FastAPI** 为这些情况提供了一个快捷方式，在这些情况下，依赖项 *明确地* 是一个类，**FastAPI** 将 "调用" 它来创建类本身的一个实例。
 
-For those specific cases, you can do the following:
+对于这些特定的情况，您可以跟随以下操作：
 
-Instead of writing:
+不是写成这样：
 
 === "Python 3.6+"
 
@@ -416,12 +417,12 @@ Instead of writing:
     commons: CommonQueryParams = Depends(CommonQueryParams)
     ```
 
-...you write:
+...而是这样写:
 
 === "Python 3.6+"
 
     ```Python
-    commons: Annotated[CommonQueryParams, Depends()]
+    关键因素是依赖项应该是 "可调用对象"。
     ```
 
 === "Python 3.6 non-Annotated"
@@ -433,9 +434,9 @@ Instead of writing:
     commons: CommonQueryParams = Depends()
     ```
 
-You declare the dependency as the type of the parameter, and you use `Depends()` without any parameter, instead of having to write the full class *again* inside of `Depends(CommonQueryParams)`.
+您声明依赖项作为参数的类型，并使用 `Depends()` 作为该函数的参数的 "默认" 值(在 `=` 之后)，而在 `Depends()` 中没有任何参数，而不是在 `Depends(CommonQueryParams)` 编写完整的类。
 
-The same example would then look like:
+同样的例子看起来像这样：
 
 === "Python 3.10+"
 
@@ -473,9 +474,9 @@ The same example would then look like:
     {!> ../../../docs_src/dependencies/tutorial004.py!}
     ```
 
-...and **FastAPI** will know what to do.
+... **FastAPI** 会知道怎么处理。
 
 !!! tip
     If that seems more confusing than helpful, disregard it, you don't *need* it.
 
-    It is just a shortcut. Because **FastAPI** cares about helping you minimize code repetition.
+    这只是一个快捷方式。 因为 **FastAPI** 关心的是帮助您减少代码重复。
