@@ -1,16 +1,16 @@
-# OAuth2 with Password (and hashing), Bearer with JWT tokens
+# OAuth2 实现密码哈希与 Bearer  JWT 令牌验证
 
-Now that we have all the security flow, let's make the application actually secure, using <abbr title="JSON Web Tokens">JWT</abbr> tokens and secure password hashing.
+至此，我们已经编写了所有安全流，本章学习如何使用 <abbr title="JSON Web Tokens">JWT</abbr> 令牌（Token）和安全密码哈希（Hash）实现真正的安全机制。
 
-This code is something you can actually use in your application, save the password hashes in your database, etc.
+本章的示例代码真正实现了在应用的数据库中保存哈希密码等功能。
 
 We are going to start from where we left in the previous chapter and increment it.
 
-## About JWT
+## JWT 简介
 
-JWT means "JSON Web Tokens".
+JWT 即**JSON 网络令牌**（JSON Web Tokens）。
 
-It's a standard to codify a JSON object in a long dense string without spaces. It looks like this:
+JWT 是一种将 JSON 对象编码为没有空格，且难以理解的长字符串的标准。 It looks like this:
 
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
@@ -20,111 +20,108 @@ It is not encrypted, so, anyone could recover the information from the contents.
 
 But it's signed. So, when you receive a token that you emitted, you can verify that you actually emitted it.
 
-That way, you can create a token with an expiration of, let's say, 1 week. And then when the user comes back the next day with the token, you know that user is still logged in to your system.
+使用 JWT 创建有效期为一周的令牌。 第二天，用户持令牌再次访问时，仍为登录状态。
 
-After a week, the token will be expired and the user will not be authorized and will have to sign in again to get a new token. And if the user (or a third party) tried to modify the token to change the expiration, you would be able to discover it, because the signatures would not match.
+After a week, the token will be expired and the user will not be authorized and will have to sign in again to get a new token. 如果用户（或第三方）篡改令牌的过期时间，因为签名不匹配会导致身份验证失败。
 
-If you want to play with JWT tokens and see how they work, check <a href="https://jwt.io/" class="external-link" target="_blank">https://jwt.io</a>.
+如需深入了解 JWT 令牌，了解它的工作方式，请参阅 <a href="https://jwt.io/" class="external-link" target="_blank">https://jwt.io</a>。
 
-## Install `python-jose`
+## 安装 `python-jose`
 
-We need to install `python-jose` to generate and verify the JWT tokens in Python:
+安装 `python-jose`，在 Python 中生成和校验 JWT 令牌：
 
 <div class="termy">
 
 ```console
-$ pip install "python-jose[cryptography]"
+$ pip install python-jose[cryptography]
 
 ---> 100%
 ```
 
 </div>
 
-<a href="https://github.com/mpdavis/python-jose" class="external-link" target="_blank">Python-jose</a> requires a cryptographic backend as an extra.
+<a href="https://github.com/mpdavis/python-jose" class="external-link" target="_blank">Python-jose</a> 需要安装配套的加密后端。
 
-Here we are using the recommended one: <a href="https://cryptography.io/" class="external-link" target="_blank">pyca/cryptography</a>.
+本教程推荐的后端是：<a href="https://cryptography.io/" class="external-link" target="_blank">pyca/cryptography</a>。
 
-!!! tip
-    This tutorial previously used <a href="https://pyjwt.readthedocs.io/" class="external-link" target="_blank">PyJWT</a>.
+!!! 本教程以前使用 &lt;a href="https://pyjwt.readthedocs.io/" class="external-link" target="_blank"&gt;PyJWT&lt;/a&gt;。
 
-    But it was updated to use Python-jose instead as it provides all the features from PyJWT plus some extras that you might need later when building integrations with other tools.
+    但后来换成了 Python-jose，因为 Python-jose 支持 PyJWT 的所有功能，还支持与其它工具集成时可能会用到的一些其它功能。
 
-## Password hashing
+## 密码哈希
 
 "Hashing" means converting some content (a password in this case) into a sequence of bytes (just a string) that looks like gibberish.
 
-Whenever you pass exactly the same content (exactly the same password) you get exactly the same gibberish.
+每次传入完全相同的内容时（比如，完全相同的密码），返回的都是完全相同的乱码。
 
-But you cannot convert from the gibberish back to the password.
+但这个乱码无法转换回传入的密码。
 
-### Why use password hashing
+### 为什么使用密码哈希
 
 If your database is stolen, the thief won't have your users' plaintext passwords, only the hashes.
 
-So, the thief won't be able to try to use that password in another system (as many users use the same password everywhere, this would be dangerous).
+这样一来，窃贼就无法在其它应用中使用窃取的密码，要知道，很多用户在所有系统中都使用相同的密码，风险超大）。
 
-## Install `passlib`
+## 安装 `passlib`
 
-PassLib is a great Python package to handle password hashes.
+Passlib 是处理密码哈希的 Python 包。
 
-It supports many secure hashing algorithms and utilities to work with them.
+它支持很多安全哈希算法及配套工具。
 
 The recommended algorithm is "Bcrypt".
 
-So, install PassLib with Bcrypt:
+因此，请先安装附带 Bcrypt 的 PassLib：
 
 <div class="termy">
 
 ```console
-$ pip install "passlib[bcrypt]"
+$ pip install passlib[bcrypt]
 
 ---> 100%
 ```
 
 </div>
 
-!!! tip
-    With `passlib`, you could even configure it to be able to read passwords created by **Django**, a **Flask** security plug-in or many others.
+!!! `passlib` 甚至可以读取 Django、Flask 的安全插件等工具创建的密码。
 
-    So, you would be able to, for example, share the same data from a Django application in a database with a FastAPI application. Or gradually migrate a Django application using the same database.
+    例如，把 Django 应用的数据共享给 FastAPI 应用的数据库。 或利用同一个数据库，可以逐步把应用从 Django 迁移到 FastAPI。
     
-    And your users would be able to login from your Django app or from your **FastAPI** app, at the same time.
+    并且，用户可以同时从 Django 应用或 FastAPI 应用登录。
 
-## Hash and verify the passwords
+## 密码哈希与校验
 
-Import the tools we need from `passlib`.
+从 `passlib` 导入所需工具。
 
 Create a PassLib "context". This is what will be used to hash and verify passwords.
 
-!!! tip
-    The PassLib context also has functionality to use different hashing algorithms, including deprecated old ones only to allow verifying them, etc.
+!!! PassLib 上下文还支持使用不同哈希算法的功能，包括只能校验的已弃用旧算法等。
 
-    For example, you could use it to read and verify passwords generated by another system (like Django) but hash any new passwords with a different algorithm like Bcrypt.
+    例如，用它读取和校验其它系统（如 Django）生成的密码，但要使用其它算法，如 Bcrypt，生成新的哈希密码。
     
-    And be compatible with all of them at the same time.
+    同时，这些功能都是兼容的。
 
-Create a utility function to hash a password coming from the user.
+接下来，创建三个工具函数，其中一个函数用于哈希用户的密码。
 
 And another utility to verify if a received password matches the hash stored.
 
-And another one to authenticate and return a user.
+第三个函数用于身份验证，并返回用户。
 
 === "Python 3.10+"
 
     ```Python hl_lines="7  48  55-56  59-60  69-75"
-    {!> ../../../docs_src/security/tutorial004_an_py310.py!}
+    !!! tip "提示"
     ```
 
 === "Python 3.9+"
 
     ```Python hl_lines="7  48  55-56  59-60  69-75"
-    {!> ../../../docs_src/security/tutorial004_an_py39.py!}
+    接下来，我们紧接上一章，继续完善安全机制。
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="7  49  56-57  60-61  70-76"
-    {!> ../../../docs_src/security/tutorial004_an.py!}
+    而且，<strong x-id="1">FastAPI</strong> 还提供了一些工具，在不影响灵活、稳定和安全的前提下，尽可能地简化安全机制。
     ```
 
 === "Python 3.10+ non-Annotated"
@@ -133,7 +130,7 @@ And another one to authenticate and return a user.
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="6  47  54-55  58-59  68-74"
-    {!> ../../../docs_src/security/tutorial004_py310.py!}
+    原因很简单，假如数据库被盗，窃贼无法获取用户的明文密码，得到的只是哈希值。
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -142,19 +139,19 @@ And another one to authenticate and return a user.
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="7  48  55-56  59-60  69-75"
-    {!> ../../../docs_src/security/tutorial004.py!}
+    {!../../../docs_src/security/tutorial004.py!}
     ```
 
 !!! note
     If you check the new (fake) database `fake_users_db`, you will see how the hashed password looks like now: `"$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW"`.
 
-## Handle JWT tokens
+## 处理 JWT 令牌
 
-Import the modules installed.
+导入已安装的模块。
 
-Create a random secret key that will be used to sign the JWT tokens.
+创建用于 JWT 令牌签名的随机密钥。
 
-To generate a secure random secret key use the command:
+使用以下命令，生成安全的随机密钥：
 
 <div class="termy">
 
@@ -166,32 +163,32 @@ $ openssl rand -hex 32
 
 </div>
 
-And copy the output to the variable `SECRET_KEY` (don't use the one in the example).
+然后，把生成的密钥复制到变量**SECRET_KEY**，注意，不要使用本例所示的密钥。
 
-Create a variable `ALGORITHM` with the algorithm used to sign the JWT token and set it to `"HS256"`.
+创建指定 JWT 令牌签名算法的变量 **ALGORITHM**，本例中的值为 `"HS256"`。
 
-Create a variable for the expiration of the token.
+创建设置令牌过期时间的变量。
 
-Define a Pydantic Model that will be used in the token endpoint for the response.
+定义令牌端点响应的 Pydantic 模型。
 
-Create a utility function to generate a new access token.
+创建生成新的访问令牌的工具函数。
 
 === "Python 3.10+"
 
     ```Python hl_lines="6  12-14  28-30  78-86"
-    {!> ../../../docs_src/security/tutorial004_an_py310.py!}
+    注意，代码中没有明文密码**`secret`**，只保存了它的哈希值。
     ```
 
 === "Python 3.9+"
 
     ```Python hl_lines="6  12-14  28-30  78-86"
-    {!> ../../../docs_src/security/tutorial004_an_py39.py!}
+    <strong x-id="1">FastAPI</strong> 还支持以相对简单的方式，使用 OAuth2 等安全、标准的协议。
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="6  13-15  29-31 79-87"
-    {!> ../../../docs_src/security/tutorial004_an.py!}
+    注意，请求中 `Authorization` 响应头的值以 `Bearer` 开头。
     ```
 
 === "Python 3.10+ non-Annotated"
@@ -200,7 +197,7 @@ Create a utility function to generate a new access token.
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="5  11-13  27-29  77-85"
-    {!> ../../../docs_src/security/tutorial004_py310.py!}
+    第一个函数用于校验接收的密码是否匹配存储的哈希值。
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -209,33 +206,33 @@ Create a utility function to generate a new access token.
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="6  12-14  28-30  78-86"
-    {!> ../../../docs_src/security/tutorial004.py!}
+    {!../../../docs_src/security/tutorial004.py!}
     ```
 
-## Update the dependencies
+## 更新依赖项
 
-Update `get_current_user` to receive the same token as before, but this time, using JWT tokens.
+更新 `get_current_user` 以接收与之前相同的令牌，但这里用的是 JWT 令牌。
 
-Decode the received token, verify it, and return the current user.
+解码并校验接收到的令牌，然后，返回当前用户。
 
-If the token is invalid, return an HTTP error right away.
+如果令牌无效，则直接返回 HTTP 错误。
 
 === "Python 3.10+"
 
     ```Python hl_lines="89-106"
-    {!> ../../../docs_src/security/tutorial004_an_py310.py!}
+    !!! tip "提示"
     ```
 
 === "Python 3.9+"
 
     ```Python hl_lines="89-106"
-    {!> ../../../docs_src/security/tutorial004_an_py39.py!}
+    本教程推荐的算法是 <strong x-id="1">Bcrypt</strong>。
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="90-107"
-    {!> ../../../docs_src/security/tutorial004_an.py!}
+    开发者可以灵活选择最适合项目的安全机制。
     ```
 
 === "Python 3.10+ non-Annotated"
@@ -244,7 +241,7 @@ If the token is invalid, return an HTTP error right away.
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="88-105"
-    {!> ../../../docs_src/security/tutorial004_py310.py!}
+    创建用于密码哈希和身份校验的 PassLib <strong x-id="1">上下文</strong>。
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -253,32 +250,34 @@ If the token is invalid, return an HTTP error right away.
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="89-106"
-    {!> ../../../docs_src/security/tutorial004.py!}
+    {!../../../docs_src/security/tutorial004.py!}
     ```
 
-## Update the `/token` *path operation*
+## 更新 `/token` *路径操作*
 
-Create a `timedelta` with the expiration time of the token.
+用令牌过期时间创建 `timedelta` 对象。
 
-Create a real JWT access token and return it
+创建并返回真正的 JWT 访问令牌。
 
 === "Python 3.10+"
 
     ```Python hl_lines="117-132"
-    {!> ../../../docs_src/security/tutorial004_an_py310.py!}
+    !!! tip "提示"
     ```
 
 === "Python 3.9+"
 
     ```Python hl_lines="117-132"
-    {!> ../../../docs_src/security/tutorial004_an_py39.py!}
+    !!! check "检查"
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="118-133"
-    {!> ../../../docs_src/security/tutorial004_an.py!}
+    OAuth2 支持<strong x-id="1"><code>scopes</code></strong>（作用域）。
     ```
+</strong>（作用域）。
+</code>
 
 === "Python 3.10+ non-Annotated"
 
@@ -286,7 +285,7 @@ Create a real JWT access token and return it
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="114-127"
-    {!> ../../../docs_src/security/tutorial004_py310.py!}
+    查看新的（伪）数据库 `fake_users_db`，就能看到哈希后的密码：`"$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW"`。
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -295,51 +294,51 @@ Create a real JWT access token and return it
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="115-128"
-    {!> ../../../docs_src/security/tutorial004.py!}
+    {!../../../docs_src/security/tutorial004.py!}
     ```
 
-### Technical details about the JWT "subject" `sub`
+### JWT `sub` 的技术细节
 
-The JWT specification says that there's a key `sub`, with the subject of the token.
+JWT 规范还包括 `sub` 键，值是令牌的主题。
 
-It's optional to use it, but that's where you would put the user's identification, so we are using it here.
+该键是可选的，但要把用户标识放在这个键里，所以本例使用了该键。
 
-JWT might be used for other things apart from identifying a user and allowing them to perform operations directly on your API.
+除了识别用户与许可用户在 API 上直接执行操作之外，JWT 还可能用于其它事情。
 
 For example, you could identify a "car" or a "blog post".
 
 Then you could add permissions about that entity, like "drive" (for the car) or "edit" (for the blog).
 
-And then, you could give that JWT token to a user (or bot), and they could use it to perform those actions (drive the car, or edit the blog post) without even needing to have an account, just with the JWT token your API generated for that.
+JWT 字符串没有加密，任何人都能用它恢复原始信息。
 
-Using these ideas, JWT can be used for way more sophisticated scenarios.
+同理，JWT 可以用于更复杂的场景。
 
-In those cases, several of those entities could have the same ID, let's say `foo` (a user `foo`, a car `foo`, and a blog post `foo`).
+在这些情况下，多个实体的 ID 可能是相同的，以 ID  `foo` 为例，用户的 ID 是 `foo`，车的 ID 是 `foo`，博客的 ID 也是  `foo`。
 
-So, to avoid ID collisions, when creating the JWT token for the user, you could prefix the value of the `sub` key, e.g. with `username:`. So, in this example, the value of `sub` could have been: `username:johndoe`.
+为了避免 ID 冲突，在给用户创建 JWT 令牌时，可以为 `sub` 键的值加上前缀，例如 `username:`。 因此，在本例中，`sub` 的值可以是：`username:johndoe`。
 
-The important thing to have in mind is that the `sub` key should have a unique identifier across the entire application, and it should be a string.
+注意，划重点，`sub` 键在整个应用中应该只有一个唯一的标识符，而且应该是字符串。
 
-## Check it
+## 检查
 
-Run the server and go to the docs: <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a>.
+运行服务器并访问文档： <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a>。
 
-You'll see the user interface like:
+可以看到如下用户界面：
 
 <img src="/img/tutorial/security/image07.png" />
 
-Authorize the application the same way as before.
+用与上一章同样的方式实现应用授权。
 
-Using the credentials:
+使用如下凭证：
 
-Username: `johndoe` Password: `secret`
+用户名: `johndoe` 密码: `secret`
 
 !!! check
     Notice that nowhere in the code is the plaintext password "`secret`", we only have the hashed version.
 
 <img src="/img/tutorial/security/image08.png" />
 
-Call the endpoint `/users/me/`, you will get the response as:
+调用 `/users/me/` 端点，收到下面的响应：
 
 ```JSON
 {
@@ -352,41 +351,41 @@ Call the endpoint `/users/me/`, you will get the response as:
 
 <img src="/img/tutorial/security/image09.png" />
 
-If you open the developer tools, you could see how the data sent only includes the token, the password is only sent in the first request to authenticate the user and get that access token, but not afterwards:
+打开浏览器的开发者工具，查看数据是怎么发送的，而且数据里只包含了令牌，只有验证用户的第一个请求才发送密码，并获取访问令牌，但之后不会再发送密码：
 
 <img src="/img/tutorial/security/image10.png" />
 
 !!! note
     Notice the header `Authorization`, with a value that starts with `Bearer`.
 
-## Advanced usage with `scopes`
+## `scopes` 高级用法
 
 OAuth2 has the notion of "scopes".
 
 You can use them to add a specific set of permissions to a JWT token.
 
-Then you can give this token to a user directly or a third party, to interact with your API with a set of restrictions.
+让持有令牌的用户或第三方在指定限制条件下与 API 交互。
 
-You can learn how to use them and how they are integrated into **FastAPI** later in the **Advanced User Guide**.
+**高级用户指南**中将介绍如何使用 `scopes`，及如何把 `scopes` 集成至 **FastAPI**。
 
 ## Recap
 
-With what you have seen up to now, you can set up a secure **FastAPI** application using standards like OAuth2 and JWT.
+至此，您可以使用 OAuth2 和 JWT 等标准配置安全的 **FastAPI** 应用。
 
-In almost any framework handling the security becomes a rather complex subject quite quickly.
+几乎在所有框架中，处理安全问题很快都会变得非常复杂。
 
-Many packages that simplify it a lot have to make many compromises with the data model, database, and available features. And some of these packages that simplify things too much actually have security flaws underneath.
+有些包为了简化安全流，不得不在数据模型、数据库和功能上做出妥协。 而有些过于简化的软件包其实存在了安全隐患。
 
 ---
 
-**FastAPI** doesn't make any compromise with any database, data model or tool.
+**FastAPI** 不向任何数据库、数据模型或工具做妥协。
 
 It gives you all the flexibility to choose the ones that fit your project the best.
 
-And you can use directly many well maintained and widely used packages like `passlib` and `python-jose`, because **FastAPI** doesn't require any complex mechanisms to integrate external packages.
+还可以直接使用 `passlib` 和 `python-jose` 等维护良好、使用广泛的包，这是因为 **FastAPI** 不需要任何复杂机制，就能集成外部的包。
 
 But it provides you the tools to simplify the process as much as possible without compromising flexibility, robustness, or security.
 
 And you can use and implement secure, standard protocols, like OAuth2 in a relatively simple way.
 
-You can learn more in the **Advanced User Guide** about how to use OAuth2 "scopes", for a more fine-grained permission system, following these same standards. OAuth2 with scopes is the mechanism used by many big authentication providers, like Facebook, Google, GitHub, Microsoft, Twitter, etc. to authorize third party applications to interact with their APIs on behalf of their users.
+**高级用户指南**中详细介绍了 OAuth2**`scopes`**的内容，遵循同样的标准，实现更精密的权限系统。 OAuth2 的作用域是脸书、谷歌、GitHub、微软、推特等第三方身份验证应用使用的机制，让用户授权第三方应用与 API 交互。
