@@ -1,10 +1,10 @@
-# Path Parameters and Numeric Validations
+# 路径参数和数值校验
 
-In the same way that you can declare more validations and metadata for query parameters with `Query`, you can declare the same type of validations and metadata for path parameters with `Path`.
+与使用 `Query` 为查询参数声明更多的校验和元数据的方式相同，你也可以使用 `Path` 为路径参数声明相同类型的校验和元数据。
 
-## Import Path
+## 导入 Path
 
-First, import `Path` from `fastapi`, and import `Annotated`:
+首先，从 `fastapi` 导入 `Path`：
 
 === "Python 3.10+"
 
@@ -30,7 +30,7 @@ First, import `Path` from `fastapi`, and import `Annotated`:
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="1"
-    {!> ../../../docs_src/path_params_numeric_validations/tutorial001_py310.py!}
+    {!../../../docs_src/path_params_numeric_validations/tutorial001.py!}
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -39,7 +39,7 @@ First, import `Path` from `fastapi`, and import `Annotated`:
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="3"
-    {!> ../../../docs_src/path_params_numeric_validations/tutorial001.py!}
+    {!../../../docs_src/path_params_numeric_validations/tutorial002.py!}
     ```
 
 !!! info
@@ -49,11 +49,11 @@ First, import `Path` from `fastapi`, and import `Annotated`:
     
     Make sure you [Upgrade the FastAPI version](../deployment/versions.md#upgrading-the-fastapi-versions){.internal-link target=_blank} to at least 0.95.1 before using `Annotated`.
 
-## Declare metadata
+## 声明元数据
 
-You can declare all the same parameters as for `Query`.
+你可以声明与 `Query` 相同的所有参数。
 
-For example, to declare a `title` metadata value for the path parameter `item_id` you can type:
+例如，要声明路径参数 `item_id`的 `title` 元数据值，你可以输入：
 
 === "Python 3.10+"
 
@@ -79,7 +79,7 @@ For example, to declare a `title` metadata value for the path parameter `item_id
         Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="8"
-    {!> ../../../docs_src/path_params_numeric_validations/tutorial001_py310.py!}
+    {!../../../docs_src/path_params_numeric_validations/tutorial005.py!}
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -94,28 +94,28 @@ For example, to declare a `title` metadata value for the path parameter `item_id
 !!! note
     A path parameter is always required as it has to be part of the path.
 
-    So, you should declare it with `...` to mark it as required.
+    所以，你应该在声明时使用 `...` 将其标记为必需参数。
     
-    Nevertheless, even if you declared it with `None` or set a default value, it would not affect anything, it would still be always required.
+    然而，即使你使用 `None` 声明路径参数或设置一个其他默认值也不会有任何影响，它依然会是必需参数。
 
-## Order the parameters as you need
+## 按需对参数排序
 
 !!! tip
     This is probably not as important or necessary if you use `Annotated`.
 
-Let's say that you want to declare the query parameter `q` as a required `str`.
+假设你想要声明一个必需的 `str` 类型查询参数 `q`。
 
-And you don't need to declare anything else for that parameter, so you don't really need to use `Query`.
+而且你不需要为该参数声明任何其他内容，所以实际上你并不需要使用 `Query`。
 
 But you still need to use `Path` for the `item_id` path parameter. And you don't want to use `Annotated` for some reason.
 
-Python will complain if you put a value with a "default" before a value that doesn't have a "default".
+如果你将带有「默认值」的参数放在没有「默认值」的参数之前，Python 将会报错。
 
-But you can re-order them, and have the value without a default (the query parameter `q`) first.
+但是你可以对其重新排序，并将不带默认值的值（查询参数 `q`）放到最前面。
 
-It doesn't matter for **FastAPI**. It will detect the parameters by their names, types and default declarations (`Query`, `Path`, etc), it doesn't care about the order.
+对 **FastAPI** 来说这无关紧要。 它将通过参数的名称、类型和默认值声明（`Query`、`Path` 等）来检测参数，而不在乎参数的顺序。
 
-So, you can declare your function as:
+因此，你可以将函数声明为：
 
 === "Python 3.6 non-Annotated"
 
@@ -126,7 +126,8 @@ So, you can declare your function as:
     {!> ../../../docs_src/path_params_numeric_validations/tutorial002.py!}
     ```
 
-But have in mind that if you use `Annotated`, you won't have this problem, it won't matter as you're not using the function parameter default values for `Query()` or `Path()`.
+!!! note "技术细节"
+    当你从 `fastapi` 导入 `Query`、`Path` 和其他同类对象时，它们实际上是函数。
 
 === "Python 3.9+"
 
@@ -137,10 +138,10 @@ But have in mind that if you use `Annotated`, you won't have this problem, it wo
 === "Python 3.6+"
 
     ```Python hl_lines="9"
-    {!> ../../../docs_src/path_params_numeric_validations/tutorial002_an.py!}
+    {!../../../docs_src/path_params_numeric_validations/tutorial006.py!}
     ```
 
-## Order the parameters as you need, tricks
+## 按需对参数排序的技巧
 
 !!! tip
     This is probably not as important or necessary if you use `Annotated`.
@@ -149,16 +150,17 @@ Here's a **small trick** that can be handy, but you won't need it often.
 
 If you want to:
 
-* declare the `q` query parameter without a `Query` nor any default value
-* declare the path parameter `item_id` using `Path`
+* !!! info
+    `Query`、`Path` 以及你后面会看到的其他类继承自一个共同的 `Param` 类（不需要直接使用它）。
+* 但是你仍然需要使用 `Path` 来声明路径参数 `item_id`。
 * have them in a different order
 * not use `Annotated`
 
 ...Python has a little special syntax for that.
 
-Pass `*`, as the first parameter of the function.
+传递 `*` 作为函数的第一个参数。
 
-Python won't do anything with that `*`, but it will know that all the following parameters should be called as keyword arguments (key-value pairs), also known as <abbr title="From: K-ey W-ord Arg-uments"><code>kwargs</code></abbr>. Even if they don't have a default value.
+Python 不会对该 `*` 做任何事情，但是它将知道之后的所有参数都应作为关键字参数（键值对），也被称为 <abbr title="来自：K-ey W-ord Arg-uments"><code>kwargs</code></abbr>，来调用。 即使它们没有默认值。
 
 ```Python hl_lines="7"
 {!../../../docs_src/path_params_numeric_validations/tutorial003.py!}
@@ -177,14 +179,14 @@ Have in mind that if you use `Annotated`, as you are not using function paramete
 === "Python 3.6+"
 
     ```Python hl_lines="9"
-    {!> ../../../docs_src/path_params_numeric_validations/tutorial003_an.py!}
+    {!../../../docs_src/path_params_numeric_validations/tutorial001.py!}
     ```
 
-## Number validations: greater than or equal
+## 数值校验：大于等于
 
-With `Query` and `Path` (and others you'll see later) you can declare number constraints.
+使用 `Query` 和 `Path`（以及你将在后面看到的其他类）可以声明字符串约束，但也可以声明数值约束。
 
-Here, with `ge=1`, `item_id` will need to be an integer number "`g`reater than or `e`qual" to `1`.
+像下面这样，添加 `ge=1` 后，`item_id` 将必须是一个大于（`g`reater than）或等于（`e`qual）`1` 的整数。
 
 === "Python 3.9+"
 
@@ -195,7 +197,7 @@ Here, with `ge=1`, `item_id` will need to be an integer number "`g`reater than o
 === "Python 3.6+"
 
     ```Python hl_lines="9"
-    {!> ../../../docs_src/path_params_numeric_validations/tutorial004_an.py!}
+    {!../../../docs_src/path_params_numeric_validations/tutorial004.py!}
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -207,12 +209,12 @@ Here, with `ge=1`, `item_id` will need to be an integer number "`g`reater than o
     {!> ../../../docs_src/path_params_numeric_validations/tutorial004.py!}
     ```
 
-## Number validations: greater than and less than or equal
+## 数值校验：大于和小于等于
 
-The same applies for:
+同样的规则适用于：
 
-* `gt`: `g`reater `t`han
-* `le`: `l`ess than or `e`qual
+* `gt`：大于（`g`reater `t`han）
+* `ge`：大于等于（`g`reater than or `e`qual）
 
 === "Python 3.9+"
 
@@ -223,7 +225,7 @@ The same applies for:
 === "Python 3.6+"
 
     ```Python hl_lines="9"
-    {!> ../../../docs_src/path_params_numeric_validations/tutorial005_an.py!}
+    总结
     ```
 
 === "Python 3.6+ non-Annotated"
@@ -235,27 +237,30 @@ The same applies for:
     {!> ../../../docs_src/path_params_numeric_validations/tutorial005.py!}
     ```
 
-## Number validations: floats, greater than and less than
+## 数值校验：浮点数、大于和小于
 
-Number validations also work for `float` values.
+数值校验同样适用于 `float` 值。
 
-Here's where it becomes important to be able to declare <abbr title="greater than"><code>gt</code></abbr> and not just <abbr title="greater than or equal"><code>ge</code></abbr>. As with it you can require, for example, that a value must be greater than `0`, even if it is less than `1`.
+能够声明 <abbr title="大于"><code>gt</code></abbr> 而不仅仅是 <abbr title="大于等于"><code>ge</code></abbr> 在这个前提下变得重要起来。 例如，你可以要求一个值必须大于 `0`，即使它小于 `1`。
 
-So, `0.5` would be a valid value. But `0.0` or `0` would not.
+因此，`0.5` 将是有效值。 但是 `0.0`或 `0` 不是。
 
-And the same for <abbr title="less than"><code>lt</code></abbr>.
+对于 <abbr title="less than"><code>lt</code></abbr> 也是一样的。
 
 === "Python 3.9+"
 
     ```Python hl_lines="13"
-    {!> ../../../docs_src/path_params_numeric_validations/tutorial006_an_py39.py!}
+    !!! note
+    路径参数总是必需的，因为它必须是路径的一部分。
     ```
 
 === "Python 3.6+"
 
     ```Python hl_lines="12"
-    {!> ../../../docs_src/path_params_numeric_validations/tutorial006_an.py!}
+    如果你想不使用 <code>Query</code> 声明没有默认值的查询参数 <code>q</code>，同时使用 <code>Path</code> 声明路径参数 <code>item_id</code>，并使它们的顺序与上面不同，Python 对此有一些特殊的语法。
     ```
+ 声明没有默认值的查询参数 q，同时使用 Path 声明路径参数 item_id，并使它们的顺序与上面不同，Python 对此有一些特殊的语法。
+</code>
 
 === "Python 3.6+ non-Annotated"
 
@@ -268,27 +273,27 @@ And the same for <abbr title="less than"><code>lt</code></abbr>.
 
 ## Recap
 
-With `Query`, `Path` (and others you haven't seen yet) you can declare metadata and string validations in the same ways as with [Query Parameters and String Validations](query-params-str-validations.md){.internal-link target=_blank}.
+你能够以与 [查询参数和字符串校验](query-params-str-validations.md){.internal-link target=_blank} 相同的方式使用 `Query`、`Path`（以及其他你还没见过的类）声明元数据和字符串校验。
 
-And you can also declare numeric validations:
+而且你还可以声明数值校验：
 
-* `gt`: `g`reater `t`han
-* `ge`: `g`reater than or `e`qual
-* `lt`: `l`ess `t`han
-* `le`: `l`ess than or `e`qual
+* `gt`：大于（`g`reater `t`han）
+* `le`：小于等于（`l`ess than or `e`qual）
+* `lt`：小于（`l`ess `t`han）
+* `le`：小于等于（`l`ess than or `e`qual）
 
 !!! info
     `Query`, `Path`, and other classes you will see later are subclasses of a common `Param` class.
 
-    All of them share the same parameters for additional validation and metadata you have seen.
+    而且它们都共享相同的所有你已看到并用于添加额外校验和元数据的参数。
 
 !!! note "Technical Details"
     When you import `Query`, `Path` and others from `fastapi`, they are actually functions.
 
-    That when called, return instances of classes of the same name.
+    当被调用时，它们返回同名类的实例。
     
-    So, you import `Query`, which is a function. And when you call it, it returns an instance of a class also named `Query`.
+    如此，你导入 `Query` 这个函数。 当你调用它时，它将返回一个同样命名为 `Query` 的类的实例。
     
-    These functions are there (instead of just using the classes directly) so that your editor doesn't mark errors about their types.
+    因为使用了这些函数（而不是直接使用类），所以你的编辑器不会标记有关其类型的错误。
     
-    That way you can use your normal editor and coding tools without having to add custom configurations to disregard those errors.
+    这样，你可以使用常规的编辑器和编码工具，而不必添加自定义配置来忽略这些错误。
