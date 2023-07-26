@@ -1,12 +1,12 @@
-# FastAPI People
+# FastAPI 社区
 
-FastAPI has an amazing community that welcomes people from all backgrounds.
+FastAPI 有一个非常棒的社区，它欢迎来自各个领域和背景的朋友。
 
 ## Creator - Maintainer
 
-Hey! 👋
+向他们致以掌声。 👏 🙇
 
-This is me:
+这就是我:
 
 {% if people %}
 <div class="user-list user-list-center">
@@ -18,59 +18,59 @@ This is me:
 </div>
 {% endif %}
 
-I'm the creator and maintainer of **FastAPI**. You can read more about that in [Help FastAPI - Get Help - Connect with the author](help-fastapi.md#connect-with-the-author){.internal-link target=_blank}.
+我是 **FastAPI** 的创建者和维护者. 你能在 [帮助 FastAPI - 获取帮助 - 与作者联系](help-fastapi.md#connect-with-the-author){.internal-link target=_blank} 阅读有关此内容的更多信息。 You can read more about that in [Help FastAPI - Get Help - Connect with the author](help-fastapi.md#connect-with-the-author){.internal-link target=_blank}.
 
-...But here I want to show you the community.
+...但是在这里我想向您展示社区。
 
 ---
 
-**FastAPI** receives a lot of support from the community. And I want to highlight their contributions.
+**FastAPI** 得到了社区的大力支持。 因此我想突出他们的贡献。
 
-These are the people that:
+这些人：
 
-* [Help others with questions in GitHub](help-fastapi.md#help-others-with-questions-in-github){.internal-link target=_blank}.
-* [Create Pull Requests](help-fastapi.md#create-a-pull-request){.internal-link target=_blank}.
-* Review Pull Requests, [especially important for translations](contributing.md#translations){.internal-link target=_blank}.
+* [帮助他人解决 GitHub 的 issues](help-fastapi.md#help-others-with-issues-in-github){.internal-link target=_blank}。
+* [创建 Pull Requests](help-fastapi.md#create-a-pull-request){.internal-link target=_blank}。
+* 审核 Pull Requests， 对于 [翻译](contributing.md#translations){.internal-link target=_blank} 尤为重要。
 
-A round of applause to them. 👏 🙇
+他们贡献了源代码，文档，翻译等。 📦
 
-## Most active users last month
+## 上个月最活跃的用户
 
-These are the users that have been [helping others the most with questions in GitHub](help-fastapi.md#help-others-with-questions-in-github){.internal-link target=_blank} during the last month. ☕
+还有很多其他贡献者（超过100个），你可以在 <a href="https://github.com/tiangolo/fastapi/graphs/contributors" class="external-link" target="_blank">FastAPI GitHub 贡献者页面</a> 中看到他们。 👷
 
 {% if people %}
 <div class="user-list user-list-center">
 {% for user in people.last_month_active %}
 
-<div class="user"><a href="{{ user.url }}" target="_blank"><div class="avatar-wrapper"><img src="{{ user.avatarUrl }}"/></div><div class="title">@{{ user.login }}</div></a> <div class="count">Questions replied: {{ user.count }}</div></div>
+<div class="user"><a href="{{ user.url }}" target="_blank"><div class="avatar-wrapper"><img src="{{ user.avatarUrl }}"/></div><div class="title">@{{ user.login }}</div></a> <div class="count">Issues replied: {{ user.count }}</div></div>
 {% endfor %}
 
 </div>
 {% endif %}
 
-## Experts
+## 专家组
 
-Here are the **FastAPI Experts**. 🤓
+以下是 **FastAPI 专家**。 🤓
 
-These are the users that have [helped others the most with questions in GitHub](help-fastapi.md#help-others-with-questions-in-github){.internal-link target=_blank} through *all time*.
+这些用户一直以来致力于 [帮助他人解决 GitHub 的 issues](help-fastapi.md#help-others-with-issues-in-github){.internal-link target=_blank}。
 
-They have proven to be experts by helping many others. ✨
+他们通过帮助许多人而被证明是专家。 ✨
 
 {% if people %}
 <div class="user-list user-list-center">
 {% for user in people.experts %}
 
-<div class="user"><a href="{{ user.url }}" target="_blank"><div class="avatar-wrapper"><img src="{{ user.avatarUrl }}"/></div><div class="title">@{{ user.login }}</div></a> <div class="count">Questions replied: {{ user.count }}</div></div>
+<div class="user"><a href="{{ user.url }}" target="_blank"><div class="avatar-wrapper"><img src="{{ user.avatarUrl }}"/></div><div class="title">@{{ user.login }}</div></a> <div class="count">Issues replied: {{ user.count }}</div></div>
 {% endfor %}
 
 </div>
 {% endif %}
 
-## Top Contributors
+## 杰出贡献者
 
-Here are the **Top Contributors**. 👷
+以下是 **杰出的贡献者**。 👷
 
-These users have [created the most Pull Requests](help-fastapi.md#create-a-pull-request){.internal-link target=_blank} that have been *merged*.
+这些用户 [创建了最多已被合并的 Pull Requests](help-fastapi.md#create-a-pull-request){.internal-link target=_blank}。
 
 They have contributed source code, documentation, translations, etc. 📦
 
@@ -84,19 +84,19 @@ They have contributed source code, documentation, translations, etc. 📦
 </div>
 {% endif %}
 
-There are many other contributors (more than a hundred), you can see them all in the <a href="https://github.com/tiangolo/fastapi/graphs/contributors" class="external-link" target="_blank">FastAPI GitHub Contributors page</a>. 👷
+以下是 **赞助商** 。 😎
 
-## Top Reviewers
+## 杰出审核者
 
-These users are the **Top Reviewers**. 🕵️
+以下用户是「杰出的评审者」。 🕵️
 
-### Reviews for Translations
+### 翻译审核
 
-I only speak a few languages (and not very well 😅). So, the reviewers are the ones that have the [**power to approve translations**](contributing.md#translations){.internal-link target=_blank} of the documentation. Without them, there wouldn't be documentation in several other languages.
+我只会说少数几种语言（而且还不是很流利 😅）。 所以，具备[能力去批准文档翻译](contributing.md#translations){.internal-link target=_blank} 是这些评审者们。 如果没有它们，就不会有多语言文档。
 
 ---
 
-The **Top Reviewers** 🕵️ have reviewed the most Pull Requests from others, ensuring the quality of the code, documentation, and especially, the **translations**.
+**杰出的评审者** 🕵️ 评审了最多来自他人的 Pull Requests，他们保证了代码、文档尤其是 **翻译** 的质量。
 
 {% if people %}
 <div class="user-list user-list-center">
@@ -108,17 +108,17 @@ The **Top Reviewers** 🕵️ have reviewed the most Pull Requests from others, 
 </div>
 {% endif %}
 
-## Sponsors
+## 赞助商
 
 These are the **Sponsors**. 😎
 
-They are supporting my work with **FastAPI** (and others), mainly through <a href="https://github.com/sponsors/tiangolo" class="external-link" target="_blank">GitHub Sponsors</a>.
+他们主要通过<a href="https://github.com/sponsors/tiangolo" class="external-link" target="_blank">GitHub Sponsors</a>支持我在 **FastAPI** (和其他项目)的工作。
 
 {% if sponsors %}
 
 {% if sponsors.gold %}
 
-### Gold Sponsors
+### 金牌赞助商
 
 {% for sponsor in sponsors.gold -%}
 <a href="{{ sponsor.url }}" target="_blank" title="{{ sponsor.title }}"><img src="{{ sponsor.img }}" style="border-radius:15px"></a>
@@ -127,7 +127,7 @@ They are supporting my work with **FastAPI** (and others), mainly through <a hre
 
 {% if sponsors.silver %}
 
-### Silver Sponsors
+### 银牌赞助商
 
 {% for sponsor in sponsors.silver -%}
 <a href="{{ sponsor.url }}" target="_blank" title="{{ sponsor.title }}"><img src="{{ sponsor.img }}" style="border-radius:15px"></a>
@@ -136,7 +136,7 @@ They are supporting my work with **FastAPI** (and others), mainly through <a hre
 
 {% if sponsors.bronze %}
 
-### Bronze Sponsors
+### 铜牌赞助商
 
 {% for sponsor in sponsors.bronze -%}
 <a href="{{ sponsor.url }}" target="_blank" title="{{ sponsor.title }}"><img src="{{ sponsor.img }}" style="border-radius:15px"></a>
@@ -145,7 +145,7 @@ They are supporting my work with **FastAPI** (and others), mainly through <a hre
 
 {% endif %}
 
-### Individual Sponsors
+### 个人赞助
 
 {% if github_sponsors %}
 {% for group in github_sponsors.sponsors %}
@@ -165,14 +165,14 @@ They are supporting my work with **FastAPI** (and others), mainly through <a hre
 {% endfor %}
 {% endif %}
 
-## About the data - technical details
+## 关于数据 - 技术细节
 
-The main intention of this page is to highlight the effort of the community to help others.
+该页面的目的是突出社区为帮助他人而付出的努力。
 
-Especially including efforts that are normally less visible, and in many cases more arduous, like helping others with questions and reviewing Pull Requests with translations.
+尤其是那些不引人注目且涉及更困难的任务，例如帮助他人解决问题或者评审翻译 Pull Requests。
 
-The data is calculated each month, you can read the <a href="https://github.com/tiangolo/fastapi/blob/master/.github/actions/people/app/main.py" class="external-link" target="_blank">source code here</a>.
+该数据每月计算一次，您可以阅读 <a href="https://github.com/tiangolo/fastapi/blob/master/.github/actions/people/app/main.py" class="external-link" target="_blank">源代码</a>。
 
-Here I'm also highlighting contributions from sponsors.
+这里也强调了赞助商的贡献。
 
-I also reserve the right to update the algorithm, sections, thresholds, etc (just in case 🤷).
+我也保留更新算法，栏目，统计阈值等的权利（以防万一🤷）。
