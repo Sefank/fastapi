@@ -1,21 +1,21 @@
-# Advanced User Guide
+# 高级用户指南
 
-## Additional Features
+## 额外特性
 
-The main [Tutorial - User Guide](../tutorial/){.internal-link target=_blank} should be enough to give you a tour through all the main features of **FastAPI**.
+主要的教程 [教程 - 用户指南](../tutorial/){.internal-link target=_blank} 应该足以让你了解 **FastAPI** 的所有主要特性。
 
-In the next sections you will see other options, configurations, and additional features.
+你会在接下来的章节中了解到其他的选项、配置以及额外的特性。
 
-!!! tip
-    The next sections are **not necessarily "advanced"**.
+!!! !!! tip
+    接下来的章节**并不一定是**「高级的」。
 
-    And it's possible that for your use case, the solution is in one of them.
+    而且对于你的使用场景来说，解决方案很可能就在其中。
 
-## Read the Tutorial first
+## 先阅读教程
 
-You could still use most of the features in **FastAPI** with the knowledge from the main [Tutorial - User Guide](../tutorial/){.internal-link target=_blank}.
+你可能仍会用到 **FastAPI** 主教程 [教程 - 用户指南](../tutorial/){.internal-link target=_blank} 中的大多数特性。
 
-And the next sections assume you already read it, and assume that you know those main ideas.
+接下来的章节我们认为你已经读过 [教程 - 用户指南](../tutorial/){.internal-link target=_blank}，并且假设你已经知晓其中主要思想。
 
 ## TestDriven.io course
 
