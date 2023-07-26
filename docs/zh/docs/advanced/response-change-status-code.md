@@ -1,33 +1,33 @@
-# Response - Change Status Code
+# 响应 - 更改状态码
 
-You probably read before that you can set a default [Response Status Code](../tutorial/response-status-code.md){.internal-link target=_blank}.
+你可能之前已经了解到，你可以设置默认的[响应状态码](../tutorial/response-status-code.md){.internal-link target=_blank}。
 
-But in some cases you need to return a different status code than the default.
+但在某些情况下，你需要返回一个不同于默认值的状态码。
 
-## Use case
+## 使用场景
 
-For example, imagine that you want to return an HTTP status code of "OK" `200` by default.
+例如，假设你想默认返回一个HTTP状态码为“OK”`200`。
 
-But if the data didn't exist, you want to create it, and return an HTTP status code of "CREATED" `201`.
+但如果数据不存在，你想创建它，并返回一个HTTP状态码为“CREATED”`201`。
 
-But you still want to be able to filter and convert the data you return with a `response_model`.
+但你仍然希望能够使用`response_model`过滤和转换你返回的数据。
 
-For those cases, you can use a `Response` parameter.
+对于这些情况，你可以使用一个`Response`参数。
 
-## Use a `Response` parameter
+## 使用 `Response` 参数
 
-You can declare a parameter of type `Response` in your *path operation function* (as you can do for cookies and headers).
+你可以在你的*路径操作函数*中声明一个`Response`类型的参数（就像你可以为cookies和头部做的那样）。
 
-And then you can set the `status_code` in that *temporal* response object.
+然后你可以在这个*临时*响应对象中设置`status_code`。
 
 ```Python hl_lines="1  9  12"
 {!../../../docs_src/response_change_status_code/tutorial001.py!}
 ```
 
-And then you can return any object you need, as you normally would (a `dict`, a database model, etc).
+然后你可以像平常一样返回任何你需要的对象（例如一个`dict`或者一个数据库模型）。
 
-And if you declared a `response_model`, it will still be used to filter and convert the object you returned.
+如果你声明了一个`response_model`，它仍然会被用来过滤和转换你返回的对象。
 
-**FastAPI** will use that *temporal* response to extract the status code (also cookies and headers), and will put them in the final response that contains the value you returned, filtered by any `response_model`.
+**FastAPI**将使用这个临时响应来提取状态码（也包括cookies和头部），并将它们放入包含你返回的值的最终响应中，该响应由任何`response_model`过滤。
 
-You can also declare the `Response` parameter in dependencies, and set the status code in them. But have in mind that the last one to be set will win.
+你也可以在依赖项中声明`Response`参数，并在其中设置状态码。 但请注意，最后设置的状态码将会生效。
