@@ -1,39 +1,42 @@
-# 响应头
+# Response Headers
 
-## 使用 `Response` 参数
+## Use a `Response` parameter
 
-你可以在你的*路径操作函数*中声明一个`Response`类型的参数（就像你可以为cookies做的那样）。
+You can declare a parameter of type `Response` in your *path operation function* (as you can do for cookies).
 
-然后你可以在这个*临时*响应对象中设置头部。
+And then you can set headers in that *temporal* response object.
+
 ```Python hl_lines="1  7-8"
 {!../../../docs_src/response_headers/tutorial002.py!}
 ```
 
-然后你可以像平常一样返回任何你需要的对象（例如一个`dict`或者一个数据库模型）。如果你声明了一个`response_model`，它仍然会被用来过滤和转换你返回的对象。
+And then you can return any object you need, as you normally would (a `dict`, a database model, etc).
 
-**FastAPI**将使用这个临时响应来提取头部（也包括cookies和状态码），并将它们放入包含你返回的值的最终响应中，该响应由任何`response_model`过滤。
+And if you declared a `response_model`, it will still be used to filter and convert the object you returned.
 
-你也可以在依赖项中声明`Response`参数，并在其中设置头部（和cookies）。
+**FastAPI** will use that *temporal* response to extract the headers (also cookies and status code), and will put them in the final response that contains the value you returned, filtered by any `response_model`.
 
-## 直接返回 `Response`
+You can also declare the `Response` parameter in dependencies, and set headers (and cookies) in them.
 
-你也可以在直接返回`Response`时添加头部。
+## Return a `Response` directly
 
-按照[直接返回响应](response-directly.md){.internal-link target=_blank}中所述创建响应，并将头部作为附加参数传递：
+You can also add headers when you return a `Response` directly.
+
+Create a response as described in [Return a Response Directly](response-directly.md){.internal-link target=_blank} and pass the headers as an additional parameter:
+
 ```Python hl_lines="10-12"
 {!../../../docs_src/response_headers/tutorial001.py!}
 ```
 
+!!! note "Technical Details"
+    You could also use `from starlette.responses import Response` or `from starlette.responses import JSONResponse`.
 
-!!! 注意 "技术细节"
-    你也可以使用`from starlette.responses import Response`或`from starlette.responses import JSONResponse`。
+    **FastAPI** provides the same `starlette.responses` as `fastapi.responses` just as a convenience for you, the developer. But most of the available responses come directly from Starlette.
+    
+    And as the `Response` can be used frequently to set headers and cookies, **FastAPI** also provides it at `fastapi.Response`.
 
-    **FastAPI**提供了与`fastapi.responses`相同的`starlette.responses`，只是为了方便开发者。但是，大多数可用的响应都直接来自Starlette。
+## Custom Headers
 
-    由于`Response`经常用于设置头部和cookies，因此**FastAPI**还在`fastapi.Response`中提供了它。
+Have in mind that custom proprietary headers can be added <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers" class="external-link" target="_blank">using the 'X-' prefix</a>.
 
-## 自定义头部
-
-请注意，可以使用'X-'前缀添加自定义专有头部。
-
-但是，如果你有自定义头部，你希望浏览器中的客户端能够看到它们，你需要将它们添加到你的CORS配置中（在[CORS（跨源资源共享）](../tutorial/cors.md){.internal-link target=_blank}中阅读更多），使用在<a href="https://www.starlette.io/middleware/#corsmiddleware" class="external-link" target="_blank">Starlette的CORS文档</a>中记录的`expose_headers`参数。
+But if you have custom headers that you want a client in a browser to be able to see, you need to add them to your CORS configurations (read more in [CORS (Cross-Origin Resource Sharing)](../tutorial/cors.md){.internal-link target=_blank}), using the parameter `expose_headers` documented in <a href="https://www.starlette.io/middleware/#corsmiddleware" class="external-link" target="_blank">Starlette's CORS docs</a>.
