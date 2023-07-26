@@ -1,101 +1,101 @@
-# Security
+# 安全性
 
-There are many ways to handle security, authentication and authorization.
+有许多方法可以处理安全性、身份认证和授权等问题。
 
-And it normally is a complex and "difficult" topic.
+而且这通常是一个复杂而「困难」的话题。
 
-In many frameworks and systems just handling security and authentication takes a big amount of effort and code (in many cases it can be 50% or more of all the code written).
+在许多框架和系统中，仅处理安全性和身份认证就会花费大量的精力和代码（在许多情况下，可能占编写的所有代码的 50％ 或更多）。
 
-**FastAPI** provides several tools to help you deal with **Security** easily, rapidly, in a standard way, without having to study and learn all the security specifications.
+**FastAPI** 提供了多种工具，可帮助你以标准的方式轻松、快速地处理**安全性**，而无需研究和学习所有的安全规范。
 
-But first, let's check some small concepts.
+但首先，让我们来看一些小的概念。
 
 ## In a hurry?
 
-If you don't care about any of these terms and you just need to add security with authentication based on username and password *right now*, skip to the next chapters.
+如果你不关心这些术语，而只需要*立即*通过基于用户名和密码的身份认证来增加安全性，请跳转到下一章。
 
 ## OAuth2
 
-OAuth2 is a specification that defines several ways to handle authentication and authorization.
+OAuth2是一个规范，它定义了几种处理身份认证和授权的方法。
 
-It is quite an extensive specification and covers several complex use cases.
+它是一个相当广泛的规范，涵盖了一些复杂的使用场景。
 
-It includes ways to authenticate using a "third party".
+它包括了使用「第三方」进行身份认证的方法。
 
-That's what all the systems with "login with Facebook, Google, Twitter, GitHub" use underneath.
+这就是所有带有「使用 Facebook，Google，Twitter，GitHub 登录」的系统背后所使用的机制。
 
 ### OAuth 1
 
-There was an OAuth 1, which is very different from OAuth2, and more complex, as it included direct specifications on how to encrypt the communication.
+有一个 OAuth 1，它与 OAuth2 完全不同，并且更为复杂，因为它直接包含了有关如何加密通信的规范。
 
-It is not very popular or used nowadays.
+如今它已经不是很流行，没有被广泛使用了。
 
-OAuth2 doesn't specify how to encrypt the communication, it expects you to have your application served with HTTPS.
+OAuth2 没有指定如何加密通信，它期望你为应用程序使用 HTTPS 进行通信。
 
-!!! tip
-    In the section about **deployment** you will see how to set up HTTPS for free, using Traefik and Let's Encrypt.
+!!! !!! tip
+    在有关**部署**的章节中，你将了解如何使用 Traefik 和 Let's Encrypt 免费设置 HTTPS。
 
 
 ## OpenID Connect
 
-OpenID Connect is another specification, based on **OAuth2**.
+OpenID Connect 是另一个基于 **OAuth2** 的规范。
 
-It just extends OAuth2 specifying some things that are relatively ambiguous in OAuth2, to try to make it more interoperable.
+它只是扩展了 OAuth2，并明确了一些在 OAuth2 中相对模糊的内容，以尝试使其更具互操作性。
 
-For example, Google login uses OpenID Connect (which underneath uses OAuth2).
+例如，Google 登录使用 OpenID Connect（底层使用OAuth2）。
 
-But Facebook login doesn't support OpenID Connect. It has its own flavor of OAuth2.
+但是 Facebook 登录不支持 OpenID Connect。 它具有自己的 OAuth2 风格。
 
-### OpenID (not "OpenID Connect")
+### OpenID（非「OpenID Connect」）
 
-There was also an "OpenID" specification. That tried to solve the same thing as **OpenID Connect**, but was not based on OAuth2.
+还有一个「OpenID」规范。 它试图解决与 **OpenID Connect** 相同的问题，但它不是基于 OAuth2。
 
-So, it was a complete additional system.
+因此，它是一个完整的附加系统。
 
-It is not very popular or used nowadays.
+如今它已经不是很流行，没有被广泛使用了。
 
 ## OpenAPI
 
-OpenAPI (previously known as Swagger) is the open specification for building APIs (now part of the Linux Foundation).
+OpenAPI（以前称为 Swagger）是用于构建 API 的开放规范（现已成为 Linux Foundation 的一部分）。
 
-**FastAPI** is based on **OpenAPI**.
+**FastAPI** 基于 **OpenAPI**。
 
-That's what makes it possible to have multiple automatic interactive documentation interfaces, code generation, etc.
+这就是使多个自动交互式文档界面，代码生成等成为可能的原因。
 
-OpenAPI has a way to define multiple security "schemes".
+OpenAPI 有一种定义多个安全「方案」的方法。
 
-By using them, you can take advantage of all these standard-based tools, including these interactive documentation systems.
+通过使用它们，你可以利用所有这些基于标准的工具，包括这些交互式文档系统。
 
-OpenAPI defines the following security schemes:
+OpenAPI 定义了以下安全方案：
 
-* `apiKey`: an application specific key that can come from:
-    * A query parameter.
+* `apiKey`：一个特定于应用程序的密钥，可以来自：
+    * 查询参数。
     * A header.
-    * A cookie.
-* `http`: standard HTTP authentication systems, including:
-    * `bearer`: a header `Authorization` with a value of `Bearer` plus a token. This is inherited from OAuth2.
-    * HTTP Basic authentication.
-    * HTTP Digest, etc.
-* `oauth2`: all the OAuth2 ways to handle security (called "flows").
-    * Several of these flows are appropriate for building an OAuth 2.0 authentication provider (like Google, Facebook, Twitter, GitHub, etc):
+    * cookie。
+* `http`：标准的 HTTP 身份认证系统，包括：
+    * `bearer`: 一个值为 `Bearer` 加令牌字符串的 `Authorization` 请求头。 这是从 OAuth2 继承的。
+    * HTTP Basic 认证方式。
+    * HTTP Digest，等等。
+* `oauth2`：所有的 OAuth2 处理安全性的方式（称为「流程」）。
+    * *以下几种流程适合构建 OAuth 2.0 身份认证的提供者（例如 Google，Facebook，Twitter，GitHub 等）： * `implicit` * `clientCredentials` * `authorizationCode`
         * `implicit`
         * `clientCredentials`
         * `authorizationCode`
-    * But there is one specific "flow" that can be perfectly used for handling authentication in the same application directly:
-        * `password`: some next chapters will cover examples of this.
-* `openIdConnect`: has a way to define how to discover OAuth2 authentication data automatically.
-    * This automatic discovery is what is defined in the OpenID Connect specification.
+    * 但是有一个特定的「流程」可以完美地用于直接在同一应用程序中处理身份认证：
+        * `password`：接下来的几章将介绍它的示例。
+* `openIdConnect`：提供了一种定义如何自动发现 OAuth2 身份认证数据的方法。
+    * 此自动发现机制是 OpenID Connect 规范中定义的内容。
 
 
-!!! tip
-    Integrating other authentication/authorization providers like Google, Facebook, Twitter, GitHub, etc. is also possible and relatively easy.
+!!! !!! tip
+    集成其他身份认证/授权提供者（例如Google，Facebook，Twitter，GitHub等）也是可能的，而且较为容易。
 
-    The most complex problem is building an authentication/authorization provider like those, but **FastAPI** gives you the tools to do it easily, while doing the heavy lifting for you.
+    最复杂的问题是创建一个像这样的身份认证/授权提供程序，但是 **FastAPI** 为你提供了轻松完成任务的工具，同时为你解决了重活。
 
-## **FastAPI** utilities
+## **FastAPI** 实用工具
 
-FastAPI provides several tools for each of these security schemes in the `fastapi.security` module that simplify using these security mechanisms.
+FastAPI 在 `fastapi.security` 模块中为每个安全方案提供了几种工具，这些工具简化了这些安全机制的使用方法。
 
-In the next chapters you will see how to add security to your API using those tools provided by **FastAPI**.
+在下一章中，你将看到如何使用 **FastAPI** 所提供的这些工具为你的 API 增加安全性。
 
-And you will also see how it gets automatically integrated into the interactive documentation system.
+而且你还将看到它如何自动地被集成到交互式文档系统中。
