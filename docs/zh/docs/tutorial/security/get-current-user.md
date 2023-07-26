@@ -1,114 +1,288 @@
-# 获取当前用户
+# Get Current User
 
-在上一章节中，（基于依赖项注入系统的）安全系统向*路径操作函数*提供了一个 `str` 类型的 `token`：
+In the previous chapter the security system (which is based on the dependency injection system) was giving the *path operation function* a `token` as a `str`:
 
-```Python hl_lines="10"
-{!../../../docs_src/security/tutorial001.py!}
-```
+=== "Python 3.9+"
 
-但这还不是很实用。
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/security/tutorial001_an_py39.py!}
+    ```
 
-让我们来使它返回当前用户给我们。
+=== "Python 3.6+"
 
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/security/tutorial001_an.py!}
+    ```
 
-## 创建一个用户模型
+=== "Python 3.6+ non-Annotated"
 
-首先，让我们来创建一个用户 Pydantic 模型。
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-与使用 Pydantic 声明请求体的方式相同，我们可以在其他任何地方使用它：
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/security/tutorial001.py!}
+    ```
 
-```Python hl_lines="5  12-16"
-{!../../../docs_src/security/tutorial002.py!}
-```
+But that is still not that useful.
 
-## 创建一个 `get_current_user` 依赖项
+Let's make it give us the current user.
 
-让我们来创建一个 `get_current_user` 依赖项。
+## Create a user model
 
-还记得依赖项可以有子依赖项吗？
+First, let's create a Pydantic user model.
 
-`get_current_user` 将具有一个我们之前所创建的同一个 `oauth2_scheme` 作为依赖项。
+The same way we use Pydantic to declare bodies, we can use it anywhere else:
 
-与我们之前直接在路径操作中所做的相同，我们新的依赖项 `get_current_user` 将从子依赖项 `oauth2_scheme` 中接收一个 `str` 类型的 `token`：
+=== "Python 3.10+"
 
-```Python hl_lines="25"
-{!../../../docs_src/security/tutorial002.py!}
-```
+    ```Python hl_lines="5  12-16"
+    {!> ../../../docs_src/security/tutorial002_an_py310.py!}
+    ```
 
-## 获取用户
+=== "Python 3.9+"
 
-`get_current_user` 将使用我们创建的（伪）工具函数，该函数接收 `str` 类型的令牌并返回我们的 Pydantic `User` 模型：
+    ```Python hl_lines="5  12-16"
+    {!> ../../../docs_src/security/tutorial002_an_py39.py!}
+    ```
 
-```Python hl_lines="19-22  26-27"
-{!../../../docs_src/security/tutorial002.py!}
-```
+=== "Python 3.6+"
 
-## 注入当前用户
+    ```Python hl_lines="5  13-17"
+    {!> ../../../docs_src/security/tutorial002_an.py!}
+    ```
 
-因此现在我们可以在*路径操作*中使用 `get_current_user` 作为 `Depends` 了：
+=== "Python 3.10+ non-Annotated"
 
-```Python hl_lines="31"
-{!../../../docs_src/security/tutorial002.py!}
-```
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-注意我们将 `current_user` 的类型声明为 Pydantic 模型 `User`。
+    ```Python hl_lines="3  10-14"
+    {!> ../../../docs_src/security/tutorial002_py310.py!}
+    ```
 
-这将帮助我们在函数内部使用所有的代码补全和类型检查。
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="5  12-16"
+    {!> ../../../docs_src/security/tutorial002.py!}
+    ```
+
+## Create a `get_current_user` dependency
+
+Let's create a dependency `get_current_user`.
+
+Remember that dependencies can have sub-dependencies?
+
+`get_current_user` will have a dependency with the same `oauth2_scheme` we created before.
+
+The same as we were doing before in the *path operation* directly, our new dependency `get_current_user` will receive a `token` as a `str` from the sub-dependency `oauth2_scheme`:
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="25"
+    {!> ../../../docs_src/security/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="25"
+    {!> ../../../docs_src/security/tutorial002_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="26"
+    {!> ../../../docs_src/security/tutorial002_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="23"
+    {!> ../../../docs_src/security/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="25"
+    {!> ../../../docs_src/security/tutorial002.py!}
+    ```
+
+## Get the user
+
+`get_current_user` will use a (fake) utility function we created, that takes a token as a `str` and returns our Pydantic `User` model:
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="19-22  26-27"
+    {!> ../../../docs_src/security/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="19-22  26-27"
+    {!> ../../../docs_src/security/tutorial002_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20-23  27-28"
+    {!> ../../../docs_src/security/tutorial002_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="17-20  24-25"
+    {!> ../../../docs_src/security/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="19-22  26-27"
+    {!> ../../../docs_src/security/tutorial002.py!}
+    ```
+
+## Inject the current user
+
+So now we can use the same `Depends` with our `get_current_user` in the *path operation*:
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="31"
+    {!> ../../../docs_src/security/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="31"
+    {!> ../../../docs_src/security/tutorial002_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="32"
+    {!> ../../../docs_src/security/tutorial002_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="29"
+    {!> ../../../docs_src/security/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="31"
+    {!> ../../../docs_src/security/tutorial002.py!}
+    ```
+
+Notice that we declare the type of `current_user` as the Pydantic model `User`.
+
+This will help us inside of the function with all the completion and type checks.
 
 !!! tip
-    你可能还记得请求体也是使用 Pydantic 模型来声明的。
+    You might remember that request bodies are also declared with Pydantic models.
 
-    在这里 **FastAPI** 不会搞混，因为你正在使用的是 `Depends`。
+    Here **FastAPI** won't get confused because you are using `Depends`.
 
 !!! check
-    这种依赖系统的设计方式使我们可以拥有不同的依赖项（不同的「可依赖类型」），并且它们都返回一个 `User` 模型。
+    The way this dependency system is designed allows us to have different dependencies (different "dependables") that all return a `User` model.
 
-    我们并未被局限于只能有一个返回该类型数据的依赖项。
+    We are not restricted to having only one dependency that can return that type of data.
 
+## Other models
 
-## 其他模型
+You can now get the current user directly in the *path operation functions* and deal with the security mechanisms at the **Dependency Injection** level, using `Depends`.
 
-现在你可以直接在*路径操作函数*中获取当前用户，并使用 `Depends` 在**依赖注入**级别处理安全性机制。
+And you can use any model or data for the security requirements (in this case, a Pydantic model `User`).
 
-你可以使用任何模型或数据来满足安全性要求（在这个示例中，使用的是 Pydantic 模型 `User`）。
+But you are not restricted to using some specific data model, class or type.
 
-但是你并未被限制只能使用某些特定的数据模型，类或类型。
+Do you want to have an `id` and `email` and not have any `username` in your model? Sure. You can use these same tools.
 
-你想要在模型中使用 `id` 和 `email` 而不使用任何的 `username`？当然可以。你可以同样地使用这些工具。
+Do you want to just have a `str`? Or just a `dict`? Or a database class model instance directly? It all works the same way.
 
-你只想要一个 `str`？或者仅仅一个 `dict`？还是直接一个数据库模型类的实例？它们的工作方式都是一样的。
+You actually don't have users that log in to your application but robots, bots, or other systems, that have just an access token? Again, it all works the same.
 
-实际上你没有用户登录到你的应用程序，而是只拥有访问令牌的机器人，程序或其他系统？再一次，它们的工作方式也是一样的。
+Just use any kind of model, any kind of class, any kind of database that you need for your application. **FastAPI** has you covered with the dependency injection system.
 
-尽管去使用你的应用程序所需要的任何模型，任何类，任何数据库。**FastAPI** 通过依赖项注入系统都帮你搞定。
+## Code size
 
+This example might seem verbose. Have in mind that we are mixing security, data models, utility functions and *path operations* in the same file.
 
-## 代码体积
+But here's the key point.
 
-这个示例似乎看起来很冗长。考虑到我们在同一文件中混合了安全性，数据模型工具函数和路径操作等代码。
+The security and dependency injection stuff is written once.
 
-但关键的是。
+And you can make it as complex as you want. And still, have it written only once, in a single place. With all the flexibility.
 
-安全性和依赖项注入内容只需要编写一次。
+But you can have thousands of endpoints (*path operations*) using the same security system.
 
-你可以根据需要使其变得很复杂。而且只需要在一个地方写一次。但仍然具备所有的灵活性。
+And all of them (or any portion of them that you want) can take the advantage of re-using these dependencies or any other dependencies you create.
 
-但是，你可以有无数个使用同一安全系统的端点（*路径操作*）。
+And all these thousands of *path operations* can be as small as 3 lines:
 
-所有（或所需的任何部分）的端点，都可以利用对这些或你创建的其他依赖项进行复用所带来的优势。
+=== "Python 3.10+"
 
-所有的这无数个*路径操作*甚至可以小到只需 3 行代码：
+    ```Python hl_lines="30-32"
+    {!> ../../../docs_src/security/tutorial002_an_py310.py!}
+    ```
 
-```Python hl_lines="30-32"
-{!../../../docs_src/security/tutorial002.py!}
-```
+=== "Python 3.9+"
 
-## 总结
+    ```Python hl_lines="30-32"
+    {!> ../../../docs_src/security/tutorial002_an_py39.py!}
+    ```
 
-现在你可以直接在*路径操作函数*中获取当前用户。
+=== "Python 3.6+"
 
-我们已经进行到一半了。
+    ```Python hl_lines="31-33"
+    {!> ../../../docs_src/security/tutorial002_an.py!}
+    ```
 
-我们只需要再为用户/客户端添加一个真正发送 `username` 和 `password` 的*路径操作*。
+=== "Python 3.10+ non-Annotated"
 
-这些内容在下一章节。
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="28-30"
+    {!> ../../../docs_src/security/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="30-32"
+    {!> ../../../docs_src/security/tutorial002.py!}
+    ```
+
+## Recap
+
+You can now get the current user directly in your *path operation function*.
+
+We are already halfway there.
+
+We just need to add a *path operation* for the user/client to actually send the `username` and `password`.
+
+That comes next.
