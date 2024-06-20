@@ -10,25 +10,61 @@
 
 例如，假设你想有一个 *路径操作* 能够更新条目，并且更新成功时返回 200 「成功」 的 HTTP 状态码。
 
-但是你也希望它能够接受新的条目。并且当这些条目不存在时，会自动创建并返回 201 「创建」的 HTTP 状态码。
+但是你也希望它能够接受新的条目。 并且当这些条目不存在时，会自动创建并返回 201 「创建」的 HTTP 状态码。
 
 要实现它，导入 `JSONResponse`，然后在其中直接返回你的内容，并将 `status_code` 设置为为你要的值。
 
-```Python hl_lines="4  25"
-{!../../../docs_src/additional_status_codes/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-!!! warning "警告"
-    当你直接返回一个像上面例子中的 `Response` 对象时，它会直接返回。
+    ```Python hl_lines="4  25"
+    !!! note "技术细节"
+    你也可以使用 <code>from starlette.responses import JSONResponse</code>。
+    ```
+。
+</code>
 
-    FastAPI 不会用模型等对该响应进行序列化。
+=== "Python 3.9+"
 
-    确保其中有你想要的数据，且返回的值为合法的 JSON（如果你使用 `JSONResponse` 的话）。
+    ```Python hl_lines="4  25"
+    !!! warning "警告"
+    当你直接返回一个像上面例子中的 <code>Response</code> 对象时，它会直接返回。
+    ```
+ 对象时，它会直接返回。
+</code>
 
-!!! note "技术细节"
-    你也可以使用 `from starlette.responses import JSONResponse`。　
+=== "Python 3.6+"
 
-    出于方便，**FastAPI** 为开发者提供同 `starlette.responses` 一样的 `fastapi.responses`。但是大多数可用的响应都是直接来自 Starlette。`status` 也是一样。
+    ```Python hl_lines="4  26"
+    {!> ../../../docs_src/additional_status_codes/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="2  23"
+    {!> ../../../docs_src/additional_status_codes/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4  25"
+    {!../../../docs_src/additional_status_codes/tutorial001.py!}
+    ```
+
+!!! warning
+    When you return a `Response` directly, like in the example above, it will be returned directly.
+
+    FastAPI 不会用模型等对该响应进行序列化。 确保其中有你想要的数据，且返回的值为合法的 JSON（如果你使用 `JSONResponse` 的话）。
+
+!!! note "Technical Details"
+    You could also use `from starlette.responses import JSONResponse`.
+
+    出于方便，**FastAPI** 为开发者提供同 `starlette.responses` 一样的 `fastapi.responses`。 但是大多数可用的响应都是直接来自 Starlette。 `status` 也是一样。
 
 ## OpenAPI 和 API 文档
 

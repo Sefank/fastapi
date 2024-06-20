@@ -8,8 +8,8 @@
 * **输出模型**不应该包含密码。
 * **数据库模型**很可能需要保存密码的哈希值。
 
-!!! danger
-    永远不要存储用户的明文密码。始终存储一个可以用于验证的「安全哈希值」。
+!!! !!! danger
+    永远不要存储用户的明文密码。 始终存储一个可以用于验证的「安全哈希值」。
 
     如果你尚未了解该知识，你可以在[安全章节](security/simple-oauth2.md#password-hashing){.internal-link target=_blank}中学习何为「密码哈希值」。
 
@@ -17,9 +17,17 @@
 
 下面是应该如何根据它们的密码字段以及使用位置去定义模型的大概思路：
 
-```Python hl_lines="9  11  16  22  24  29-30  33-35  40-41"
-{!../../../docs_src/extra_models/tutorial001.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7  9  14  20  22  27-28  31-33  38-39"
+    {!> ../../../docs_src/extra_models/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9  11  16  22  24  29-30  33-35  40-41"
+    {!../../../docs_src/extra_models/tutorial001.py!}
+    ```
 
 ### 关于 `**user_in.dict()`
 
@@ -62,7 +70,7 @@ print(user_dict)
 
 #### 解包 `dict`
 
-如果我们将 `user_dict` 这样的 `dict` 以 `**user_dict` 形式传递给一个函数（或类），Python将对其进行「解包」。它会将 `user_dict` 的键和值作为关键字参数直接传递。
+如果我们将 `user_dict` 这样的 `dict` 以 `**user_dict` 形式传递给一个函数（或类），Python将对其进行「解包」。 它会将 `user_dict` 的键和值作为关键字参数直接传递。
 
 因此，从上面的 `user_dict` 继续，编写：
 
@@ -94,7 +102,7 @@ UserInDB(
 
 #### 来自于其他模型内容的 Pydantic 模型
 
-如上例所示，我们从 `user_in.dict（）` 中获得了 `user_dict`，此代码：
+...因为 `user_in.dict()` 是一个 `dict`，然后我们通过以`**`开头传递给 `UserInDB` 来使 Python「解包」它。
 
 ```Python
 user_dict = user_in.dict()
@@ -107,7 +115,7 @@ UserInDB(**user_dict)
 UserInDB(**user_in.dict())
 ```
 
-...因为 `user_in.dict()` 是一个 `dict`，然后我们通过以`**`开头传递给 `UserInDB` 来使 Python「解包」它。
+如上例所示，我们从 `user_in.dict（）` 中获得了 `user_dict`，此代码：
 
 这样，我们获得了一个来自于其他 Pydantic 模型中的数据的 Pydantic 模型。
 
@@ -132,7 +140,7 @@ UserInDB(
 ```
 
 !!! warning
-    辅助性的额外函数只是为了演示可能的数据流，但它们显然不能提供任何真正的安全性。
+    The supporting additional functions are just to demo a possible flow of the data, but they of course are not providing any real security.
 
 ## 减少重复
 
@@ -144,15 +152,23 @@ UserInDB(
 
 我们可以做得更好。
 
-我们可以声明一个 `UserBase` 模型作为其他模型的基类。然后我们可以创建继承该模型属性（类型声明，校验等）的子类。
+我们可以声明一个 `UserBase` 模型作为其他模型的基类。 然后我们可以创建继承该模型属性（类型声明，校验等）的子类。
 
 所有的数据转换、校验、文档生成等仍将正常运行。
 
 这样，我们可以仅声明模型之间的差异部分（具有明文的 `password`、具有 `hashed_password` 以及不包括密码）。
 
-```Python hl_lines="9  15-16  19-20  23-24"
-{!../../../docs_src/extra_models/tutorial002.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7  13-14  17-18  21-22"
+    {!> ../../../docs_src/extra_models/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9  15-16  19-20  23-24"
+    {!../../../docs_src/extra_models/tutorial002.py!}
+    ```
 
 ## `Union` 或者 `anyOf`
 
@@ -162,13 +178,34 @@ UserInDB(
 
 为此，请使用标准的 Python 类型提示 <a href="https://docs.python.org/3/library/typing.html#typing.Union" class="external-link" target="_blank">`typing.Union`</a>：
 
+!!! !!! note
+    定义一个 <a href="https://pydantic-docs.helpmanual.io/usage/types/#unions" class="external-link" target="_blank">`Union`</a> 类型时，首先包括最详细的类型，然后是不太详细的类型。 在下面的示例中，更详细的 `PlaneItem` 位于 `Union[PlaneItem，CarItem]` 中的 `CarItem` 之前。
 
-!!! note
-    定义一个 <a href="https://pydantic-docs.helpmanual.io/usage/types/#unions" class="external-link" target="_blank">`Union`</a> 类型时，首先包括最详细的类型，然后是不太详细的类型。在下面的示例中，更详细的 `PlaneItem` 位于 `Union[PlaneItem，CarItem]` 中的 `CarItem` 之前。
+=== "Python 3.10+"
 
-```Python hl_lines="1  14-15  18-20  33"
-{!../../../docs_src/extra_models/tutorial003.py!}
+    ```Python hl_lines="1  14-15  18-20  33"
+    {!> ../../../docs_src/extra_models/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  14-15  18-20  33"
+    {!../../../docs_src/extra_models/tutorial003.py!}
+    ```
+
+### `Union` in Python 3.10
+
+In this example we pass `Union[PlaneItem, CarItem]` as the value of the argument `response_model`.
+
+Because we are passing it as a **value to an argument** instead of putting it in a **type annotation**, we have to use `Union` even in Python 3.10.
+
+If it was in a type annotation we could have used the vertical bar, as:
+
+```Python
+some_variable: PlaneItem | CarItem
 ```
+
+But if we put that in `response_model=PlaneItem | CarItem` we would get an error, because Python would try to perform an **invalid operation** between `PlaneItem` and `CarItem` instead of interpreting that as a type annotation.
 
 ## 模型列表
 
@@ -176,9 +213,18 @@ UserInDB(
 
 为此，请使用标准的 Python `typing.List`：
 
-```Python hl_lines="1  20"
-{!../../../docs_src/extra_models/tutorial004.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="18"
+    !!! warning
+    辅助性的额外函数只是为了演示可能的数据流，但它们显然不能提供任何真正的安全性。
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  20"
+    {!../../../docs_src/extra_models/tutorial004.py!}
+    ```
 
 ## 任意 `dict` 构成的响应
 
@@ -188,12 +234,20 @@ UserInDB(
 
 在这种情况下，你可以使用 `typing.Dict`：
 
-```Python hl_lines="1  8"
-{!../../../docs_src/extra_models/tutorial005.py!}
-```
+=== "Python 3.9+"
 
-## 总结
+    ```Python hl_lines="6"
+    总结
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  8"
+    {!../../../docs_src/extra_models/tutorial005.py!}
+    ```
+
+## Recap
 
 使用多个 Pydantic 模型，并针对不同场景自由地继承。
 
-如果一个实体必须能够具有不同的「状态」，你无需为每个状态的实体定义单独的数据模型。以用户「实体」为例，其状态有包含 `password`、包含 `password_hash` 以及不含密码。
+如果一个实体必须能够具有不同的「状态」，你无需为每个状态的实体定义单独的数据模型。 以用户「实体」为例，其状态有包含 `password`、包含 `password_hash` 以及不含密码。

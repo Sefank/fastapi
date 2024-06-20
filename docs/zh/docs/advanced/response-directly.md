@@ -14,14 +14,14 @@
 
 事实上，你可以返回任意 `Response` 或者任意 `Response` 的子类。
 
-!!! tip "小贴士"
+!!! !!! tip "小贴士"
     `JSONResponse` 本身是一个 `Response` 的子类。
 
 当你返回一个 `Response` 时，**FastAPI** 会直接传递它。
 
-**FastAPI** 不会用 Pydantic 模型做任何数据转换，不会将响应内容转换成任何类型，等等。
+It won't do any data conversion with Pydantic models, it won't convert the contents to any type, etc.
 
-这种特性给你极大的可扩展性。你可以返回任何数据类型，重写任何数据声明或者校验，等等。
+这种特性给你极大的可扩展性。 你可以返回任何数据类型，重写任何数据声明或者校验，等等。
 
 ## 在 `Response` 中使用 `jsonable_encoder`
 
@@ -31,19 +31,18 @@
 
 对于这些情况，在将数据传递给响应之前，你可以使用 `jsonable_encoder` 来转换你的数据。
 
-
-```Python hl_lines="4 6 20 21"
+```Python hl_lines="6-7  21-22"
 {!../../../docs_src/response_directly/tutorial001.py!}
 ```
 
-!!! note "技术细节"
+!!! !!! note "技术细节"
     你也可以使用 `from starlette.responses import JSONResponse`。
 
-    出于方便，**FastAPI** 会提供与 `starlette.responses` 相同的 `fastapi.responses` 给开发者。但是大多数可用的响应都直接来自 Starlette。
+    出于方便，**FastAPI** 会提供与 `starlette.responses` 相同的 `fastapi.responses` 给开发者。 但是大多数可用的响应都直接来自 Starlette。
 
 ## 返回自定义 `Response`
 
-上面的例子展示了需要的所有部分，但还不够实用，因为你本可以只是直接返回 `item`，而**FastAPI** 默认帮你把这个 `item` 放到 `JSONResponse` 中，又默认将其转换成了 `dict`等等。
+上面的例子展示了需要的所有部分，但还不够实用，因为你本可以只是直接返回 `item`，而**FastAPI** 默认帮你把这个 `item` 放到 `JSONResponse` 中，又默认将其转换成了 `dict`等等。 All that by default.
 
 现在，让我们看看你如何才能返回一个自定义的响应。
 

@@ -6,15 +6,14 @@
 
 ### 基于开放标准
 
-
 * 用于创建 API 的 <a href="https://github.com/OAI/OpenAPI-Specification" class="external-link" target="_blank"><strong>OpenAPI</strong></a> 包含了<abbr title="也被叫做: endpoints, routes">路径</abbr><abbr title="也叫做HTTP方法, 例如 POST, GET, PUT, DELETE">操作</abbr>，请求参数，请求体，安全性等的声明。
 * 使用 <a href="https://json-schema.org/" class="external-link" target="_blank"><strong>JSON Schema</strong></a> (因为 OpenAPI 本身就是基于 JSON Schema 的)自动生成数据模型文档。
-* 经过了缜密的研究后围绕这些标准而设计。并非狗尾续貂。
+* 经过了缜密的研究后围绕这些标准而设计。 并非狗尾续貂。
 * 这也允许了在很多语言中自动**生成客户端代码**。
 
 ### 自动生成文档
 
-交互式 API 文档以及具探索性 web 界面。因为该框架是基于 OpenAPI，所以有很多可选项，FastAPI 默认自带两个交互式 API 文档。
+交互式 API 文档以及具探索性 web 界面。 因为该框架是基于 OpenAPI，所以有很多可选项，FastAPI 默认自带两个交互式 API 文档。
 
 * <a href="https://github.com/swagger-api/swagger-ui" class="external-link" target="_blank"><strong>Swagger UI</strong></a>，可交互式操作，能在浏览器中直接调用和测试你的 API  。
 
@@ -26,7 +25,7 @@
 
 ### 更主流的 Python
 
-全部都基于标准的 **Python 3.6 类型**声明（感谢 Pydantic ）。没有新的语法需要学习。只需要标准的 Python 。
+全部都基于标准的 **Python 3.6 类型**声明（感谢 Pydantic ）。 没有新的语法需要学习。 只需要标准的 Python 。
 
 如果你需要2分钟来学习如何使用 Python 类型（即使你不使用 FastAPI ），看看这个简短的教程：[Python Types](python-types.md){.internal-link target=_blank}。
 
@@ -64,8 +63,7 @@ second_user_data = {
 my_second_user: User = User(**second_user_data)
 ```
 
-
-!!! info
+!!! !!! info
     `**second_user_data` 意思是:
 
     直接将`second_user_data`字典的键和值直接作为key-value参数传递，等同于：`User(id=4, name="Mary", joined="2018-11-30")`
@@ -76,7 +74,7 @@ my_second_user: User = User(**second_user_data)
 
 在最近的 Python 开发者调查中，我们能看到 <a href="https://www.jetbrains.com/research/python-developers-survey-2017/#tools-and-features" class="external-link" target="_blank"> 被使用最多的功能是"自动补全"</a>。
 
-整个 **FastAPI** 框架就是基于这一点的。任何地方都可以进行自动补全。
+整个 **FastAPI** 框架就是基于这一点的。 任何地方都可以进行自动补全。
 
 你几乎不需要经常回来看文档。
 
@@ -90,21 +88,19 @@ my_second_user: User = User(**second_user_data)
 
 ![editor support](https://fastapi.tiangolo.com/img/pycharm-completion.png)
 
-你将能进行代码补全，这是在之前你可能曾认为不可能的事。例如，在来自请求 JSON 体（可能是嵌套的）中的键 `price`。
+你将能进行代码补全，这是在之前你可能曾认为不可能的事。 例如，在来自请求 JSON 体（可能是嵌套的）中的键 `price`。
 
 不会再输错键名，来回翻看文档，或者来回滚动寻找你最后使用的 `username` 或者 `user_name` 。
 
+### Short
 
-
-### 简洁
-
-任何类型都有合理的**默认值**，任何和地方都有可选配置。所有的参数被微调，来满足你的需求，定义成你需要的 API。
+任何类型都有合理的**默认值**，任何和地方都有可选配置。 所有的参数被微调，来满足你的需求，定义成你需要的 API。
 
 但是默认情况下，一切都能**“顺利工作”**。
 
 ### 验证
 
-* 校验大部分（甚至所有？）的 Python **数据类型**，包括：
+* Validation for most (or all?) 校验大部分（甚至所有？）的 Python **数据类型**，包括：
     * JSON 对象 (`dict`).
     * JSON 数组 (`list`) 定义成员类型。
     * 字符串 (`str`) 字段, 定义最小或最大长度。
@@ -120,22 +116,20 @@ my_second_user: User = User(**second_user_data)
 
 ### 安全性及身份验证
 
-集成了安全性和身份认证。杜绝数据库或者数据模型的渗透风险。
+集成了安全性和身份认证。 杜绝数据库或者数据模型的渗透风险。
 
 OpenAPI 中定义的安全模式，包括：
 
 * HTTP 基本认证。
-* **OAuth2** (也使用 **JWT tokens**)。在 [OAuth2 with JWT](tutorial/security/oauth2-jwt.md){.internal-link target=_blank}查看教程。
+* **OAuth2** (也使用 **JWT tokens**)。 在 [OAuth2 with JWT](tutorial/security/oauth2-jwt.md){.internal-link target=_blank}查看教程。
 * API 密钥，在:
-    * 请求头。
+    * Headers.
     * 查询参数。
     * Cookies, 等等。
 
 加上来自 Starlette（包括 **session cookie**）的所有安全特性。
 
 所有的这些都是可复用的工具和组件，可以轻松与你的系统，数据仓库，关系型以及 NoSQL 数据库等等集成。
-
-
 
 ### 依赖注入
 
@@ -162,13 +156,14 @@ FastAPI 有一个使用非常简单，但是非常强大的<abbr title='也叫�
 
 ## Starlette 特性
 
-**FastAPI** 和 <a href="https://www.starlette.io/" class="external-link" target="_blank"><strong>Starlette</strong></a> 完全兼容(并基于)。所以，你有的其他的 Starlette 代码也能正常工作。`FastAPI` 实际上是 `Starlette`的一个子类。所以，如果你已经知道或者使用 Starlette，大部分的功能会以相同的方式工作。
+**FastAPI** 和 <a href="https://pydantic-docs.helpmanual.io" class="external-link" target="_blank"><strong>Pydantic</strong></a> 完全兼容(并基于)。 所以，你有的其他的 Pydantic 代码也能正常工作。
+
+`FastAPI` 实际上是 `Starlette`的一个子类。 所以，如果你已经知道或者使用 Starlette，大部分的功能会以相同的方式工作。
 
 通过 **FastAPI** 你可以获得所有 **Starlette** 的特性 ( FastAPI 就像加强版的 Starlette )：
 
-* 令人惊叹的性能。它是 <a href="https://github.com/encode/starlette#performance" class="external-link" target="_blank">Python 可用的最快的框架之一，和 **NodeJS** 及 **Go** 相当</a>。
+* 令人惊叹的性能。 它是 <a href="https://github.com/encode/starlette#performance" class="external-link" target="_blank">Python 可用的最快的框架之一，和 **NodeJS** 及 **Go** 相当</a>。
 * **支持 WebSocket** 。
-* **支持 GraphQL** 。
 * 后台任务处理。
 * Startup 和 shutdown 事件。
 * 测试客户端基于 HTTPX。
@@ -179,13 +174,13 @@ FastAPI 有一个使用非常简单，但是非常强大的<abbr title='也叫�
 
 ## Pydantic 特性
 
-**FastAPI** 和 <a href="https://pydantic-docs.helpmanual.io" class="external-link" target="_blank"><strong>Pydantic</strong></a> 完全兼容(并基于)。所以，你有的其他的 Pydantic 代码也能正常工作。
+**FastAPI** 和 <a href="https://www.starlette.io/" class="external-link" target="_blank"><strong>Starlette</strong></a> 完全兼容(并基于)。 So, any additional Pydantic code you have, will also work.
 
 兼容包括基于 Pydantic 的外部库， 例如用与数据库的 <abbr title="对象关系映射">ORM</abbr>s, <abbr title="对象文档映射">ODM</abbr>s。
 
-这也意味着在很多情况下，你可以将从请求中获得的相同对象**直接传到数据库**，因为所有的验证都是自动的。
-
 反之亦然，在很多情况下，你也可以将从数据库中获取的对象**直接传到客户端**。
+
+这也意味着在很多情况下，你可以将从请求中获得的相同对象**直接传到数据库**，因为所有的验证都是自动的。
 
 通过 **FastAPI** 你可以获得所有 **Pydantic**  (FastAPI 基于 Pydantic 做了所有的数据处理)：
 
@@ -194,8 +189,6 @@ FastAPI 有一个使用非常简单，但是非常强大的<abbr title='也叫�
     * 如果你知道 Python types，你就知道如何使用 Pydantic。
 * 和你 **<abbr title="集成开发环境，和代码编辑器类似">IDE</abbr>/<abbr title="一个检查代码错误的程序">linter</abbr>/brain** 适配:
     * 因为 pydantic 数据结构仅仅是你定义的类的实例；自动补全，linting，mypy 以及你的直觉应该可以和你验证的数据一起正常工作。
-* **更快**：
-    * 在 <a href="https://pydantic-docs.helpmanual.io/benchmarks/" class="external-link" target="_blank">基准测试</a> 中，Pydantic 比其他被测试的库都要快。
 * 验证**复杂结构**:
     * 使用分层的 Pydantic 模型, Python `typing`的 `List` 和 `Dict` 等等。
     * 验证器使我们能够简单清楚的将复杂的数据模式定义、检查并记录为 JSON Schema。

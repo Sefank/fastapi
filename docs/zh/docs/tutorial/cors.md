@@ -24,7 +24,7 @@
 
 在这种情况下，它必须包含 `http://localhost:8080`，前端才能正常工作。
 
-## 通配符
+## Wildcards
 
 也可以使用 `"*"`（一个「通配符」）声明这个列表，表示全部都是允许的。
 
@@ -54,13 +54,13 @@
 
 支持以下参数：
 
-* `allow_origins` - 一个允许跨域请求的源列表。例如 `['https://example.org', 'https://www.example.org']`。你可以使用 `['*']` 允许任何源。
-* `allow_origin_regex` - 一个正则表达式字符串，匹配的源允许跨域请求。例如 `'https://.*\.example\.org'`。
-* `allow_methods` - 一个允许跨域请求的 HTTP 方法列表。默认为 `['GET']`。你可以使用 `['*']` 来允许所有标准方法。
-* `allow_headers` - 一个允许跨域请求的 HTTP 请求头列表。默认为 `[]`。你可以使用 `['*']` 允许所有的请求头。`Accept`、`Accept-Language`、`Content-Language` 以及 `Content-Type` 请求头总是允许 CORS 请求。
-* `allow_credentials` - 指示跨域请求支持 cookies。默认是 `False`。另外，允许凭证时 `allow_origins` 不能设定为 `['*']`，必须指定源。
-* `expose_headers` - 指示可以被浏览器访问的响应头。默认为 `[]`。
-* `max_age` - 设定浏览器缓存 CORS 响应的最长时间，单位是秒。默认为 `600`。
+* `allow_origins` - 一个允许跨域请求的源列表。 E.g. 例如 `['https://example.org', 'https://www.example.org']`。 你可以使用 `['*']` 允许任何源。
+* `allow_origin_regex` - 一个正则表达式字符串，匹配的源允许跨域请求。 例如 `'https://.*\.example\.org'`。
+* `allow_methods` - 一个允许跨域请求的 HTTP 方法列表。 默认为 `['GET']`。 你可以使用 `['*']` 来允许所有标准方法。
+* `allow_headers` - 一个允许跨域请求的 HTTP 请求头列表。 默认为 `[]`。 你可以使用 `['*']` 允许所有的请求头。 `Accept`、`Accept-Language`、`Content-Language` 以及 `Content-Type` 请求头总是允许 CORS 请求。
+* `allow_credentials` - 指示跨域请求支持 cookies。 默认是 `False`。 另外，允许凭证时 `allow_origins` 不能设定为 `['*']`，必须指定源。
+* `expose_headers` - 指示可以被浏览器访问的响应头。 默认为 `[]`。
+* `max_age` - 设定浏览器缓存 CORS 响应的最长时间，单位是秒。 默认为 `600`。
 
 中间件响应两种特定类型的 HTTP 请求……
 
@@ -72,13 +72,13 @@
 
 ### 简单请求
 
-任何带有 `Origin` 请求头的请求。在这种情况下，中间件将像平常一样传递请求，但是在响应中包含适当的 CORS headers。
+任何带有 `Origin` 请求头的请求。 在这种情况下，中间件将像平常一样传递请求，但是在响应中包含适当的 CORS headers。
 
 ## 更多信息
 
 更多关于 <abbr title="Cross-Origin Resource Sharing">CORS</abbr> 的信息，请查看 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" class="external-link" target="_blank">Mozilla CORS 文档</a>。
 
-!!! note "技术细节"
+!!! !!! note "技术细节"
     你也可以使用 `from starlette.middleware.cors import CORSMiddleware`。
 
-    出于方便，**FastAPI** 在 `fastapi.middleware` 中为开发者提供了几个中间件。但是大多数可用的中间件都是直接来自 Starlette。
+    出于方便，**FastAPI** 在 `fastapi.middleware` 中为开发者提供了几个中间件。 但是大多数可用的中间件都是直接来自 Starlette。

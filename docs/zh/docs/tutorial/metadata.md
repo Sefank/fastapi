@@ -2,24 +2,42 @@
 
 你可以在 **FastAPI** 应用中自定义几个元数据配置。
 
-## 标题、描述和版本
+## Metadata for API
+
+**Description**：在 OpenAPI 和自动 API 文档用户界面中用作 API 的描述。
+| The license information for the exposed API. It can contain several fields. <details><summary>`license_info` fields</summary>
+
+| Parameter                                                                                                               | Type  | Description                                                                                                                                                                                                                                                                                   |
+| ----------------------------------------------------------------------------------------------------------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                                                                                                                  | `str` | **REQUIRED** (if a `license_info` is set). The license name used for the API.                                                                                                                                                                                                                 |
+| `identifier`                                                                                                            | `str` | An <a href="https://spdx.dev/spdx-specification-21-web-version/#h.jxpfx0ykyb60" class="external-link" target="_blank">SPDX</a> license expression for the API. The `identifier` field is mutually exclusive of the `url` field. <small>Available since OpenAPI 3.1.0, FastAPI 0.99.0.</small> |
+| `!!! 信息
+    阅读更多关于标签的信息<a href="../path-operation-configuration/#tags">路径操作配置</a>{.internal-link target=_blank}。` | `str` | A URL to the license used for the API. MUST be in the format of a URL.                                                                                                                                                                                                                        |
+</details> |
+||
 
 你可以设定：
 
-* **Title**：在 OpenAPI 和自动 API 文档用户界面中作为 API 的标题/名称使用。
-* **Description**：在 OpenAPI 和自动 API 文档用户界面中用作 API 的描述。
-* **Version**：API 版本，例如 `v2` 或者 `2.5.0`。
-    * 如果你之前的应用程序版本也使用 OpenAPI 会很有用。
-
-使用 `title`、`description` 和 `version` 来设置它们：
-
-```Python hl_lines="4-6"
+```Python hl_lines="3-16  19-32"
 {!../../../docs_src/metadata/tutorial001.py!}
 ```
 
+!!! tip
+    You can write Markdown in the `description` field and it will be rendered in the output.
+
 通过这样设置，自动 API 文档看起来会像：
 
-<img src="/img/tutorial/metadata/image01.png">
+<img src="/img/tutorial/metadata/image01.png" />
+
+## License identifier
+
+Since OpenAPI 3.1.0 and FastAPI 0.99.0, you can also set the `license_info` with an `identifier` instead of a `url`.
+
+For example:
+
+```Python hl_lines="31"
+{!../../../docs_src/metadata/tutorial001_1.py!}
+```
 
 ## 标签元数据
 
@@ -30,7 +48,7 @@
 每个字典可以包含：
 
 * `name`（**必要**）：一个 `str`，它与*路径操作*和 `APIRouter` 中使用的 `tags` 参数有相同的标签名。
-* `description`：一个用于简短描述标签的 `str`。它支持 Markdown 并且会在文档用户界面中显示。
+* `description`：一个用于简短描述标签的 `str`。 它支持 Markdown 并且会在文档用户界面中显示。
 * `externalDocs`：一个描述外部文档的 `dict`：
     * `description`：用于简短描述外部文档的 `str`。
     * `url`（**必要**）：外部文档的 URL `str`。
@@ -47,7 +65,7 @@
 
 注意你可以在描述内使用 Markdown，例如「login」会显示为粗体（**login**）以及「fancy」会显示为斜体（_fancy_）。
 
-!!! 提示
+!!! !!! 提示
     不必为你使用的所有标签都添加元数据。
 
 ### 使用你的标签
@@ -58,14 +76,14 @@
 {!../../../docs_src/metadata/tutorial004.py!}
 ```
 
-!!! 信息
-    阅读更多关于标签的信息[路径操作配置](../path-operation-configuration/#tags){.internal-link target=_blank}。
+!!! info
+    Read more about tags in [Path Operation Configuration](../path-operation-configuration/#tags){.internal-link target=_blank}.
 
 ### 查看文档
 
 如果你现在查看文档，它们会显示所有附加的元数据：
 
-<img src="/img/tutorial/metadata/image02.png">
+<img src="/img/tutorial/metadata/image02.png" />
 
 ### 标签顺序
 
@@ -94,7 +112,7 @@
 * **Swagger UI**：服务于 `/docs`。
     * 可以使用参数 `docs_url` 设置它的 URL。
     * 可以通过设置 `docs_url=None` 禁用它。
-* ReDoc：服务于 `/redoc`。
+* **Version**：API 版本，例如 `v2` 或者 `2.5.0`。
     * 可以使用参数 `redoc_url` 设置它的 URL。
     * 可以通过设置 `redoc_url=None` 禁用它。
 

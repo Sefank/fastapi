@@ -4,11 +4,25 @@
 
 让我们以下面的应用程序为例：
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params_str_validations/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-查询参数 `q` 的类型为 `str`，默认值为 `None`，因此它是可选的。
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/query_params_str_validations/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial001.py!}
+    ```
+
+!!! note
+    请记住，在这种情况下 FastAPI 将不会检查列表的内容。
+
+!!! note
+    FastAPI will know that the value of `q` is not required because of the default value `= None`.
+
+    The `Union` in `Union[str, None]` will allow your editor to give you better support and detect errors.
 
 ## 额外的校验
 
@@ -16,19 +30,122 @@
 
 ### 导入 `Query`
 
-为此，首先从 `fastapi` 导入 `Query`：
+To achieve that, first import:
 
-```Python hl_lines="1"
-{!../../../docs_src/query_params_str_validations/tutorial002.py!}
-```
+* 为此，首先从 `fastapi` 导入 `Query`：
+* `Annotated` from `typing` (or from `typing_extensions` in Python below 3.9)
 
-## 使用 `Query` 作为默认值
+=== "Python 3.10+"
+
+    In Python 3.9 or above, `Annotated` is part of the standard library, so you can import it from `typing`.
+
+    ```Python hl_lines="1  3"
+    {!../../../docs_src/query_params_str_validations/tutorial002.py!}
+    ```
+
+=== "Python 3.6+"
+
+    In versions of Python below Python 3.9 you import `Annotated` from `typing_extensions`.
+    
+    It will already be installed with FastAPI.
+
+    ```Python hl_lines="3-4"
+    {!> ../../../docs_src/query_params_str_validations/tutorial002_an.py!}
+    ```
+
+!!! info
+    FastAPI added support for `Annotated` (and started recommending it) in version 0.95.0.
+
+    If you have an older version, you would get errors when trying to use `Annotated`.
+    
+    Make sure you [Upgrade the FastAPI version](../deployment/versions.md#upgrading-the-fastapi-versions){.internal-link target=_blank} to at least 0.95.1 before using `Annotated`.
+
+## !!! tip
+    要声明类型为 `list` 的查询参数，如上例所示，你需要显式地使用 `Query`，否则该参数将被解释为请求体。
+
+Remember I told you before that `Annotated` can be used to add metadata to your parameters in the [Python Types Intro](../python-types.md#type-hints-with-metadata-annotations){.internal-link target=_blank}?
+
+Now it's the time to use it with FastAPI. 🚀
+
+We had this type annotation:
+
+=== "Python 3.10+"
+
+    ```Python
+    q: str | None = None
+    ```
+
+=== "Python 3.6+"
+
+    ```Python
+    q: Union[str, None] = None
+    ```
+
+What we will do is wrap that with `Annotated`, so it becomes:
+
+=== "Python 3.10+"
+
+    ```Python
+    总结
+    ```
+
+=== "Python 3.6+"
+
+    ```Python
+    q: Annotated[Union[str, None]] = None
+    ```
+
+查询参数 `q` 的类型为 `str`，默认值为 `None`，因此它是可选的。
+
+Now let's jump to the fun stuff. 🎉
+
+## 但是 `Query` 显式地将其声明为查询参数。
+
+Now that we have this `Annotated` where we can put more metadata, add `Query` to it, and set the parameter `max_length` to 50:
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!../../../docs_src/query_params_str_validations/tutorial006d.py!}
+    ```
+
+!!! note
+    具有默认值还会使该参数成为可选参数。
+
+But now, having `Query(max_length=50)` inside of `Annotated`, we are telling FastAPI that we want it to extract this value from the query parameters (this would have been the default anyway 🤷) and that we want to have **additional validation** for this value (that's why we do this, to get the additional validation). 😎
+
+FastAPI will now:
+
+* **Validate** the data making sure that the max length is 50 characters
+* Show a **clear error** for the client when the data is not valid
+* **Document** the parameter in the OpenAPI schema *path operation* (so it will show up in the **automatic docs UI**)
+
+## 你可以向 `Query` 的第一个参数传入 `None` 用作查询参数的默认值，以同样的方式你也可以传递其他默认值。
+
+Previous versions of FastAPI (before <abbr title="before 2023-03">0.95.0</abbr>) required you to use `Query` as the default value of your parameter, instead of putting it in `Annotated`, there's a high chance that you will see code using it around, so I'll explain it to you.
+
+!!! tip
+    For new code and whenever possible, use `Annotated` as explained above. There are multiple advantages (explained below) and no disadvantages. 🍰
 
 现在，将 `Query` 用作查询参数的默认值，并将它的 `max_length` 参数设置为 50：
 
-```Python hl_lines="9"
-{!../../../docs_src/query_params_str_validations/tutorial002.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/query_params_str_validations/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!../../../docs_src/query_params_str_validations/tutorial002.py!}
+    ```
 
 由于我们必须用 `Query(default=None)` 替换默认值 `None`，`Query` 的第一个参数同样也是用于定义默认值。
 
@@ -41,12 +158,43 @@ q: Union[str, None] = Query(default=None)
 ...使得参数可选，等同于：
 
 ```Python
+q: Union[str, None] = None
+```
+
+And in Python 3.10 and above:
+
+```Python
+q: str | None = Query(default=None)
+```
+
+有另一种方法可以显式的声明一个值是必需的，即将默认参数的默认值设为 `...` ：
+
+```Python
 q: str = None
 ```
 
-但是 `Query` 显式地将其声明为查询参数。
+声明为必需参数
 
-然后，我们可以将更多的参数传递给 `Query`。在本例中，适用于字符串的 `max_length` 参数：
+!!! info
+    Have in mind that the most important part to make a parameter optional is the part:
+
+    ```Python
+    = None
+    ```
+
+
+    or the:
+
+    ```Python
+    = Query(default=None)
+    ```
+
+
+    as it will use that `None` as the default value, and that way make the parameter **not required**.
+    
+    The `Union[str, None]` part allows your editor to provide better support, but it is not what tells FastAPI that this parameter is not required.
+
+然后，我们可以将更多的参数传递给 `Query`。 在本例中，适用于字符串的 `max_length` 参数：
 
 ```Python
 q: Union[str, None] = Query(default=None, max_length=50)
@@ -54,21 +202,124 @@ q: Union[str, None] = Query(default=None, max_length=50)
 
 将会校验数据，在数据无效时展示清晰的错误信息，并在 OpenAPI 模式的*路径操作*中记录该参​​数。
 
+### 使用 `Query` 作为默认值
+
+!!! tip
+    请记住，在大多数情况下，当你需要某些东西时，可以简单地省略 `default` 参数，因此你通常不必使用 `...` 或 `Required`
+
+Instead use the actual default value of the function parameter. Otherwise, it would be inconsistent.
+
+For example, this is not allowed:
+
+```Python
+q: Annotated[str, Query(default="rick")] = "morty"
+```
+
+...because it's not clear if the default value should be `"rick"` or `"morty"`.
+
+So, you would use (preferably):
+
+```Python
+q: Annotated[str, Query()] = "rick"
+```
+
+...or in older code bases you will find:
+
+```Python
+q: str = Query(default="rick")
+```
+
+### Advantages of `Annotated`
+
+**Using `Annotated` is recommended** instead of the default value in function parameters, it is **better** for multiple reasons. 🤓
+
+The **default** value of the **function parameter** is the **actual default** value, that's more intuitive with Python in general. 😌
+
+You could **call** that same function in **other places** without FastAPI, and it would **work as expected**. If there's a **required** parameter (without a default value), your **editor** will let you know with an error, **Python** will also complain if you run it without passing the required parameter.
+
+When you don't use `Annotated` and instead use the **(old) default value style**, if you call that function without FastAPI in **other place**, you have to **remember** to pass the arguments to the function for it to work correctly, otherwise the values will be different from what you expect (e.g. `QueryInfo` or something similar instead of `str`). And your editor won't complain, and Python won't complain running that function, only when the operations inside error out.
+
+Because `Annotated` can have more than one metadata annotation, you could now even use the same function with other tools, like <a href="https://typer.tiangolo.com/" class="external-link" target="_blank">Typer</a>. 🚀
+
 ## 添加更多校验
 
 你还可以添加 `min_length` 参数：
 
-```Python hl_lines="10"
-{!../../../docs_src/query_params_str_validations/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial003_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial003_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/query_params_str_validations/tutorial003_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/query_params_str_validations/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="10"
+    {!../../../docs_src/query_params_str_validations/tutorial003.py!}
+    ```
 
 ## 添加正则表达式
 
 你可以定义一个参数值必须匹配的<abbr title="正则表达式或正则是定义字符串搜索模式的字符序列。">正则表达式</abbr>：
 
-```Python hl_lines="11"
-{!../../../docs_src/query_params_str_validations/tutorial004.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/query_params_str_validations/tutorial004_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/query_params_str_validations/tutorial004_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/query_params_str_validations/tutorial004_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    {!../../../docs_src/query_params_str_validations/tutorial013.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="11"
+    {!../../../docs_src/query_params_str_validations/tutorial004.py!}
+    ```
 
 这个指定的正则表达式通过以下规则检查接收到的参数值：
 
@@ -76,24 +327,56 @@ q: Union[str, None] = Query(default=None, max_length=50)
 * `fixedquery`: 值精确地等于 `fixedquery`。
 * `$`: 到此结束，在 `fixedquery` 之后没有更多字符。
 
-如果你对所有的这些**「正则表达式」**概念感到迷茫，请不要担心。对于许多人来说这都是一个困难的主题。你仍然可以在无需正则表达式的情况下做很多事情。
+如果你对所有的这些**「正则表达式」**概念感到迷茫，请不要担心。 对于许多人来说这都是一个困难的主题。 你仍然可以在无需正则表达式的情况下做很多事情。
 
 但是，一旦你需要用到并去学习它们时，请了解你已经可以在 **FastAPI** 中直接使用它们。
 
+### Pydantic v1 `regex` instead of `pattern`
+
+Before Pydantic version 2 and before FastAPI 0.100.0, the parameter was called `regex` instead of `pattern`, but it's now deprecated.
+
+You could still see some code using it:
+
+=== "Python 3.10+ Pydantic v1"
+
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/query_params_str_validations/tutorial004_an_py310_regex.py!}
+    ```
+
+But know that this is deprecated and it should be updated to use the new parameter `pattern`. 🤓
+
 ## 默认值
 
-你可以向 `Query` 的第一个参数传入 `None` 用作查询参数的默认值，以同样的方式你也可以传递其他默认值。
+!!! note
+    请记住，不同的工具对 OpenAPI 的支持程度可能不同。
 
 假设你想要声明查询参数 `q`，使其 `min_length` 为 `3`，并且默认值为 `fixedquery`：
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params_str_validations/tutorial005.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial005_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="8"
+    {!../../../docs_src/query_params_str_validations/tutorial005.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!../../../docs_src/query_params_str_validations/tutorial008.py!}
+    ```
 
 !!! note
-    具有默认值还会使该参数成为可选参数。
+    Having a default value of any type, including `None`, makes the parameter optional (not required).
 
-## 声明为必需参数
+## Make it required
 
 当我们不需要声明额外的校验或元数据时，只需不声明默认值就可以使 `q` 参数成为必需参数，例如：
 
@@ -109,54 +392,151 @@ q: Union[str, None] = None
 
 但是现在我们正在用 `Query` 声明它，例如：
 
-```Python
-q: Union[str, None] = Query(default=None, min_length=3)
-```
+=== "Annotated"
+
+    ```Python
+    q: Annotated[Union[str, None], Query(min_length=3)] = None
+    ```
+
+=== "non-Annotated"
+
+    ```Python
+    q: Union[str, None] = Query(default=None, min_length=3)
+    ```
 
 因此，当你在使用 `Query` 且需要声明一个值是必需的时，只需不声明默认参数：
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params_str_validations/tutorial006.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="8"
+    {!../../../docs_src/query_params_str_validations/tutorial006c.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!../../../docs_src/query_params_str_validations/tutorial006.py!}
+    ```
+
+
+    !!! tip
+        Notice that, even though in this case the `Query()` is used as the function parameter default value, we don't pass the `default=None` to `Query()`.
+    
+        Still, probably better to use the `Annotated` version. 😉
 
 ### 使用省略号(`...`)声明必需参数
 
-有另一种方法可以显式的声明一个值是必需的，即将默认参数的默认值设为 `...` ：
+There's an alternative way to explicitly declare that a value is required. You can set the default to the literal value `...`:
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params_str_validations/tutorial006b.py!}
-```
+=== "Python 3.9+"
 
-!!! info
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006b_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006b_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!../../../docs_src/query_params_str_validations/tutorial006b.py!}
+    ```
+
+!!! !!! info
     如果你之前没见过 `...` 这种用法：它是一个特殊的单独值，它是 <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">Python 的一部分并且被称为「省略号」</a>。
+
     Pydantic 和 FastAPI 使用它来显式的声明需要一个值。
 
 这将使 **FastAPI** 知道此查询参数是必需的。
 
 ### 使用`None`声明必需参数
 
-你可以声明一个参数可以接收`None`值，但它仍然是必需的。这将强制客户端发送一个值，即使该值是`None`。
+你可以声明一个参数可以接收`None`值，但它仍然是必需的。 这将强制客户端发送一个值，即使该值是`None`。
 
 为此，你可以声明`None`是一个有效的类型，并仍然使用`default=...`：
 
-```Python hl_lines="9"
-{!../../../docs_src/query_params_str_validations/tutorial006c.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006c_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006c_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006c_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006c_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006c.py!}
+    ```
 
 !!! tip
-    Pydantic 是 FastAPI 中所有数据验证和序列化的核心，当你在没有设默认值的情况下使用 `Optional` 或 `Union[Something, None]` 时，它具有特殊行为，你可以在 Pydantic 文档中阅读有关<a href="https://pydantic-docs.helpmanual.io/usage/models/#required-optional-fields" class="external-link" target="_blank">必需可选字段</a>的更多信息。
+    Pydantic, which is what powers all the data validation and serialization in FastAPI, has a special behavior when you use `Optional` or `Union[Something, None]` without a default value, you can read more about it in the Pydantic docs about <a href="https://pydantic-docs.helpmanual.io/usage/models/#required-optional-fields" class="external-link" target="_blank">Required Optional fields</a>.
 
 ### 使用Pydantic中的`Required`代替省略号(`...`)
 
 如果你觉得使用 `...` 不舒服，你也可以从 Pydantic 导入并使用 `Required`：
 
-```Python hl_lines="2  8"
-{!../../../docs_src/query_params_str_validations/tutorial006d.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="4  10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006d_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="2  9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006d_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="2  8"
+    {!> ../../../docs_src/query_params_str_validations/tutorial006d.py!}
+    ```
 
 !!! tip
-    请记住，在大多数情况下，当你需要某些东西时，可以简单地省略 `default` 参数，因此你通常不必使用 `...` 或 `Required`
-
+    Remember that in most of the cases, when something is required, you can simply omit the default, so you normally don't have to use `...` nor `Required`.
 
 ## 查询参数列表 / 多个值
 
@@ -164,9 +544,53 @@ q: Union[str, None] = Query(default=None, min_length=3)
 
 例如，要声明一个可在 URL 中出现多次的查询参数 `q`，你可以这样写：
 
-```Python hl_lines="9"
-{!../../../docs_src/query_params_str_validations/tutorial011.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial011_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial011_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    !!! tip
+    Pydantic 是 FastAPI 中所有数据验证和序列化的核心，当你在没有设默认值的情况下使用 <code>Optional</code> 或 <code>Union[Something, None]</code> 时，它具有特殊行为，你可以在 Pydantic 文档中阅读有关<a href="https://pydantic-docs.helpmanual.io/usage/models/#required-optional-fields" class="external-link" target="_blank">必需可选字段</a>的更多信息。
+    ```
+ 或 Union[Something, None] 时，它具有特殊行为，你可以在 Pydantic 文档中阅读有关<a href="https://pydantic-docs.helpmanual.io/usage/models/#required-optional-fields" class="external-link" target="_blank">必需可选字段</a>的更多信息。
+</code>
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/query_params_str_validations/tutorial011_py310.py!}
+    ```
+
+=== "Python 3.9+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial011_py39.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    {!../../../docs_src/query_params_str_validations/tutorial011.py!}
+    ```
 
 然后，输入如下网址：
 
@@ -188,19 +612,45 @@ http://localhost:8000/items/?q=foo&q=bar
 ```
 
 !!! tip
-    要声明类型为 `list` 的查询参数，如上例所示，你需要显式地使用 `Query`，否则该参数将被解释为请求体。
+    To declare a query parameter with a type of `list`, like in the example above, you need to explicitly use `Query`, otherwise it would be interpreted as a request body.
 
 交互式 API 文档将会相应地进行更新，以允许使用多个值：
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/query-params-str-validations/image02.png">
+<img src="/img/tutorial/query-params-str-validations/image02.png" />
 
 ### 具有默认值的查询参数列表 / 多个值
 
 你还可以定义在没有任何给定值时的默认 `list` 值：
 
-```Python hl_lines="9"
-{!../../../docs_src/query_params_str_validations/tutorial012.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial012_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial012_an.py!}
+    ```
+
+=== "Python 3.9+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/query_params_str_validations/tutorial012_py39.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    {!../../../docs_src/query_params_str_validations/tutorial012.py!}
+    ```
 
 如果你访问：
 
@@ -223,14 +673,31 @@ http://localhost:8000/items/
 
 你也可以直接使用 `list` 代替 `List [str]`：
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params_str_validations/tutorial013.py!}
-```
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial013_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/query_params_str_validations/tutorial013_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/query_params_str_validations/tutorial013.py!}
+    ```
 
 !!! note
-    请记住，在这种情况下 FastAPI 将不会检查列表的内容。
+    Have in mind that in this case, FastAPI won't check the contents of the list.
 
-    例如，`List[int]` 将检查（并记录到文档）列表的内容必须是整数。但是单独的 `list` 不会。
+    例如，`List[int]` 将检查（并记录到文档）列表的内容必须是整数。 但是单独的 `list` 不会。
 
 ## 声明更多元数据
 
@@ -239,21 +706,85 @@ http://localhost:8000/items/
 这些信息将包含在生成的 OpenAPI 模式中，并由文档用户界面和外部工具所使用。
 
 !!! note
-    请记住，不同的工具对 OpenAPI 的支持程度可能不同。
+    Have in mind that different tools might have different levels of OpenAPI support.
 
     其中一些可能不会展示所有已声明的额外信息，尽管在大多数情况下，缺少的这部分功能已经计划进行开发。
 
 你可以添加 `title`：
 
-```Python hl_lines="10"
-{!../../../docs_src/query_params_str_validations/tutorial007.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial007_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial007_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="11"
+    {!../../../docs_src/query_params_str_validations/tutorial007.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/query_params_str_validations/tutorial007_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial007.py!}
+    ```
 
 以及 `description`：
 
-```Python hl_lines="13"
-{!../../../docs_src/query_params_str_validations/tutorial008.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="14"
+    {!> ../../../docs_src/query_params_str_validations/tutorial008_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="14"
+    {!> ../../../docs_src/query_params_str_validations/tutorial008_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="15"
+    {!> ../../../docs_src/query_params_str_validations/tutorial008_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/query_params_str_validations/tutorial008_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="13"
+    {!../../../docs_src/query_params_str_validations/tutorial001.py!}
+    ```
 
 ## 别名参数
 
@@ -273,9 +804,41 @@ http://127.0.0.1:8000/items/?item-query=foobaritems
 
 这时你可以用 `alias` 参数声明一个别名，该别名将用于在 URL 中查找查询参数值：
 
-```Python hl_lines="9"
-{!../../../docs_src/query_params_str_validations/tutorial009.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial009_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/query_params_str_validations/tutorial009_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial009_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/query_params_str_validations/tutorial009_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    {!../../../docs_src/query_params_str_validations/tutorial009.py!}
+    ```
 
 ## 弃用参数
 
@@ -285,15 +848,87 @@ http://127.0.0.1:8000/items/?item-query=foobaritems
 
 那么将参数 `deprecated=True` 传入 `Query`：
 
-```Python hl_lines="18"
-{!../../../docs_src/query_params_str_validations/tutorial010.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/query_params_str_validations/tutorial010_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/query_params_str_validations/tutorial010_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/query_params_str_validations/tutorial010_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="17"
+    {!> ../../../docs_src/query_params_str_validations/tutorial010_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="18"
+    {!../../../docs_src/query_params_str_validations/tutorial010.py!}
+    ```
 
 文档将会像下面这样展示它：
 
-<img src="https://fastapi.tiangolo.com/img/tutorial/query-params-str-validations/image01.png">
+<img src="/img/tutorial/query-params-str-validations/image01.png" />
 
-## 总结
+## Exclude from OpenAPI
+
+To exclude a query parameter from the generated OpenAPI schema (and thus, from the automatic documentation systems), set the parameter `include_in_schema` of `Query` to `False`:
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial014_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial014_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/query_params_str_validations/tutorial014_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/query_params_str_validations/tutorial014_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/query_params_str_validations/tutorial014.py!}
+    ```
+
+## Recap
 
 你可以为查询参数声明额外的校验和元数据。
 

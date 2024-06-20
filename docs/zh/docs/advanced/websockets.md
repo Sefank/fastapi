@@ -6,11 +6,13 @@
 
 首先，您需要安装 `WebSockets`：
 
-```console
+<div class="termy">
+
 $ pip install websockets
 
----> 100%
-```
+---&gt; 100%
+
+</div>
 
 ## WebSockets 客户端
 
@@ -46,10 +48,10 @@ $ pip install websockets
 {!../../../docs_src/websockets/tutorial001.py!}
 ```
 
-!!! note "技术细节"
+!!! !!! note "技术细节"
     您也可以使用 `from starlette.websockets import WebSocket`。
 
-    **FastAPI** 直接提供了相同的 `WebSocket`，只是为了方便开发人员。但它直接来自 Starlette。
+    **FastAPI** 直接提供了相同的 `WebSocket`，只是为了方便开发人员。 但它直接来自 Starlette。
 
 ## 等待消息并发送消息
 
@@ -65,33 +67,33 @@ $ pip install websockets
 
 如果您的文件名为 `main.py`，请使用以下命令运行应用程序：
 
-```console
+<div class="termy">
+
 $ uvicorn main:app --reload
 
-<span style="color: green;">INFO</span>:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-```
+&lt;span style="color: green;"&gt;INFO&lt;/span&gt;:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+
+</div>
 
 在浏览器中打开 <a href="http://127.0.0.1:8000" class="external-link" target="_blank">http://127.0.0.1:8000</a>。
 
 您将看到一个简单的页面，如下所示：
 
-<img src="/img/tutorial/websockets/image01.png">
+<img src="/img/tutorial/websockets/image01.png" />
 
 您可以在输入框中输入消息并发送：
 
-<img src="/img/tutorial/websockets/image02.png">
+<img src="/img/tutorial/websockets/image02.png" />
 
 您的 **FastAPI** 应用程序将回复：
 
-<img src="/img/tutorial/websockets/image03.png">
+<img src="/img/tutorial/websockets/image03.png" />
 
 您可以发送（和接收）多条消息：
 
-<img src="/img/tutorial/websockets/image04.png">
+<img src="/img/tutorial/websockets/image04.png" />
 
 所有这些消息都将使用同一个 WebSocket 连
-
-接。
 
 ## 使用 `Depends` 和其他依赖项
 
@@ -124,25 +126,25 @@ $ uvicorn main:app --reload
     {!> ../../../docs_src/websockets/tutorial002_an.py!}
     ```
 
-=== "Python 3.10+ 非带注解版本"
+=== "Python 3.6+ 非带注解版本"
 
-    !!! tip
+    !!! !!! tip
         如果可能，请尽量使用 `Annotated` 版本。
 
     ```Python hl_lines="66-67  79"
     {!> ../../../docs_src/websockets/tutorial002_py310.py!}
     ```
 
-=== "Python 3.6+ 非带注解版本"
+=== "Python 3.10+ 非带注解版本"
 
-    !!! tip
+    !!! !!! tip
         如果可能，请尽量使用 `Annotated` 版本。
 
     ```Python hl_lines="68-69  81"
     {!> ../../../docs_src/websockets/tutorial002.py!}
     ```
 
-!!! info
+!!! !!! info
     由于这是一个 WebSocket，抛出 `HTTPException` 并不是很合理，而是抛出 `WebSocketException`。
 
     您可以使用<a href="https://tools.ietf.org/html/rfc6455#section-7.4.1" class="external-link" target="_blank">规范中定义的有效代码</a>。
@@ -151,11 +153,13 @@ $ uvicorn main:app --reload
 
 如果您的文件名为 `main.py`，请使用以下命令运行应用程序：
 
-```console
+<div class="termy">
+
 $ uvicorn main:app --reload
 
-<span style="color: green;">INFO</span>:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-```
+&lt;span style="color: green;"&gt;INFO&lt;/span&gt;:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+
+</div>
 
 在浏览器中打开 <a href="http://127.0.0.1:8000" class="external-link" target="_blank">http://127.0.0.1:8000</a>。
 
@@ -164,12 +168,12 @@ $ uvicorn main:app --reload
 * "Item ID"，用于路径。
 * "Token"，作为查询参数。
 
-!!! tip
+!!! !!! tip
     注意，查询参数 `token` 将由依赖项处理。
 
 通过这样，您可以连接 WebSocket，然后发送和接收消息：
 
-<img src="/img/tutorial/websockets/image05.png">
+<img src="/img/tutorial/websockets/image05.png" />
 
 ## 处理断开连接和多个客户端
 
@@ -190,7 +194,7 @@ $ uvicorn main:app --reload
 尝试以下操作：
 
 * 使用多个浏览器选项卡打开应用程序。
-* 从这些选项卡中发送消息。
+* Write messages from them.
 * 然后关闭其中一个选项卡。
 
 这将引发 `WebSocketDisconnect` 异常，并且所有其他客户端都会收到类似以下的消息：
@@ -199,16 +203,16 @@ $ uvicorn main:app --reload
 Client #1596980209979 left the chat
 ```
 
-!!! tip
+!!! !!! tip
     上面的应用程序是一个最小和简单的示例，用于演示如何处理和向多个 WebSocket 连接广播消息。
 
     但请记住，由于所有内容都在内存中以单个列表的形式处理，因此它只能在进程运行时工作，并且只能使用单个进程。
-
+    
     如果您需要与 FastAPI 集成更简单但更强大的功能，支持 Redis、PostgreSQL 或其他功能，请查看 [encode/broadcaster](https://github.com/encode/broadcaster)。
 
 ## 更多信息
 
 要了解更多选项，请查看 Starlette 的文档：
 
-* [WebSocket 类](https://www.starlette.io/websockets/)
+* WebSocket 类
 * [基于类的 WebSocket 处理](https://www.starlette.io/endpoints/#websocketendpoint)。

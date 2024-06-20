@@ -8,13 +8,37 @@
 
 === "Python 3.10+"
 
-    ```Python hl_lines="7"
-    {!> ../../../docs_src/dependencies/tutorial001_py310.py!}
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="11"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py39.py!}
     ```
 
 === "Python 3.6+"
 
-    ```Python hl_lines="9"
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/dependencies/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/dependencies/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="11"
     {!> ../../../docs_src/dependencies/tutorial001.py!}
     ```
 
@@ -30,7 +54,7 @@
 
 但这并不是声明依赖项的唯一方法(尽管它可能是更常见的方法)。
 
-关键因素是依赖项应该是 "可调用对象"。
+The key factor is that a dependency should be a "callable".
 
 Python 中的 "**可调用对象**" 是指任何 Python 可以像函数一样 "调用" 的对象。
 
@@ -46,7 +70,7 @@ something()
 something(some_argument, some_keyword_argument="foo")
 ```
 
-这就是 "可调用对象"。
+then it is a "callable".
 
 ## 类作为依赖项
 
@@ -73,19 +97,43 @@ fluffy = Cat(name="Mr Fluffy")
 
 实际上 FastAPI 检查的是它是一个 "可调用对象"（函数，类或其他任何类型）以及定义的参数。
 
-如果您在 **FastAPI** 中传递一个 "可调用对象" 作为依赖项，它将分析该 "可调用对象" 的参数，并以处理路径操作函数的参数的方式来处理它们。包括子依赖项。
+如果您在 **FastAPI** 中传递一个 "可调用对象" 作为依赖项，它将分析该 "可调用对象" 的参数，并以处理路径操作函数的参数的方式来处理它们。 包括子依赖项。
 
-这也适用于完全没有参数的可调用对象。这与不带参数的路径操作函数一样。
+这也适用于完全没有参数的可调用对象。 这与不带参数的路径操作函数一样。
 
 所以，我们可以将上面的依赖项 "可依赖对象" `common_parameters` 更改为类 `CommonQueryParams`:
 
 === "Python 3.10+"
 
+    ```Python hl_lines="11-15"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="11-15"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="12-16"
+    {!> ../../../docs_src/dependencies/tutorial002_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="9-13"
     {!> ../../../docs_src/dependencies/tutorial002_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="11-15"
     {!> ../../../docs_src/dependencies/tutorial002.py!}
@@ -95,11 +143,35 @@ fluffy = Cat(name="Mr Fluffy")
 
 === "Python 3.10+"
 
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="13"
+    {!> ../../../docs_src/dependencies/tutorial002_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="10"
     {!> ../../../docs_src/dependencies/tutorial002_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="12"
     {!> ../../../docs_src/dependencies/tutorial002.py!}
@@ -109,11 +181,35 @@ fluffy = Cat(name="Mr Fluffy")
 
 === "Python 3.10+"
 
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/dependencies/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/dependencies/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="6"
     {!> ../../../docs_src/dependencies/tutorial001_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="9"
     {!> ../../../docs_src/dependencies/tutorial001.py!}
@@ -135,30 +231,65 @@ fluffy = Cat(name="Mr Fluffy")
 
 === "Python 3.10+"
 
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial002_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/dependencies/tutorial002_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="17"
     {!> ../../../docs_src/dependencies/tutorial002_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="19"
     {!> ../../../docs_src/dependencies/tutorial002.py!}
     ```
 
-**FastAPI** 调用 `CommonQueryParams` 类。这将创建该类的一个 "实例"，该实例将作为参数 `commons` 被传递给你的函数。
+**FastAPI** 调用 `CommonQueryParams` 类。 这将创建该类的一个 "实例"，该实例将作为参数 `commons` 被传递给你的函数。
 
 ## 类型注解 vs `Depends`
 
 注意，我们在上面的代码中编写了两次`CommonQueryParams`：
 
-```Python
-commons: CommonQueryParams = Depends(CommonQueryParams)
-```
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons: CommonQueryParams = Depends(CommonQueryParams)
+    ```
+
+=== "Python 3.6+"
+
+    ```Python
+    ... = Depends(CommonQueryParams)
+    ```
 
 最后的 `CommonQueryParams`:
 
 ```Python
-... = Depends(CommonQueryParams)
+... Depends(CommonQueryParams)
 ```
 
 ...实际上是 **Fastapi** 用来知道依赖项是什么的。
@@ -169,27 +300,74 @@ FastAPI 将从依赖项中提取声明的参数，这才是 FastAPI 实际调用
 
 在本例中，第一个 `CommonQueryParams` ：
 
-```Python
-commons: CommonQueryParams ...
-```
+=== "Python 3.6+"
 
-...对于 **FastAPI** 没有任何特殊的意义。FastAPI 不会使用它进行数据转换、验证等 (因为对于这，它使用 `= Depends(CommonQueryParams)`)。
+    ```Python
+    这就是 "可调用对象"。
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons: CommonQueryParams ...
+    ```
+
+...对于 **FastAPI** 没有任何特殊的意义。 FastAPI 不会使用它进行数据转换、验证等 (因为对于这，它使用 `= Depends(CommonQueryParams)`)。
 
 你实际上可以只这样编写:
 
-```Python
-commons = Depends(CommonQueryParams)
-```
+=== "Python 3.6+"
+
+    ```Python
+    !!! tip
+    如果这看起来更加混乱而不是更加有帮助，那么请忽略它，你不<em x-id="3">需要</em>它。
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons = Depends(CommonQueryParams)
+    ```
 
 ..就像:
 
 === "Python 3.10+"
 
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial003_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial003_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/dependencies/tutorial003_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="17"
     {!> ../../../docs_src/dependencies/tutorial003_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="19"
     {!> ../../../docs_src/dependencies/tutorial003.py!}
@@ -197,15 +375,26 @@ commons = Depends(CommonQueryParams)
 
 但是声明类型是被鼓励的，因为那样你的编辑器就会知道将传递什么作为参数 `commons` ，然后它可以帮助你完成代码，类型检查，等等：
 
-<img src="/img/tutorial/dependencies/image02.png">
+<img src="/img/tutorial/dependencies/image02.png" />
 
 ## 快捷方式
 
 但是您可以看到，我们在这里有一些代码重复了，编写了`CommonQueryParams`两次：
 
-```Python
-commons: CommonQueryParams = Depends(CommonQueryParams)
-```
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons: CommonQueryParams = Depends(CommonQueryParams)
+    ```
+
+=== "Python 3.6+"
+
+    ```Python
+    commons: Annotated[CommonQueryParams, Depends(CommonQueryParams)]
+    ```
 
 **FastAPI** 为这些情况提供了一个快捷方式，在这些情况下，依赖项 *明确地* 是一个类，**FastAPI** 将 "调用" 它来创建类本身的一个实例。
 
@@ -213,15 +402,37 @@ commons: CommonQueryParams = Depends(CommonQueryParams)
 
 不是写成这样：
 
-```Python
-commons: CommonQueryParams = Depends(CommonQueryParams)
-```
+=== "Python 3.6+"
+
+    ```Python
+    commons: Annotated[CommonQueryParams, Depends(CommonQueryParams)]
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons: CommonQueryParams = Depends(CommonQueryParams)
+    ```
 
 ...而是这样写:
 
-```Python
-commons: CommonQueryParams = Depends()
-```
+=== "Python 3.6+"
+
+    ```Python
+    关键因素是依赖项应该是 "可调用对象"。
+    ```
+
+=== "Python 3.6 non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    commons: CommonQueryParams = Depends()
+    ```
 
 您声明依赖项作为参数的类型，并使用 `Depends()` 作为该函数的参数的 "默认" 值(在 `=` 之后)，而在 `Depends()` 中没有任何参数，而不是在 `Depends(CommonQueryParams)` 编写完整的类。
 
@@ -229,11 +440,35 @@ commons: CommonQueryParams = Depends()
 
 === "Python 3.10+"
 
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial004_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="19"
+    {!> ../../../docs_src/dependencies/tutorial004_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="20"
+    {!> ../../../docs_src/dependencies/tutorial004_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
     ```Python hl_lines="17"
     {!> ../../../docs_src/dependencies/tutorial004_py310.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
     ```Python hl_lines="19"
     {!> ../../../docs_src/dependencies/tutorial004.py!}
@@ -242,6 +477,6 @@ commons: CommonQueryParams = Depends()
 ... **FastAPI** 会知道怎么处理。
 
 !!! tip
-    如果这看起来更加混乱而不是更加有帮助，那么请忽略它，你不*需要*它。
+    If that seems more confusing than helpful, disregard it, you don't *need* it.
 
-    这只是一个快捷方式。因为 **FastAPI** 关心的是帮助您减少代码重复。
+    这只是一个快捷方式。 因为 **FastAPI** 关心的是帮助您减少代码重复。

@@ -25,10 +25,12 @@ $ uvicorn main:app --reload
 <span style="color: green;">INFO</span>:     Waiting for application startup.
 <span style="color: green;">INFO</span>:     Application startup complete.
 ```
+<span style="color: green;">INFO</span>:     Application startup complete.
+```
 
 </div>
 
-强烈建议你在本地编写或复制代码，对其进行编辑并运行。
+**强烈建议**你在本地编写或复制代码，对其进行编辑并运行。
 
 在编辑器中使用 FastAPI 会真正地展现出它的优势：只需要编写很少的代码，所有的类型检查，代码补全等等。
 
@@ -52,7 +54,7 @@ $ pip install "fastapi[all]"
 
 ......以上安装还包括了 `uvicorn`，你可以将其用作运行代码的服务器。
 
-!!! note
+!!! note "说明"
     你也可以分开来安装。
 
     假如你想将应用程序部署到生产环境，你可能要执行以下操作：
@@ -61,11 +63,13 @@ $ pip install "fastapi[all]"
     pip install fastapi
     ```
 
+
     并且安装`uvicorn`来作为服务器：
 
     ```
     pip install "uvicorn[standard]"
     ```
+
 
     然后对你想使用的每个可选依赖项也执行相同的操作。
 

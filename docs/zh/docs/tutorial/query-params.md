@@ -6,7 +6,7 @@
 {!../../../docs_src/query_params/tutorial001.py!}
 ```
 
-查询字符串是键值对的集合，这些键值对位于 URL 的 `？` 之后，并以 `&` 符号分隔。
+查询字符串是键值对的集合，这些键值对位于 URL 的 `？ ` 之后，并以 `&` 符号分隔。
 
 例如，在以下 url 中：
 
@@ -42,7 +42,7 @@ http://127.0.0.1:8000/items/?skip=0&limit=10
 http://127.0.0.1:8000/items/
 ```
 
-将与访问以下地址相同：
+would be the same as going to:
 
 ```
 http://127.0.0.1:8000/items/?skip=0&limit=10
@@ -63,22 +63,41 @@ http://127.0.0.1:8000/items/?skip=20
 
 通过同样的方式，你可以将它们的默认值设置为 `None` 来声明可选查询参数：
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params/tutorial002.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7"
+    将与访问以下地址相同：
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!../../../docs_src/query_params/tutorial002.py!}
+    ```
 
 在这个例子中，函数参数 `q` 将是可选的，并且默认值为 `None`。
 
 !!! check
-    还要注意的是，**FastAPI** 足够聪明，能够分辨出参数 `item_id` 是路径参数而 `q` 不是，因此 `q` 是一个查询参数。
+    Also notice that **FastAPI** is smart enough to notice that the path parameter `item_id` is a path parameter and `q` is not, so, it's a query parameter.
 
 ## 查询参数类型转换
 
 你还可以声明 `bool` 类型，它们将被自动转换：
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="7"
+    {!../../../docs_src/query_params/tutorial003.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    !!! check
+    还要注意的是，<strong x-id="1">FastAPI</strong> 足够聪明，能够分辨出参数 <code>item_id</code> 是路径参数而 <code>q</code> 不是，因此 <code>q</code> 是一个查询参数。
+    ```
+ 是路径参数而 q 不是，因此 q 是一个查询参数。
+</code>
 
 这个例子中，如果你访问：
 
@@ -110,7 +129,7 @@ http://127.0.0.1:8000/items/foo?short=on
 http://127.0.0.1:8000/items/foo?short=yes
 ```
 
-或任何其他的变体形式（大写，首字母大写等等），你的函数接收的 `short` 参数都会是布尔值 `True`。对于值为 `False` 的情况也是一样的。
+或任何其他的变体形式（大写，首字母大写等等），你的函数接收的 `short` 参数都会是布尔值 `True`。 对于值为 `False` 的情况也是一样的。
 
 
 ## 多个路径和查询参数
@@ -121,9 +140,17 @@ http://127.0.0.1:8000/items/foo?short=yes
 
 它们将通过名称被检测到：
 
-```Python hl_lines="6  8"
-{!../../../docs_src/query_params/tutorial004.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="6  8"
+    {!> ../../../docs_src/query_params/tutorial004_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="8  10"
+    {!../../../docs_src/query_params/tutorial004.py!}
+    ```
 
 ## 必需查询参数
 
@@ -179,9 +206,20 @@ http://127.0.0.1:8000/items/foo-item?needy=sooooneedy
 
 当然，你也可以定义一些参数为必需的，一些具有默认值，而某些则完全是可选的：
 
-```Python hl_lines="7"
-{!../../../docs_src/query_params/tutorial006.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="8"
+    {!../../../docs_src/query_params/tutorial006.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    !!! tip
+    你还可以像在 <a href="path-params.md#predefined-values">路径参数</a>{.internal-link target=_blank} 中那样使用 <code>Enum</code>。
+    ```
+。
+</code>
 
 在这个例子中，有3个查询参数：
 
@@ -190,4 +228,4 @@ http://127.0.0.1:8000/items/foo-item?needy=sooooneedy
 * `limit`，一个可选的 `int` 类型参数。
 
 !!! tip
-    你还可以像在 [路径参数](path-params.md#predefined-values){.internal-link target=_blank} 中那样使用 `Enum`。
+    You could also use `Enum`s the same way as with [Path Parameters](path-params.md#predefined-values){.internal-link target=_blank}.

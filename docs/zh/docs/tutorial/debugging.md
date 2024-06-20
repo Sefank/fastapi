@@ -1,4 +1,4 @@
-# 调试
+# Debugging
 
 你可以在编辑器中连接调试器，例如使用 Visual Studio Code 或 PyCharm。
 
@@ -44,11 +44,13 @@ $ python myapp.py
 
 那么文件中由 Python 自动创建的内部变量 `__name__`，会将字符串 `"__main__"` 作为值。
 
-所以，下面这部分代码才会运行：
+So, the section:
 
 ```Python
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
+
+will run.
 
 ---
 
@@ -64,13 +66,15 @@ from myapp import app
 
 在这种情况下，`myapp.py` 内部的自动变量不会有值为 `"__main__"` 的变量 `__name__`。
 
-所以，下面这一行不会被执行：
+So, the line:
 
 ```Python
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
-!!! info
+will not be executed.
+
+!!! !!! info
     更多信息请检查 <a href="https://docs.python.org/3/library/__main__.html" class="external-link" target="_blank">Python 官方文档</a>.
 
 ## 使用你的调试器运行代码
@@ -81,7 +85,7 @@ from myapp import app
 
 例如，你可以在 Visual Studio Code 中：
 
-* 进入到「调试」面板。
+* Go to the "Debug" panel.
 * 「添加配置...」。
 * 选中「Python」
 * 运行「Python：当前文件（集成终端）」选项的调试器。
@@ -90,14 +94,14 @@ from myapp import app
 
 看起来可能是这样：
 
-<img src="/img/tutorial/debugging/image01.png">
+<img src="/img/tutorial/debugging/image01.png" />
 
 ---
 
 如果使用 Pycharm，你可以：
 
 * 打开「运行」菜单。
-* 选中「调试...」。
+* Select the option "Debug...".
 * 然后出现一个上下文菜单。
 * 选择要调试的文件（本例中的 `main.py`）。
 
@@ -105,4 +109,4 @@ from myapp import app
 
 看起来可能是这样：
 
-<img src="/img/tutorial/debugging/image02.png">
+<img src="/img/tutorial/debugging/image02.png" />

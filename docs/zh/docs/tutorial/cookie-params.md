@@ -6,9 +6,44 @@
 
 首先，导入 `Cookie`:
 
-```Python hl_lines="3"
-{!../../../docs_src/cookie_params/tutorial001.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/cookie_params/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/cookie_params/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/cookie_params/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1"
+    {!../../../docs_src/cookie_params/tutorial001.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="3"
+    !!! info
+    你需要使用 <code>Cookie</code> 来声明 cookie 参数，否则参数将会被解释为查询参数。
+    ```
+ 来声明 cookie 参数，否则参数将会被解释为查询参数。
+</code>
 
 ## 声明 `Cookie` 参数
 
@@ -16,19 +51,53 @@
 
 第一个值是参数的默认值，同时也可以传递所有验证参数或注释参数，来校验参数：
 
+=== "Python 3.10+"
 
-```Python hl_lines="9"
-{!../../../docs_src/cookie_params/tutorial001.py!}
-```
+    ```Python hl_lines="9"
+    总结
+    ```
 
-!!! note "技术细节"
-    `Cookie` 、`Path` 、`Query`是兄弟类，它们都继承自公共的 `Param` 类
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/cookie_params/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!../../../docs_src/cookie_params/tutorial001.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/cookie_params/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    !!! note "技术细节"
+    <code>Cookie</code> 、<code>Path</code> 、<code>Query</code>是兄弟类，它们都继承自公共的 <code>Param</code> 类
+    ```
+ 、Path 、Query是兄弟类，它们都继承自公共的 Param 类
+</code>
+
+!!! note "Technical Details"
+    `Cookie` is a "sister" class of `Path` and `Query`. It also inherits from the same common `Param` class.
 
     但请记住，当你从 `fastapi` 导入的 `Query`、`Path`、`Cookie` 或其他参数声明函数，这些实际上是返回特殊类的函数。
 
 !!! info
-    你需要使用 `Cookie` 来声明 cookie 参数，否则参数将会被解释为查询参数。
+    To declare cookies, you need to use `Cookie`, because otherwise the parameters would be interpreted as query parameters.
 
-## 总结
+## Recap
 
 使用 `Cookie` 声明 cookie 参数，使用方式与 `Query` 和 `Path` 类似。

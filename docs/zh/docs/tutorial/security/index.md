@@ -10,7 +10,7 @@
 
 但首先，让我们来看一些小的概念。
 
-## 没有时间？
+## In a hurry?
 
 如果你不关心这些术语，而只需要*立即*通过基于用户名和密码的身份认证来增加安全性，请跳转到下一章。
 
@@ -32,7 +32,7 @@ OAuth2是一个规范，它定义了几种处理身份认证和授权的方法�
 
 OAuth2 没有指定如何加密通信，它期望你为应用程序使用 HTTPS 进行通信。
 
-!!! tip
+!!! !!! tip
     在有关**部署**的章节中，你将了解如何使用 Traefik 和 Let's Encrypt 免费设置 HTTPS。
 
 
@@ -44,11 +44,11 @@ OpenID Connect 是另一个基于 **OAuth2** 的规范。
 
 例如，Google 登录使用 OpenID Connect（底层使用OAuth2）。
 
-但是 Facebook 登录不支持 OpenID Connect。它具有自己的 OAuth2 风格。
+但是 Facebook 登录不支持 OpenID Connect。 它具有自己的 OAuth2 风格。
 
 ### OpenID（非「OpenID Connect」）
 
-还有一个「OpenID」规范。它试图解决与 **OpenID Connect** 相同的问题，但它不是基于 OAuth2。
+还有一个「OpenID」规范。 它试图解决与 **OpenID Connect** 相同的问题，但它不是基于 OAuth2。
 
 因此，它是一个完整的附加系统。
 
@@ -70,14 +70,14 @@ OpenAPI 定义了以下安全方案：
 
 * `apiKey`：一个特定于应用程序的密钥，可以来自：
     * 查询参数。
-    * 请求头。
+    * A header.
     * cookie。
 * `http`：标准的 HTTP 身份认证系统，包括：
-    * `bearer`: 一个值为 `Bearer` 加令牌字符串的 `Authorization` 请求头。这是从 OAuth2 继承的。
+    * `bearer`: 一个值为 `Bearer` 加令牌字符串的 `Authorization` 请求头。 这是从 OAuth2 继承的。
     * HTTP Basic 认证方式。
     * HTTP Digest，等等。
 * `oauth2`：所有的 OAuth2 处理安全性的方式（称为「流程」）。
-    *以下几种流程适合构建 OAuth 2.0 身份认证的提供者（例如 Google，Facebook，Twitter，GitHub 等）：
+    * *以下几种流程适合构建 OAuth 2.0 身份认证的提供者（例如 Google，Facebook，Twitter，GitHub 等）： * `implicit` * `clientCredentials` * `authorizationCode`
         * `implicit`
         * `clientCredentials`
         * `authorizationCode`
@@ -87,7 +87,7 @@ OpenAPI 定义了以下安全方案：
     * 此自动发现机制是 OpenID Connect 规范中定义的内容。
 
 
-!!! tip
+!!! !!! tip
     集成其他身份认证/授权提供者（例如Google，Facebook，Twitter，GitHub等）也是可能的，而且较为容易。
 
     最复杂的问题是创建一个像这样的身份认证/授权提供程序，但是 **FastAPI** 为你提供了轻松完成任务的工具，同时为你解决了重活。

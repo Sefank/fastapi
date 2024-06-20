@@ -1,139 +1,139 @@
-# Python 类型提示简介
+# Python Types Intro
 
-**Python 3.6+ 版本**加入了对"类型提示"的支持。
+Python has support for optional "type hints" (also called "type annotations").
 
-这些**"类型提示"**是一种新的语法（在 Python 3.6 版本加入）用来声明一个变量的<abbr title="例如：str、int、float、bool">类型</abbr>。
+These **"type hints"** or annotations are a special syntax that allow declaring the <abbr title="for example: str, int, float, bool">type</abbr> of a variable.
 
-通过声明变量的类型，编辑器和一些工具能给你提供更好的支持。
+By declaring types for your variables, editors and tools can give you better support.
 
-这只是一个关于 Python 类型提示的**快速入门 / 复习**。它仅涵盖与 **FastAPI** 一起使用所需的最少部分...实际上只有很少一点。
+This is just a **quick tutorial / refresher** about Python type hints. It covers only the minimum necessary to use them with **FastAPI**... which is actually very little.
 
-整个 **FastAPI** 都基于这些类型提示构建，它们带来了许多优点和好处。
+**FastAPI** is all based on these type hints, they give it many advantages and benefits.
 
-但即使你不会用到 **FastAPI**，了解一下类型提示也会让你从中受益。
+But even if you never use **FastAPI**, you would benefit from learning a bit about them.
 
 !!! note
-    如果你已经精通 Python，并且了解关于类型提示的一切知识，直接跳到下一章节吧。
+    If you are a Python expert, and you already know everything about type hints, skip to the next chapter.
 
-## 动机
+## Motivation
 
-让我们从一个简单的例子开始：
+Let's start with a simple example:
 
 ```Python
 {!../../../docs_src/python_types/tutorial001.py!}
 ```
 
-运行这段程序将输出：
+Calling this program outputs:
 
 ```
 John Doe
 ```
 
-这个函数做了下面这些事情：
+The function does the following:
 
-* 接收 `first_name` 和 `last_name` 参数。
-* 通过 `title()` 将每个参数的第一个字母转换为大写形式。
-* 中间用一个空格来<abbr title="将它们按顺序放置组合成一个整体。">拼接</abbr>它们。
+* Takes a `first_name` and `last_name`.
+* Converts the first letter of each one to upper case with `title()`.
+* <abbr title="Puts them together, as one. With the contents of one after the other.">Concatenates</abbr> them with a space in the middle.
 
 ```Python hl_lines="2"
 {!../../../docs_src/python_types/tutorial001.py!}
 ```
 
-### 修改示例
+### Edit it
 
-这是一个非常简单的程序。
+It's a very simple program.
 
-现在假设你将从头开始编写这段程序。
+But now imagine that you were writing it from scratch.
 
-在某一时刻，你开始定义函数，并且准备好了参数...。
+At some point you would have started the definition of the function, you had the parameters ready...
 
-现在你需要调用一个"将第一个字母转换为大写形式的方法"。
+But then you have to call "that method that converts the first letter to upper case".
 
-等等，那个方法是什么来着？`upper`？还是 `uppercase`？`first_uppercase`？`capitalize`？
+Was it `upper`? Was it `uppercase`? `first_uppercase`? `capitalize`?
 
-然后你尝试向程序员老手的朋友——编辑器自动补全寻求帮助。
+Then, you try with the old programmer's friend, editor autocompletion.
 
-输入函数的第一个参数 `first_name`，输入点号（`.`）然后敲下 `Ctrl+Space` 来触发代码补全。
+You type the first parameter of the function, `first_name`, then a dot (`.`) and then hit `Ctrl+Space` to trigger the completion.
 
-但遗憾的是并没有起什么作用：
+But, sadly, you get nothing useful:
 
-<img src="https://fastapi.tiangolo.com/img/python-types/image01.png">
+<img src="/img/python-types/image01.png" />
 
-### 添加类型
+### Add types
 
-让我们来修改上面例子的一行代码。
+Let's modify a single line from the previous version.
 
-我们将把下面这段代码中的函数参数从：
+We will change exactly this fragment, the parameters of the function, from:
 
 ```Python
     first_name, last_name
 ```
 
-改成：
+to:
 
 ```Python
     first_name: str, last_name: str
 ```
 
-就是这样。
+That's it.
 
-这些就是"类型提示"：
+Those are the "type hints":
 
 ```Python hl_lines="1"
 {!../../../docs_src/python_types/tutorial002.py!}
 ```
 
-这和声明默认值是不同的，例如：
+That is not the same as declaring default values like would be with:
 
 ```Python
     first_name="john", last_name="doe"
 ```
 
-这两者不一样。
+It's a different thing.
 
-我们用的是冒号（`:`），不是等号（`=`）。
+We are using colons (`:`), not equals (`=`).
 
-而且添加类型提示一般不会改变原来的运行结果。
+And adding type hints normally doesn't change what happens from what would happen without them.
 
-现在假设我们又一次正在创建这个函数，这次添加了类型提示。
+But now, imagine you are again in the middle of creating that function, but with type hints.
 
-在同样的地方，通过 `Ctrl+Space` 触发自动补全，你会发现：
+At the same point, you try to trigger the autocomplete with `Ctrl+Space` and you see:
 
-<img src="https://fastapi.tiangolo.com/img/python-types/image02.png">
+<img src="/img/python-types/image02.png" />
 
-这样，你可以滚动查看选项，直到你找到看起来眼熟的那个：
+With that, you can scroll, seeing the options, until you find the one that "rings a bell":
 
-<img src="https://fastapi.tiangolo.com/img/python-types/image03.png">
+<img src="/img/python-types/image03.png" />
 
-## 更多动机
+## More motivation
 
-下面是一个已经有类型提示的函数：
+Check this function, it already has type hints:
 
 ```Python hl_lines="1"
 {!../../../docs_src/python_types/tutorial003.py!}
 ```
 
-因为编辑器已经知道了这些变量的类型，所以不仅能对代码进行补全，还能检查其中的错误：
+Because the editor knows the types of the variables, you don't only get completion, you also get error checks:
 
-<img src="https://fastapi.tiangolo.com/img/python-types/image04.png">
+<img src="/img/python-types/image04.png" />
 
-现在你知道了必须先修复这个问题，通过 `str(age)` 把 `age` 转换成字符串：
+Now you know that you have to fix it, convert `age` to a string with `str(age)`:
 
 ```Python hl_lines="2"
 {!../../../docs_src/python_types/tutorial004.py!}
 ```
 
-## 声明类型
+## Declaring types
 
-你刚刚看到的就是声明类型提示的主要场景。用于函数的参数。
+You just saw the main place to declare type hints. As function parameters.
 
-这也是你将在 **FastAPI** 中使用它们的主要场景。
+This is also the main place you would use them with **FastAPI**.
 
-### 简单类型
+### Simple types
 
-不只是 `str`，你能够声明所有的标准 Python 类型。
+You can declare all the standard Python types, not only `str`.
 
-比如以下类型：
+You can use, for example:
 
 * `int`
 * `float`
@@ -144,143 +144,395 @@ John Doe
 {!../../../docs_src/python_types/tutorial005.py!}
 ```
 
-### 嵌套类型
+### Generic types with type parameters
 
-有些容器数据结构可以包含其他的值，比如 `dict`、`list`、`set` 和 `tuple`。它们内部的值也会拥有自己的类型。
+There are some data structures that can contain other values, like `dict`, `list`, `set` and `tuple`. And the internal values can have their own type too.
 
-你可以使用 Python 的 `typing` 标准库来声明这些类型以及子类型。
+These types that have internal types are called "**generic**" types. And it's possible to declare them, even with their internal types.
 
-它专门用来支持这些类型提示。
+To declare those types and the internal types, you can use the standard Python module `typing`. It exists specifically to support these type hints.
 
-#### 列表
+#### Newer versions of Python
 
-例如，让我们来定义一个由 `str` 组成的 `list` 变量。
+The syntax using `typing` is **compatible** with all versions, from Python 3.6 to the latest ones, including Python 3.9, Python 3.10, etc.
 
-从 `typing` 模块导入 `List`（注意是大写的 `L`）：
+As Python advances, **newer versions** come with improved support for these type annotations and in many cases you won't even need to import and use the `typing` module to declare the type annotations.
 
-```Python hl_lines="1"
-{!../../../docs_src/python_types/tutorial006.py!}
-```
+If you can choose a more recent version of Python for your project, you will be able to take advantage of that extra simplicity.
 
-同样以冒号（`:`）来声明这个变量。
+In all the docs there are examples compatible with each version of Python (when there's a difference).
 
-输入 `List` 作为类型。
+For example "**Python 3.6+**" means it's compatible with Python 3.6 or above (including 3.7, 3.8, 3.9, 3.10, etc). And "**Python 3.9+**" means it's compatible with Python 3.9 or above (including 3.10, etc).
 
-由于列表是带有"子类型"的类型，所以我们把子类型放在方括号中：
+If you can use the **latest versions of Python**, use the examples for the latest version, those will have the **best and simplest syntax**, for example, "**Python 3.10+**".
 
-```Python hl_lines="4"
-{!../../../docs_src/python_types/tutorial006.py!}
-```
+#### List
 
-这表示："变量 `items` 是一个 `list`，并且这个列表里的每一个元素都是 `str`"。
+For example, let's define a variable to be a `list` of `str`.
 
-这样，即使在处理列表中的元素时，你的编辑器也可以提供支持。
+=== "Python 3.9+"
 
-没有类型，几乎是不可能实现下面这样：
+    Declare the variable, with the same colon (`:`) syntax.
+    
+    As the type, put `list`.
+    
+    As the list is a type that contains some internal types, you put them in square brackets:
 
-<img src="https://fastapi.tiangolo.com/img/python-types/image05.png">
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/python_types/tutorial006_py39.py!}
+    ```
 
-注意，变量 `item` 是列表 `items` 中的元素之一。
+=== "Python 3.6+"
 
-而且，编辑器仍然知道它是一个 `str`，并为此提供了支持。
+    From `typing`, import `List` (with a capital `L`):
 
-#### 元组和集合
+    ``` Python hl_lines="1"
+    {!> ../../../docs_src/python_types/tutorial006.py!}
+    ```
 
-声明 `tuple` 和 `set` 的方法也是一样的：
+
+    Declare the variable, with the same colon (`:`) syntax.
+    
+    As the type, put the `List` that you imported from `typing`.
+    
+    As the list is a type that contains some internal types, you put them in square brackets:
+
+    ```Python hl_lines="4"
+    {!> ../../../docs_src/python_types/tutorial006.py!}
+    ```
+
+!!! info
+    Those internal types in the square brackets are called "type parameters".
+
+    In this case, `str` is the type parameter passed to `List` (or `list` in Python 3.9 and above).
+
+That means: "the variable `items` is a `list`, and each of the items in this list is a `str`".
+
+!!! tip
+    If you use Python 3.9 or above, you don't have to import `List` from `typing`, you can use the same regular `list` type instead.
+
+By doing that, your editor can provide support even while processing items from the list:
+
+<img src="/img/python-types/image05.png" />
+
+Without types, that's almost impossible to achieve.
+
+Notice that the variable `item` is one of the elements in the list `items`.
+
+And still, the editor knows it is a `str`, and provides support for that.
+
+#### Tuple and Set
+
+You would do the same to declare `tuple`s and `set`s:
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/python_types/tutorial007_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  4"
+    {!> ../../../docs_src/python_types/tutorial007.py!}
+    ```
+
+This means:
+
+* The variable `items_t` is a `tuple` with 3 items, an `int`, another `int`, and a `str`.
+* The variable `items_s` is a `set`, and each of its items is of type `bytes`.
+
+#### Dict
+
+To define a `dict`, you pass 2 type parameters, separated by commas.
+
+The first type parameter is for the keys of the `dict`.
+
+The second type parameter is for the values of the `dict`:
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/python_types/tutorial008_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  4"
+    {!> ../../../docs_src/python_types/tutorial008.py!}
+    ```
+
+This means:
+
+* The variable `prices` is a `dict`:
+    * The keys of this `dict` are of type `str` (let's say, the name of each item).
+    * The values of this `dict` are of type `float` (let's say, the price of each item).
+
+#### Union
+
+You can declare that a variable can be any of **several types**, for example, an `int` or a `str`.
+
+In Python 3.6 and above (including Python 3.10) you can use the `Union` type from `typing` and put inside the square brackets the possible types to accept.
+
+In Python 3.10 there's also a **new syntax** where you can put the possible types separated by a <abbr title='also called "bitwise or operator", but that meaning is not relevant here'>vertical bar (`|`)</abbr>.
+
+=== "Python 3.10+"
+
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/python_types/tutorial008b_py310.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  4"
+    {!> ../../../docs_src/python_types/tutorial008b.py!}
+    ```
+
+In both cases this means that `item` could be an `int` or a `str`.
+
+#### Possibly `None`
+
+You can declare that a value could have a type, like `str`, but that it could also be `None`.
+
+In Python 3.6 and above (including Python 3.10) you can declare it by importing and using `Optional` from the `typing` module.
 
 ```Python hl_lines="1  4"
-{!../../../docs_src/python_types/tutorial007.py!}
+{!../../../docs_src/python_types/tutorial009.py!}
 ```
 
-这表示：
+Using `Optional[str]` instead of just `str` will let the editor help you detecting errors where you could be assuming that a value is always a `str`, when it could actually be `None` too.
 
-* 变量 `items_t` 是一个 `tuple`，其中的前两个元素都是 `int` 类型, 最后一个元素是 `str` 类型。
-* 变量 `items_s` 是一个 `set`，其中的每个元素都是 `bytes` 类型。
+`Optional[Something]` is actually a shortcut for `Union[Something, None]`, they are equivalent.
 
-#### 字典
+This also means that in Python 3.10, you can use `Something | None`:
 
-定义 `dict` 时，需要传入两个子类型，用逗号进行分隔。
+=== "Python 3.10+"
 
-第一个子类型声明 `dict` 的所有键。
+    ```Python hl_lines="1"
+    {!> ../../../docs_src/python_types/tutorial009_py310.py!}
+    ```
 
-第二个子类型声明 `dict` 的所有值：
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  4"
+    {!> ../../../docs_src/python_types/tutorial009.py!}
+    ```
+
+=== "Python 3.6+ alternative"
+
+    ```Python hl_lines="1  4"
+    {!> ../../../docs_src/python_types/tutorial009b.py!}
+    ```
+
+#### Using `Union` or `Optional`
+
+If you are using a Python version below 3.10, here's a tip from my very **subjective** point of view:
+
+* 🚨 Avoid using `Optional[SomeType]`
+* Instead ✨ **use `Union[SomeType, None]`** ✨.
+
+Both are equivalent and underneath they are the same, but I would recommend `Union` instead of `Optional` because the word "**optional**" would seem to imply that the value is optional, and it actually means "it can be `None`", even if it's not optional and is still required.
+
+I think `Union[SomeType, None]` is more explicit about what it means.
+
+It's just about the words and names. But those words can affect how you and your teammates think about the code.
+
+As an example, let's take this function:
 
 ```Python hl_lines="1  4"
-{!../../../docs_src/python_types/tutorial008.py!}
+{!../../../docs_src/python_types/tutorial009c.py!}
 ```
 
-这表示：
+The parameter `name` is defined as `Optional[str]`, but it is **not optional**, you cannot call the function without the parameter:
 
-* 变量 `prices` 是一个 `dict`：
-    * 这个 `dict` 的所有键为 `str` 类型（可以看作是字典内每个元素的名称）。
-    * 这个 `dict` 的所有值为 `float` 类型（可以看作是字典内每个元素的价格）。
+```Python
+say_hi()  # Oh, no, this throws an error! 😱
+```
 
-### 类作为类型
+The `name` parameter is **still required** (not *optional*) because it doesn't have a default value. Still, `name` accepts `None` as the value:
 
-你也可以将类声明为变量的类型。
+```Python
+say_hi(name=None)  # This works, None is valid 🎉
+```
 
-假设你有一个名为 `Person` 的类，拥有 name 属性：
+The good news is, once you are on Python 3.10 you won't have to worry about that, as you will be able to simply use `|` to define unions of types:
+
+```Python hl_lines="1  4"
+{!../../../docs_src/python_types/tutorial009c_py310.py!}
+```
+
+And then you won't have to worry about names like `Optional` and `Union`. 😎
+
+#### Generic types
+
+These types that take type parameters in square brackets are called **Generic types** or **Generics**, for example:
+
+=== "Python 3.10+"
+
+    You can use the same builtin types as generics (with square brackets and types inside):
+
+    * `list`
+    * `tuple`
+    * `set`
+    * `dict`
+
+    And the same as with Python 3.6, from the `typing` module:
+
+    * `Union`
+    * `Optional` (the same as with Python 3.6)
+    * ...and others.
+
+    In Python 3.10, as an alternative to using the generics `Union` and `Optional`, you can use the <abbr title='also called "bitwise or operator", but that meaning is not relevant here'>vertical bar (`|`)</abbr> to declare unions of types, that's a lot better and simpler.
+
+=== "Python 3.9+"
+
+    You can use the same builtin types as generics (with square brackets and types inside):
+
+    * `list`
+    * `tuple`
+    * `set`
+    * `dict`
+
+    And the same as with Python 3.6, from the `typing` module:
+
+    * `Union`
+    * `Optional`
+    * ...and others.
+
+=== "Python 3.6+"
+
+    * `List`
+    * `Tuple`
+    * `Set`
+    * `Dict`
+    * `Union`
+    * `Optional`
+    * ...and others.
+
+### Classes as types
+
+You can also declare a class as the type of a variable.
+
+Let's say you have a class `Person`, with a name:
 
 ```Python hl_lines="1-3"
 {!../../../docs_src/python_types/tutorial010.py!}
 ```
 
-接下来，你可以将一个变量声明为 `Person` 类型：
+Then you can declare a variable to be of type `Person`:
 
 ```Python hl_lines="6"
 {!../../../docs_src/python_types/tutorial010.py!}
 ```
 
-然后，你将再次获得所有的编辑器支持：
+And then, again, you get all the editor support:
 
-<img src="https://fastapi.tiangolo.com/img/python-types/image06.png">
+<img src="/img/python-types/image06.png" />
 
-## Pydantic 模型
+Notice that this means "`one_person` is an **instance** of the class `Person`".
 
-<a href="https://pydantic-docs.helpmanual.io/" class="external-link" target="_blank">Pydantic</a> 是一个用来用来执行数据校验的 Python 库。
+It doesn't mean "`one_person` is the **class** called `Person`".
 
-你可以将数据的"结构"声明为具有属性的类。
+## Pydantic models
 
-每个属性都拥有类型。
+<a href="https://pydantic-docs.helpmanual.io/" class="external-link" target="_blank">Pydantic</a> is a Python library to perform data validation.
 
-接着你用一些值来创建这个类的实例，这些值会被校验，并被转换为适当的类型（在需要的情况下），返回一个包含所有数据的对象。
+You declare the "shape" of the data as classes with attributes.
 
-然后，你将获得这个对象的所有编辑器支持。
+And each attribute has a type.
 
-下面的例子来自 Pydantic 官方文档：
+Then you create an instance of that class with some values and it will validate the values, convert them to the appropriate type (if that's the case) and give you an object with all the data.
 
-```Python
-{!../../../docs_src/python_types/tutorial010.py!}
-```
+And you get all the editor support with that resulting object.
 
-!!! info
-    想进一步了解 <a href="https://pydantic-docs.helpmanual.io/" class="external-link" target="_blank">Pydantic，请阅读其文档</a>.
+An example from the official Pydantic docs:
 
-整个 **FastAPI** 建立在 Pydantic 的基础之上。
+=== "Python 3.10+"
 
-实际上你将在 [教程 - 用户指南](tutorial/index.md){.internal-link target=_blank} 看到很多这种情况。
+    ```Python
+    {!> ../../../docs_src/python_types/tutorial011_py310.py!}
+    ```
 
-## **FastAPI** 中的类型提示
+=== "Python 3.9+"
 
-**FastAPI** 利用这些类型提示来做下面几件事。
+    ```Python
+    {!> ../../../docs_src/python_types/tutorial011_py39.py!}
+    ```
 
-使用 **FastAPI** 时用类型提示声明参数可以获得：
+=== "Python 3.6+"
 
-* **编辑器支持**。
-* **类型检查**。
-
-...并且 **FastAPI** 还会用这些类型声明来：
-
-* **定义参数要求**：声明对请求路径参数、查询参数、请求头、请求体、依赖等的要求。
-* **转换数据**：将来自请求的数据转换为需要的类型。
-* **校验数据**： 对于每一个请求：
-    * 当数据校验失败时自动生成**错误信息**返回给客户端。
-* 使用 OpenAPI **记录** API：
-    * 然后用于自动生成交互式文档的用户界面。
-
-听上去有点抽象。不过不用担心。你将在 [教程 - 用户指南](tutorial/index.md){.internal-link target=_blank} 中看到所有的实战。
-
-最重要的是，通过使用标准的 Python 类型，只需要在一个地方声明（而不是添加更多的类、装饰器等），**FastAPI** 会为你完成很多的工作。
+    ```Python
+    {!> ../../../docs_src/python_types/tutorial011.py!}
+    ```
 
 !!! info
-    如果你已经阅读了所有教程，回过头来想了解有关类型的更多信息，<a href="https://mypy.readthedocs.io/en/latest/cheat_sheet_py3.html" class="external-link" target="_blank">来自 `mypy` 的"速查表"</a>是不错的资源。
+    To learn more about <a href="https://pydantic-docs.helpmanual.io/" class="external-link" target="_blank">Pydantic, check its docs</a>.
+
+**FastAPI** is all based on Pydantic.
+
+You will see a lot more of all this in practice in the [Tutorial - User Guide](tutorial/index.md){.internal-link target=_blank}.
+
+!!! tip
+    Pydantic has a special behavior when you use `Optional` or `Union[Something, None]` without a default value, you can read more about it in the Pydantic docs about <a href="https://pydantic-docs.helpmanual.io/usage/models/#required-optional-fields" class="external-link" target="_blank">Required Optional fields</a>.
+
+## Type Hints with Metadata Annotations
+
+Python also has a feature that allows putting **additional metadata** in these type hints using `Annotated`.
+
+=== "Python 3.9+"
+
+    In Python 3.9, `Annotated` is part of the standard library, so you can import it from `typing`.
+
+    ```Python hl_lines="1  4"
+    {!> ../../../docs_src/python_types/tutorial013_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    In versions below Python 3.9, you import `Annotated` from `typing_extensions`.
+    
+    It will already be installed with **FastAPI**.
+
+    ```Python hl_lines="1  4"
+    {!> ../../../docs_src/python_types/tutorial013.py!}
+    ```
+
+Python itself doesn't do anything with this `Annotated`. And for editors and other tools, the type is still `str`.
+
+But you can use this space in `Annotated` to provide **FastAPI** with additional metadata about how you want your application to behave.
+
+The important thing to remember is that ***the first ***type parameter****** you pass to `Annotated` is the **actual type**. The rest, is just metadata for other tools.
+
+For now, you just need to know that `Annotated` exists, and that it's standard Python. 😎
+
+Later you will see how **powerful** it can be.
+
+!!! tip
+    The fact that this is **standard Python** means that you will still get the **best possible developer experience** in your editor, with the tools you use to analyze and refactor your code, etc. ✨
+
+    And also that your code will be very compatible with many other Python tools and libraries. 🚀
+
+## Type hints in **FastAPI**
+
+**FastAPI** takes advantage of these type hints to do several things.
+
+With **FastAPI** you declare parameters with type hints and you get:
+
+* **Editor support**.
+* **Type checks**.
+
+...and **FastAPI** uses the same declarations to:
+
+* **Define requirements**: from request path parameters, query parameters, headers, bodies, dependencies, etc.
+* **Convert data**: from the request to the required type.
+* **Validate data**: coming from each request:
+    * Generating **automatic errors** returned to the client when the data is invalid.
+* **Document** the API using OpenAPI:
+    * which is then used by the automatic interactive documentation user interfaces.
+
+This might all sound abstract. Don't worry. You'll see all this in action in the [Tutorial - User Guide](tutorial/index.md){.internal-link target=_blank}.
+
+The important thing is that by using standard Python types, in a single place (instead of adding more classes, decorators, etc), **FastAPI** will do a lot of the work for you.
+
+!!! info
+    If you already went through all the tutorial and came back to see more about types, a good resource is <a href="https://mypy.readthedocs.io/en/latest/cheat_sheet_py3.html" class="external-link" target="_blank">the "cheat sheet" from `mypy`</a>.

@@ -36,7 +36,7 @@
 
 调用它的结果后就可以使用Python标准编码中的<a href="https://docs.python.org/3/library/json.html#json.dumps" class="external-link" target="_blank">`json.dumps()`</a>。
 
-这个操作不会返回一个包含JSON格式（作为字符串）数据的庞大的`str`。它将返回一个Python标准数据结构（例如`dict`），其值和子值都与JSON兼容。
+这个操作不会返回一个包含JSON格式（作为字符串）数据的庞大的`str`。 它将返回一个Python标准数据结构（例如`dict`），其值和子值都与JSON兼容。
 
-!!! note
-    `jsonable_encoder`实际上是FastAPI内部用来转换数据的。但是它在许多其他场景中也很有用。
+!!! !!! note
+    `jsonable_encoder`实际上是FastAPI内部用来转换数据的。 但是它在许多其他场景中也很有用。

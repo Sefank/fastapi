@@ -4,18 +4,18 @@
 
 这里所谓的客户端包括前端浏览器、其他应用程序、物联网设备等。
 
-需要向客户端返回错误提示的场景主要如下：
+You could need to tell the client that:
 
-- 客户端没有执行操作的权限
-- 客户端没有访问资源的权限
-- 客户端要访问的项目不存在
-- 等等 ...
+* 客户端没有执行操作的权限
+* 客户端没有访问资源的权限
+* 客户端要访问的项目不存在
+* etc.
 
 遇到这些情况时，通常要返回 **4XX**（400 至 499）**HTTP 状态码**。
 
-**4XX** 状态码与表示请求成功的 **2XX**（200 至 299） HTTP 状态码类似。
+This is similar to the 200 HTTP status codes (from 200 to 299). Those "200" status codes mean that somehow there was a "success" in the request.
 
-只不过，**4XX** 状态码表示客户端发生的错误。
+The status codes in the 400 range mean that there was an error from the client.
 
 大家都知道**「404 Not Found」**错误，还有调侃这个错误的笑话吧？
 
@@ -27,7 +27,6 @@
 
 ```Python hl_lines="1"
 {!../../../docs_src/handling_errors/tutorial001.py!}
-
 ```
 
 ### 触发 `HTTPException`
@@ -44,7 +43,6 @@
 
 ```Python hl_lines="11"
 {!../../../docs_src/handling_errors/tutorial001.py!}
-
 ```
 
 ### 响应结果
@@ -55,7 +53,6 @@
 {
   "item": "The Foo Wrestlers"
 }
-
 ```
 
 但如果客户端请求 `http://example.com/items/bar`（`item_id` `「bar」` 不存在时），则会接收到 HTTP 状态码 - 404（「未找到」错误）及如下 JSON 响应结果：
@@ -64,21 +61,15 @@
 {
   "detail": "Item not found"
 }
-
 ```
 
-!!! tip "提示"
+!!! 触发 `HTTPException` 时，可以用参数 `detail` 传递任何能转换为 JSON 的值，不仅限于 `str`。
 
-    触发 `HTTPException` 时，可以用参数 `detail` 传递任何能转换为 JSON 的值，不仅限于 `str`。
-
-    还支持传递 `dict`、`list` 等数据结构。
-
-    **FastAPI** 能自动处理这些数据，并将之转换为 JSON。
-
+    还支持传递 `dict`、`list` 等数据结构。 **FastAPI** 能自动处理这些数据，并将之转换为 JSON。
 
 ## 添加自定义响应头
 
-有些场景下要为 HTTP 错误添加自定义响应头。例如，出于某些方面的安全需要。
+有些场景下要为 HTTP 错误添加自定义响应头。 例如，出于某些方面的安全需要。
 
 一般情况下可能不会需要在代码中直接使用响应头。
 
@@ -86,7 +77,6 @@
 
 ```Python hl_lines="14"
 {!../../../docs_src/handling_errors/tutorial002.py!}
-
 ```
 
 ## 安装自定义异常处理器
@@ -101,7 +91,6 @@
 
 ```Python hl_lines="5-7  13-18  24"
 {!../../../docs_src/handling_errors/tutorial003.py!}
-
 ```
 
 请求 `/unicorns/yolo` 时，路径操作会触发 `UnicornException`。
@@ -111,30 +100,27 @@
 接收到的错误信息清晰明了，HTTP 状态码为 `418`，JSON 内容如下：
 
 ```JSON
-{"message": "Oops! yolo did something. There goes a rainbow..."}
-
+{"message": "Oops! yolo did something. {"message": "Oops! yolo did something. There goes a rainbow..."}
 ```
 
-!!! note "技术细节"
+!!! note "Technical Details"
+    You could also use `from starlette.requests import Request` and `from starlette.responses import JSONResponse`.
 
-    `from starlette.requests import Request` 和 `from starlette.responses import JSONResponse` 也可以用于导入 `Request` 和 `JSONResponse`。
+    `from starlette.requests import Request` 和 `from starlette.responses import JSONResponse` 也可以用于导入 `Request` 和 `JSONResponse`。 **FastAPI** 提供了与 `starlette.responses` 相同的 `fastapi.responses` 作为快捷方式，但大部分响应操作都可以直接从 Starlette 导入。 同理，`Request` 也是如此。
 
-    **FastAPI** 提供了与 `starlette.responses` 相同的 `fastapi.responses` 作为快捷方式，但大部分响应操作都可以直接从 Starlette 导入。同理，`Request` 也是如此。
-
-
-## 覆盖默认异常处理器
+## Override the default exception handlers
 
 **FastAPI** 自带了一些默认异常处理器。
 
 触发 `HTTPException` 或请求无效数据时，这些处理器返回默认的 JSON 响应结果。
 
-不过，也可以使用自定义处理器覆盖默认异常处理器。
+You can override these exception handlers with your own.
 
 ### 覆盖请求验证异常
 
 请求中包含无效数据时，**FastAPI** 内部会触发 `RequestValidationError`。
 
-该异常也内置了默认异常处理器。
+And it also includes a default exception handler for it.
 
 覆盖默认异常处理器时需要导入 `RequestValidationError`，并用 `@app.excption_handler(RequestValidationError)` 装饰异常处理器。
 
@@ -142,7 +128,6 @@
 
 ```Python hl_lines="2  14-16"
 {!../../../docs_src/handling_errors/tutorial004.py!}
-
 ```
 
 访问 `/items/foo`，可以看到以下内容替换了默认 JSON 错误信息：
@@ -160,30 +145,26 @@
         }
     ]
 }
-
 ```
 
-以下是文本格式的错误信息：
+you will get a text version, with:
 
 ```
 1 validation error
 path -> item_id
   value is not a valid integer (type=type_error.integer)
-
 ```
 
-### `RequestValidationError` vs `ValidationError`
+#### `RequestValidationError` vs `ValidationError`
 
-!!! warning "警告"
-
-    如果您觉得现在还用不到以下技术细节，可以先跳过下面的内容。
-
+!!! warning
+    These are technical details that you might skip if it's not important for you now.
 
 `RequestValidationError` 是 Pydantic 的 <a href="https://pydantic-docs.helpmanual.io/usage/models/#error-handling" class="external-link" target="_blank">`ValidationError`</a> 的子类。
 
 **FastAPI** 调用的就是 `RequestValidationError` 类，因此，如果在 `response_model` 中使用 Pydantic 模型，且数据有错误时，在日志中就会看到这个错误。
 
-但客户端或用户看不到这个错误。反之，客户端接收到的是 HTTP 状态码为 `500` 的「内部服务器错误」。
+但客户端或用户看不到这个错误。 反之，客户端接收到的是 HTTP 状态码为 `500` 的「内部服务器错误」。
 
 这是因为在*响应*或代码（不是在客户端的请求里）中出现的 Pydantic `ValidationError` 是代码的 bug。
 
@@ -197,15 +178,12 @@ path -> item_id
 
 ```Python hl_lines="3-4  9-11  22"
 {!../../../docs_src/handling_errors/tutorial004.py!}
-
 ```
 
-!!! note "技术细节"
+!!! note "Technical Details"
+    You could also use `from starlette.responses import PlainTextResponse`.
 
-    还可以使用 `from starlette.responses import PlainTextResponse`。
-
-    **FastAPI** 提供了与 `starlette.responses` 相同的 `fastapi.responses` 作为快捷方式，但大部分响应都可以直接从 Starlette 导入。
-
+    还可以使用 `from starlette.responses import PlainTextResponse`。 **FastAPI** 提供了与 `starlette.responses` 相同的 `fastapi.responses` 作为快捷方式，但大部分响应都可以直接从 Starlette 导入。
 
 ### 使用 `RequestValidationError` 的请求体
 
@@ -215,7 +193,6 @@ path -> item_id
 
 ```Python hl_lines="14"
 {!../../../docs_src/handling_errors/tutorial005.py!}
-
 ```
 
 现在试着发送一个无效的 `item`，例如：
@@ -225,7 +202,6 @@ path -> item_id
   "title": "towel",
   "size": "XL"
 }
-
 ```
 
 收到的响应包含 `body` 信息，并说明数据是无效的：
@@ -247,10 +223,9 @@ path -> item_id
     "size": "XL"
   }
 }
-
 ```
 
-### FastAPI `HTTPException` vs Starlette `HTTPException`
+#### FastAPI `HTTPException` vs Starlette `HTTPException`
 
 **FastAPI** 也提供了自有的 `HTTPException`。
 
@@ -270,20 +245,14 @@ OAuth 2.0 等安全工具需要在内部调用这些响应头。
 
 ```Python
 from starlette.exceptions import HTTPException as StarletteHTTPException
-
 ```
 
 ### 复用 **FastAPI** 异常处理器
 
 FastAPI 支持先对异常进行某些处理，然后再使用 **FastAPI** 中处理该异常的默认异常处理器。
 
-从 `fastapi.exception_handlers` 中导入要复用的默认异常处理器：
-
 ```Python hl_lines="2-5  15  21"
 {!../../../docs_src/handling_errors/tutorial006.py!}
-
 ```
 
-虽然，本例只是输出了夸大其词的错误信息。
-
-但也足以说明，可以在处理异常之后再复用默认的异常处理器。
+In this example you are just `print`ing the error with a very expressive message, but you get the idea. You can use the exception and then just re-use the default exception handlers.

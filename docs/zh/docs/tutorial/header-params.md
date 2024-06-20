@@ -6,9 +6,41 @@
 
 首先导入 `Header`:
 
-```Python hl_lines="3"
-{!../../../docs_src/header_params/tutorial001.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/header_params/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/header_params/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="3"
+    {!> ../../../docs_src/header_params/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1"
+    {!../../../docs_src/header_params/tutorial001.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="3"
+    {!../../../docs_src/header_params/tutorial002.py!}
+    ```
 
 ## 声明 `Header` 参数
 
@@ -16,17 +48,49 @@
 
 第一个值是默认值，你可以传递所有的额外验证或注释参数：
 
-```Python hl_lines="9"
-{!../../../docs_src/header_params/tutorial001.py!}
-```
+=== "Python 3.10+"
 
-!!! note "技术细节"
-    `Header` 是 `Path`, `Query` 和 `Cookie` 的兄弟类型。它也继承自通用的 `Param` 类.
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/header_params/tutorial001_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/header_params/tutorial001_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/header_params/tutorial001_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/header_params/tutorial001_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/header_params/tutorial001.py!}
+    ```
+
+!!! !!! note "技术细节"
+    `Header` 是 `Path`, `Query` 和 `Cookie` 的兄弟类型。 它也继承自通用的 `Param` 类.
 
     但是请记得，当你从`fastapi`导入 `Query`, `Path`, `Header`, 或其他时，实际上导入的是返回特定类型的函数。
 
 !!! info
-    为了声明headers， 你需要使用`Header`, 因为否则参数将被解释为查询参数。
+    To declare headers, you need to use `Header`, because otherwise the parameters would be interpreted as query parameters.
 
 ## 自动转换
 
@@ -44,17 +108,51 @@
 
 如果出于某些原因，你需要禁用下划线到连字符的自动转换，设置`Header`的参数 `convert_underscores` 为 `False`:
 
-```Python hl_lines="10"
-{!../../../docs_src/header_params/tutorial002.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/header_params/tutorial002_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="11"
+    !!! info
+    为了声明headers， 你需要使用<code>Header</code>, 因为否则参数将被解释为查询参数。
+    ```
+, 因为否则参数将被解释为查询参数。
+</code>
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="12"
+    {!> ../../../docs_src/header_params/tutorial002_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="8"
+    {!> ../../../docs_src/header_params/tutorial002_py310.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="10"
+    {!../../../docs_src/header_params/tutorial001.py!}
+    ```
 
 !!! warning
-    在设置 `convert_underscores` 为 `False` 之前，请记住，一些HTTP代理和服务器不允许使用带有下划线的headers。
-
+    Before setting `convert_underscores` to `False`, bear in mind that some HTTP proxies and servers disallow the usage of headers with underscores.
 
 ## 重复的 headers
 
-有可能收到重复的headers。这意味着，相同的header具有多个值。
+有可能收到重复的headers。 这意味着，相同的header具有多个值。
 
 您可以在类型声明中使用一个list来定义这些情况。
 
@@ -62,9 +160,53 @@
 
 比如, 为了声明一个 `X-Token` header 可以出现多次，你可以这样写：
 
-```Python hl_lines="9"
-{!../../../docs_src/header_params/tutorial003.py!}
-```
+=== "Python 3.10+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/header_params/tutorial003_an_py310.py!}
+    ```
+
+=== "Python 3.9+"
+
+    ```Python hl_lines="9"
+    {!> ../../../docs_src/header_params/tutorial003_an_py39.py!}
+    ```
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="10"
+    {!> ../../../docs_src/header_params/tutorial003_an.py!}
+    ```
+
+=== "Python 3.10+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../../../docs_src/header_params/tutorial003_py310.py!}
+    ```
+
+=== "Python 3.9+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    !!! warning
+    在设置 <code>convert_underscores</code> 为 <code>False</code> 之前，请记住，一些HTTP代理和服务器不允许使用带有下划线的headers。
+    ```
+ 为 False 之前，请记住，一些HTTP代理和服务器不允许使用带有下划线的headers。
+</code>
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9"
+    {!../../../docs_src/header_params/tutorial003.py!}
+    ```
 
 如果你与*路径操作*通信时发送两个HTTP headers，就像：
 
